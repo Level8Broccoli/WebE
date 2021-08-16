@@ -126,6 +126,10 @@ Das Spiel wird auf der Webseite vom Hersteller wiefolgt beschrieben:
 
 > Zwei bis sechs Spieler kämpfen sich Level für Level zum Sieg. Zu Beginn bekommt jeder Mitspieler eine Level-Karte mit allen acht Aufgaben sowie eine Level-Anzeige-Karte, die immer anzeigt, auf welchem Level man sich befindet. Wer legt die geforderten Kombinationen aus Zahlenfolgen, gleichen Karten und gleichen Farben am schnellsten aus? Einfache Regeln, schnelle Entscheidungen, großer Spielspaß! Das Familienspiel ab 8 Jahren eignet sich ideal für jeden Spieleabend.
 
+In erster Linie wird das Grundspiel umgesetzt und eventuell um zusätzliche Features wie z.B. verschiedene Levels (Anzahl Aufgaben für Sieg), verschiedene Aufgaben / Reihenfolgen pro Spieler oder neue Aufgaben ergänzt. Die Zusatzfeatures werden in einem separaten Kapitel beschrieben.
+
+Die Regeln sind vom Hersteller öffentlich publiziert und unter folgendem [Link](https://www.ravensburger.de/spielanleitungen/ecm/Spielanleitungen/20766%20anl%201636574.pdf?ossl=pds_text_Spielanleitung) eingesehbar.
+
 ## 3.1 Spielmaterial für "offline" Version
 
 Das Spiel besteht aus folgenden Teilen und müssen digitalisiert werden.
@@ -251,9 +255,3 @@ Ein Spieler gewinnt sofort, wenn er sich im 8. Level befindet und es auslegt (er
 also seine restlichen Handkarten nicht mehr loswerden!).
 Ein Spieler gewinnt auch, wenn er sein 7. Level ausgelegt hat und den laufenden
 Durchgang beendet. Dadurch überspringt er das 8. Level und schiebt seine Levelkarte auf das Wort „Sieg“!
-
-## 3.1 Regeln
-
-In erster Linie wird das Grundspiel umgesetzt und eventuell um zusätzliche Features wie z.B. verschiedene Levels (Anzahl Aufgaben für Sieg), verschiedene Aufgaben / Reihenfolgen pro Spieler oder neue Aufgaben ergänzt. Die Zusatzfeatures werden in einem separaten Kapitel beschrieben.
-
-Die Regeln sind vom Hersteller öffentlich publiziert und unter folgendem [Link](https://www.ravensburger.de/spielanleitungen/ecm/Spielanleitungen/20766%20anl%201636574.pdf?ossl=pds_text_Spielanleitung) eingesehbar.
