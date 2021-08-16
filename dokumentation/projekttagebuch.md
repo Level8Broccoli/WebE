@@ -20,7 +20,7 @@ Folgende Anforderungen sind an das Projekttagebuch gestellt:
 ## Sitzung 15.08.2021
 
 - Spiel ausgewählt -> Level 8
-- Techstack finalisiert
+- Techstack finalisiert -> MEVN (Mongo DB, Express.js, Vue.js, Node.js)
 - Fragen geklärt
 
   - Gibt es Vorgaben bezüglich Sprache etc.? _Nein, man darf beliebige Technologie wählen. Es muss lediglich im Browser laufen schlussendlich._
