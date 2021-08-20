@@ -1,0 +1,13 @@
+{
+    "name": "WebE",
+    "build": {
+        "dockerfile": "./Dockerfile"
+    },
+    "settings": {
+        "terminal.integrated.profiles.linux": {
+            "ash": {
+                "path": "/bin/ash"
+            }
+        }
+	},
+}
