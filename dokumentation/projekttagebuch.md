@@ -70,7 +70,15 @@ Folgende Anforderungen sind an das Projekttagebuch gestellt:
   - Pong
   - Uno
   - Level 8
-  - ...
+  - Gin Rummy
+  - For Sale
+  - Frantic
+  - Tippi Toppi
+  - Onitama
+  - Diamonds
+  - Geschenkt
+  - Skull King
+  - Tiefseetaucher
 - Fragen notiert
 
   - Gibt es Vorgaben bezüglich Sprache etc.?

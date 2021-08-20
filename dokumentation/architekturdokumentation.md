@@ -10,8 +10,7 @@ Dieser Abschnitt führt in die Aufgabenstellung ein und skizziert die Ziele, die
 
 ## 1.1 Aufgabenstellung
 
-Die Aufgabenstellung der Schule fordert eine
-Spezifikation, Umsetzung und Dokumentation eines verteilten Mehrbenutzer-Spiels mit modernen Web-Technologien. Es ist dabei freigestellt, mit welchen Technologiestacks man arbeiten möchte.
+Die Aufgabenstellung der Schule fordert eine Spezifikation, Umsetzung und Dokumentation eines verteilten Mehrbenutzer-Spiels mit modernen Web-Technologien. Es ist dabei freigestellt, mit welchen Technologiestacks man arbeiten möchte.
 
 Folgende Anforderungen müssen seitens Studenten eingehalten werden:
 
@@ -25,8 +24,7 @@ Folgende Anforderungen müssen seitens Studenten eingehalten werden:
    - Er verwaltet den Spielverlauf (überprüft und stellt sicher, dass alle Spielzüge regelkonform sind, erkennt das Ende des Spiels, zählt Punkte, etc.)
    - Wenn alle Spieler das Spiel verlassen, dann beendet der Server das Spiel.
 5. Ein Client hat folgende Eigenschaften:
-   - Er nimmt Benutzereingaben durch eine grafische Schnittstelle (graphical
-     userinterface, GUI) entgegen
+   - Er nimmt Benutzereingaben durch eine grafische Schnittstelle (graphical userinterface, GUI) entgegen
    - Er gleicht den lokalen Status eines Spiels mit dem Status des Servers ab (Synchronisation)
    - Er erlaubt den Spielern eines Spiels zu chatten.
 6. Folgende Aspekte sollen beachtet werden: Internationalisierung, Usability, Accessability, Levels (das Spiel muss mind. 3 Levels haben), Responsiveness
@@ -34,8 +32,7 @@ Folgende Anforderungen müssen seitens Studenten eingehalten werden:
 
 ## 1.2 Meilensteine
 
-Während des Projekts sollen von allen Teams vordefinierte “Meilensteine” zu einem bestimmten Zeitpunkt erfüllt werden. Mit den Meilensteinen wird der Projektfortschritt
-überprüft.
+Während des Projekts sollen von allen Teams vordefinierte "Meilensteine” zu einem bestimmten Zeitpunkt erfüllt werden. Mit den Meilensteinen wird der Projektfortschritt überprüft.
 
 ### Meilenstein 1
 
@@ -53,8 +50,7 @@ Erwartet wird ein Bericht mit folgenden Aspekten:
 - Spezifikation des Netzwerkprotokolls - erster Entwurf.
 - Erster Entwurf Server.
 - Erster Entwurf GUI.
-- Die Anmeldung Client beim Server vollständig realisiert (GUI muss nicht vollständig
-  realisiert sein).
+- Die Anmeldung Client beim Server vollständig realisiert (GUI muss nicht vollständig realisiert sein).
 - Senden einer Nachricht von einem Client zu einem anderen Client vollständig realisiert.
 
 ### Meilenstein 3
@@ -63,8 +59,7 @@ Erwartet wird ein Bericht mit folgenden Aspekten:
 
 - Verwaltung Status des Spiels.
 - Komplette Implementierung des Protokolls.
-- Das Spiel muss vollständig realisiert sein (ohne vollständiges GUI und
-  Regelüberprüfung).
+- Das Spiel muss vollständig realisiert sein (ohne vollständiges GUI und Regelüberprüfung).
 - Zweiter Entwurf Server.
 - Zweiter Entwurf GUI.
 - In der Beschreibung soll klar beschrieben sein, was im zweiten Entwurf vom GUI und Server dazu kam.
@@ -136,7 +131,7 @@ Das Spiel besteht aus folgenden Teilen und müssen digitalisiert werden.
 
 > - 98 Spielkarten, bestehend aus 90 Zahlenkarten (1-15 in 6 Farben)
 > - 5 Jokern
-> - 3 „Aussetzen!“-Karten
+> - 3 "Aussetzen!"-Karten
 > - 6 doppelseitige Levelkarten
 > - 6 Levelanzeiger
 
@@ -148,110 +143,59 @@ Wer also zuerst alle Level schafft, gewinnt.
 
 ## 3.3 Spielvorbereitung "offline" Version
 
-Jeder Spieler erhält eine Levelkarte und einen Levelanzeiger. Er schiebt
-die Levelkarte mit der Vorderseite (= 1 Sternchen) so in seinen Levelanzeiger, dass im Fenster das erste Level („2 Dreierfolgen“) zu sehen
-ist.
+Jeder Spieler erhält eine Levelkarte und einen Levelanzeiger. Er schiebt die Levelkarte mit der Vorderseite (= 1 Sternchen) so in seinen Levelanzeiger, dass im Fenster das erste Level ("2 Dreierfolgen") zu sehen ist.
 
-Ein Spieler wird zum ersten Geber bestimmt: Er mischt die 98 Spielkarten gut und verteilt dann verdeckt, einzeln reihum, an jeden Spieler
-(auch an sich) 10 Karten. Die restlichen Karten werden als verdeckter
-Nachziehstapel in die Tischmitte gelegt.
-Danach deckt der Geber die oberste
-Karte vom Nachziehstapel auf und
-legt sie offen so neben den Nachziehstapel, dass sie zu ihm hin zeigt. Das
-ist die erste Karte seines persönlichen
-Ablagestapels.
-Im Lauf des Spiels wird auch jeder
-andere Spieler seinen eigenen Ablagestapel bilden, immer in seine jeweilige
-Richtung zeigend.
+Ein Spieler wird zum ersten Geber bestimmt: Er mischt die 98 Spielkarten gut und verteilt dann verdeckt, einzeln reihum, an jeden Spieler (auch an sich) 10 Karten. Die restlichen Karten werden als verdeckter Nachziehstapel in die Tischmitte gelegt. Danach deckt der Geber die oberste Karte vom Nachziehstapel auf und legt sie offen so neben den Nachziehstapel, dass sie zu ihm hin zeigt. Das ist die erste Karte seines persönlichen Ablagestapels. Im Lauf des Spiels wird auch jeder andere Spieler seinen eigenen Ablagestapel bilden, immer in seine jeweilige Richtung zeigend.
 
 ## 3.4 Spielverlauf
 
 Der Spieler links vom Geber beginnt. Danach verläuft das Spiel im Uhrzeigersinn reihum. Für den Spieler am Zug gilt:
 
 1. Zuerst muss er eine Karte aufnehmen: entweder die oberste Karte vom Nachziehstapel oder die oberste Karte von einem beliebigen Ablagestapel.
-2. Danach kann er sein Level auslegen: Dazu legt er alle benötigten Karten seines
-   aktuellen Levels offen und für alle sichtbar vor sich aus. Im 1. Level sind das z.B.
-   2 Dreierfolgen.
+2. Danach kann er sein Level auslegen: Dazu legt er alle benötigten Karten seines aktuellen Levels offen und für alle sichtbar vor sich aus. Im 1. Level sind das z.B. 2 Dreierfolgen.
 
 > **Achtung:** Es ist nicht erlaubt, nur Teile des Levels (also z.B. im 1. Level nur eine statt
 > beider Dreierfolgen) auszulegen. Ebenso darf man seinem Level niemals weitere
-> „Teilaufgaben“ zufügen (also z.B. im 1. Level eine dritte Folge auslegen).
+> "Teilaufgaben" zufügen (also z.B. im 1. Level eine dritte Folge auslegen).
 > Sobald ein Spieler sein Level ausgelegt hat, darf er weitere Handkarten passend an
 > bereits ausgelegte Karten anlegen. Dies darf er sowohl bei seinen eigenen Karten
 > tun, wie auch bei denen seiner Mitspieler. Das gilt ab dem Moment, in dem er seine
 > Karten auslegt, und für alle seine weiteren Züge des laufenden Durchgangs.
 > Sein Ziel hierbei ist, seine restlichen Handkarten so schnell wie möglich anzulegen,
-> denn nur so kann er den Bonus einstreichen (siehe „Ende eines Durchgangs“).
+> denn nur so kann er den Bonus einstreichen (siehe "Ende eines Durchgangs").
 
-3. Zum Abschluss seines Zuges muss der Spieler eine Karte abwerfen: Er legt eine
-   beliebige Handkarte offen auf seinen Ablagestapel.
+3. Zum Abschluss seines Zuges muss der Spieler eine Karte abwerfen: Er legt eine beliebige Handkarte offen auf seinen Ablagestapel.
 
 ## 3.5 Die Kombinationen
 
-**Folgen** sind mehrere Karten mit direkt aufeinanderfolgenden
-Zahlen in **beliebiger** Farbe (wie z.B. 4-5-6 oder 8-9-10-11).
+**Folgen** sind mehrere Karten mit direkt aufeinanderfolgenden Zahlen in **beliebiger** Farbe (wie z.B. 4-5-6 oder 8-9-10-11).
 
 _Hinweis:_ Zwischen 15 und 1 gibt es keine Verbindung!
 
-**Zwillinge, Drillinge usw.** sind mehrere Karten mit demselben
-Wert (wie z.B. 4-4-4 oder 11-11-11-11).
+**Zwillinge, Drillinge usw.** sind mehrere Karten mit demselben Wert (wie z.B. 4-4-4 oder 11-11-11-11).
 
-**x Karten einer Farbe** sind beliebige Zahlen **derselben** Farbe
-(z.B. blau 7-2-11-15 oder grün 12-13-4-8-1).
+**x Karten einer Farbe** sind beliebige Zahlen **derselben** Farbe (z.B. blau 7-2-11-15 oder grün 12-13-4-8-1).
 
-_Hinweis:_ Wird während eines Durchgangs die letzte verdeckte Karte vom Nachziehstapel gezogen, gibt jeder Spieler alle Karten seines Ablagestapels bis auf die oberste
-Karte zurück (die weiterhin seinen Ablagestapel bildet). Die zurückgegebenen Karten
-werden gemischt und als neuer Nachziehstapel bereitgelegt.
+_Hinweis:_ Wird während eines Durchgangs die letzte verdeckte Karte vom Nachziehstapel gezogen, gibt jeder Spieler alle Karten seines Ablagestapels bis auf die oberste Karte zurück (die weiterhin seinen Ablagestapel bildet). Die zurückgegebenen Karten werden gemischt und als neuer Nachziehstapel bereitgelegt.
 
 Zusammengefasst ist der Ablauf:
 
-1. Zuerst eine Karte
-   aufnehmen – vom
-   Nachziehstapel oder
-   einem der Ablagestapel (Muss!)
-2. Eigenes Level
-   – stets komplett! –
-   auslegen (Kann!)
-3. Als letztes eine
-   Karte auf eigenen
-   Ablagestapel legen
-   (Muss!)
+1. Zuerst eine Karte aufnehmen – vom Nachziehstapel oder einem der Ablagestapel (Muss!)
+2. Eigenes Level – stets komplett! – auslegen (Kann!)
+3. Als letztes eine Karte auf eigenen Ablagestapel legen (Muss!)
 
 ## 3.6 Ende einer Runde
 
-Ein Durchgang endet sofort, wenn ein Spieler seine letzte Handkarte auf seinen
-Ablagestapel wirft. Dieser Spieler darf nun als Bonus seine Levelkarte um zwei
-Level weiter schieben (d.h. er überspringt damit ein Level!).
-Alle anderen Spieler, die auch ihr aktuelles Level ausgelegt haben, schieben ihre
-Levelkarte um ein Level weiter.
-Spieler, die ihr Level nicht ausliegen haben, machen nichts.
-Nun wird der linke Nachbar des alten Gebers neuer Geber. Er sammelt alle ausliegenden Karten und alle Handkarten ein, mischt die 98 Spielkarten neu und teilt
-wieder an jeden Spieler 10 Karten aus. Er deckt die oberste Karte vom Nachziehstapel auf und legt sie als erste Karte seines Ablagestapels bereit. Danach beginnt
-sein linker Nachbar den nächsten Durchgang...
+Ein Durchgang endet sofort, wenn ein Spieler seine letzte Handkarte auf seinen Ablagestapel wirft. Dieser Spieler darf nun als Bonus seine Levelkarte um zwei Level weiter schieben (d.h. er überspringt damit ein Level!). Alle anderen Spieler, die auch ihr aktuelles Level ausgelegt haben, schieben ihre Levelkarte um ein Level weiter. Spieler, die ihr Level nicht ausliegen haben, machen nichts. Nun wird der linke Nachbar des alten Gebers neuer Geber. Er sammelt alle ausliegenden Karten und alle Handkarten ein, mischt die 98 Spielkarten neu und teilt wieder an jeden Spieler 10 Karten aus. Er deckt die oberste Karte vom Nachziehstapel auf und legt sie als erste Karte seines Ablagestapels bereit. Danach beginnt sein linker Nachbar den nächsten Durchgang...
 
 ## 3.7 Die Joker-Karte
 
-Ein Joker kann für jede beliebige Zahl bzw. Farbe benutzt werden (nicht aber
-als „Aussetzen!“-Karte). Für ein Level dürfen auch mehrere Joker benutzt
-werden. Für jeden ausgelegten Joker muss immer klar sein, wofür er benutzt
-wird. Notfalls muss der auslegende Spieler mitteilen, welche Zahl bzw. Farbe
-ein Joker ersetzt. Ausliegende Joker dürfen nicht gegen passende Karten
-ausgetauscht werden.
+Ein Joker kann für jede beliebige Zahl bzw. Farbe benutzt werden (nicht aber als "Aussetzen!"-Karte). Für ein Level dürfen auch mehrere Joker benutzt werden. Für jeden ausgelegten Joker muss immer klar sein, wofür er benutzt wird. Notfalls muss der auslegende Spieler mitteilen, welche Zahl bzw. Farbe ein Joker ersetzt. Ausliegende Joker dürfen nicht gegen passende Karten ausgetauscht werden.
 
 ## 3.8 Die "Aussetzen"-Karte
 
-Anstatt eine Karte als dritte Aktion seines Zuges auf den eigenen
-Ablagestapel abzuwerfen, darf ein Spieler auch eine „Aussetzen!“-
-Karte von seiner Hand vor einen beliebigen Mitspieler legen, der
-nicht bereits eine solche Karte vor sich liegen hat.
-Kommt dieser Spieler dann an die Reihe, muss er aussetzen, indem
-er als einzige Aktion seines gesamten Zuges die „Aussetzen!“-Karte offen unter
-den Nachziehstapel schiebt. Sobald hier später eine offene „Aussetzen!“-Karte
-auftaucht, wird ein neuer Nachziehstapel gebildet (s.o.).
+Anstatt eine Karte als dritte Aktion seines Zuges auf den eigenen Ablagestapel abzuwerfen, darf ein Spieler auch eine "Aussetzen!"-Karte von seiner Hand vor einen beliebigen Mitspieler legen, der nicht bereits eine solche Karte vor sich liegen hat. Kommt dieser Spieler dann an die Reihe, muss er aussetzen, indem er als einzige Aktion seines gesamten Zuges die "Aussetzen!"-Karte offen unter den Nachziehstapel schiebt. Sobald hier später eine offene "Aussetzen!"-Karte auftaucht, wird ein neuer Nachziehstapel gebildet (s.o.).
 
 ## 3.9 Spielende
 
-Ein Spieler gewinnt sofort, wenn er sich im 8. Level befindet und es auslegt (er muss
-also seine restlichen Handkarten nicht mehr loswerden!).
-Ein Spieler gewinnt auch, wenn er sein 7. Level ausgelegt hat und den laufenden
-Durchgang beendet. Dadurch überspringt er das 8. Level und schiebt seine Levelkarte auf das Wort „Sieg“!
+Ein Spieler gewinnt sofort, wenn er sich im 8. Level befindet und es auslegt (er muss also seine restlichen Handkarten nicht mehr loswerden!). Ein Spieler gewinnt auch, wenn er sein 7. Level ausgelegt hat und den laufenden Durchgang beendet. Dadurch überspringt er das 8. Level und schiebt seine Levelkarte auf das Wort "Sieg"!
