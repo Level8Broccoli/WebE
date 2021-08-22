@@ -226,7 +226,7 @@ Für die Formulierung der Use Cases (funktionale Anforderungen) halten wir uns a
 
 > Abnahmekriterium:
 >
-> Das Starten eines Spiels erfasst folgende Schritte:
+> Das Erstellen eines Spiels erfasst folgende Schritte:
 >
 > - Erstellen eines Spielraums
 > - Setzen der Einstellungen (Anzahl Spieler, Spezialregeln etc.)
