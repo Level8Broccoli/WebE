@@ -199,3 +199,32 @@ Anstatt eine Karte als dritte Aktion seines Zuges auf den eigenen Ablagestapel a
 ## 3.9 Spielende
 
 Ein Spieler gewinnt sofort, wenn er sich im 8. Level befindet und es auslegt (er muss also seine restlichen Handkarten nicht mehr loswerden!). Ein Spieler gewinnt auch, wenn er sein 7. Level ausgelegt hat und den laufenden Durchgang beendet. Dadurch überspringt er das 8. Level und schiebt seine Levelkarte auf das Wort "Sieg"!
+
+# 4. Anforderungen
+
+Aus der Aufgabenstellung gehen für die Umsetzung funktionale -, sowie nicht-funktionale Anforderungen an die Software hervor.
+
+Für die Formulierung der Use Cases (funktionale Anforderungen) halten wir uns an die Anforderungssatzschablone aus dem Buch Basiswissen Requirements Engineering von [Klaus Pohl und Chris Rupp, dpunkt.verlag 4. Auflage](https://dpunkt.de/produkt/basiswissen-requirements-engineering/) Seite 61.
+
+![Use Case Schablone](use_case_schablone.png)
+
+## 4.1 Funktionale Anforderungen
+
+## 4.2 Nicht-Funktionale Anforderungen
+
+1. Entwicklung eins Spiels mittels Web-Technologien vom folgenden Typ:
+   - Runden-basiert
+   - Educational
+   - Datensammler
+2. Das Spiel muss eine Client/Server Architektur haben
+3. Der Server und die Clients kommunizieren über ein Text-basiertes Protokoll. Das Protokoll muss lesbar sein.
+4. Die Server-Funktionalität ist wie folgt definiert:
+   - Er verwaltet den Spielverlauf (überprüft und stellt sicher, dass alle Spielzüge regelkonform sind, erkennt das Ende des Spiels, zählt Punkte, etc.)
+   - Wenn alle Spieler das Spiel verlassen, dann beendet der Server das Spiel.
+5. Ein Client hat folgende Eigenschaften:
+   - Er nimmt Benutzereingaben durch eine grafische Schnittstelle (graphical userinterface, GUI) entgegen
+   - Er gleicht den lokalen Status eines Spiels mit dem Status des Servers ab (Synchronisation)
+   - Er erlaubt den Spielern eines Spiels zu chatten.
+6. Sollten mehrere Sprachen gewünscht sein, sollte das Spiel den Entwicklern die einfache Möglichkeit bieten, Sprachübersetzungen hinzuzufügen.
+7. Das Spiel soll mindestens 3 verschiedene Levels haben.
+8. Das User Interface passt sich an verschiedene Bildschirmgrössen an.
