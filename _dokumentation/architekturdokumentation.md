@@ -90,7 +90,7 @@ Die folgende Tabelle stellt die Stakeholder von unserem Projekt und ihre jeweili
 
 | Wer?                  | Interesse, Bezug                                                                                                                                  |
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Benutzer              | Kennt das Spiel möglicherweise nicht. Will mit seinen Freunden / seiner Familie eine Runde spielen. Beliebiges Alter und technische Versiertheit. |
+| Benutzer / Spieler    | Kennt das Spiel möglicherweise nicht. Will mit seinen Freunden / seiner Familie eine Runde spielen. Beliebiges Alter und technische Versiertheit. |
 | Heinrich Zimmermann   | Dozent und stellt die Aufgabe.                                                                                                                    |
 | Wir (Oliver, Thierry) | Projekt erfolgreich abschliessen. Neue Technologie anwenden. Projekt kann auf Github als Demo publiziert werden.                                  |
 
@@ -209,6 +209,52 @@ Für die Formulierung der Use Cases (funktionale Anforderungen) halten wir uns a
 ![Use Case Schablone](use_case_schablone.png)
 
 ## 4.1 Funktionale Anforderungen
+
+1. Auf der Willkommensseite muss das Spiel dem Benutzer die Möglichkeit bieten, einen Benutzernamen zu wählen.
+
+> Abnahmekriterium:
+>
+> Benutzer erhält eine Eingabebox für seinen Namen.
+
+2. Jederzeit sollte das System dem Benutzer die Möglichkeit bieten, die Regeln einzusehen.
+
+> Abnahmekriterium:
+>
+> Ein Button, der immer immer im Bild ersichtlich ist, kann angeklickt werden um die Regeln via Modalfenster einzusehen.
+
+3. Nachdem ein Benutzername gewählt wurde, kann der Benutzer ein Spiel erstellen.
+
+> Abnahmekriterium:
+>
+> Das Starten eines Spiels erfasst folgende Schritte:
+>
+> - Erstellen eines Spielraums
+> - Setzen der Einstellungen (Anzahl Spieler, Spezialregeln etc.)
+> - Einladungslink generieren
+> - Auf Beitritt aller Spieler warten
+> - Spiel starten
+
+4. Nachdem ein Benutzername gewählt wurde, kann der Benutzer einem noch nicht gestarteten Spiel beitreten.
+
+> Abnahmekriterium:
+>
+> Der Benutzer hat eine Übersichtsliste von offenen Spielen und kann einem Spiel beitreten.
+
+5. Nachdem ein Einladungslink erhalten wurde, kann der Benutzer dem Spiel beitreten.
+
+> Der Benutzer klickt auf den Einladungslink, gibt einen Benutzername ein und kommt direkt ins offene Spiel.
+
+5. Sobald alle Benutzer der Lobby hinzugefügt sind, kann der Ersteller das Spiel starten
+
+> Abnahmekriterium:
+>
+> Der Ersteller kann den Button "Start Spiel" anklicken, sobald die in den Einstellungen vorgenommen Anzahl Spieler in der Lobby sind.
+
+6. In einer Spiellobby muss das System den Spielern eine Chatfunktion zur Verfügung stellen.
+
+> Abnahmekriterium:
+>
+> Die Spieler haben in der Lobby und während des Spiels eine Chatfunktion zur Verfügung.
 
 ## 4.2 Nicht-Funktionale Anforderungen
 
