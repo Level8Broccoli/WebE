@@ -244,13 +244,13 @@ Für die Formulierung der Use Cases (funktionale Anforderungen) halten wir uns a
 
 > Der Benutzer klickt auf den Einladungslink, gibt einen Benutzername ein und kommt direkt ins offene Spiel.
 
-5. Sobald alle Benutzer der Lobby hinzugefügt sind, kann der Ersteller das Spiel starten
+6. Sobald alle Benutzer der Lobby hinzugefügt sind, kann der Ersteller das Spiel starten
 
 > Abnahmekriterium:
 >
 > Der Ersteller kann den Button "Start Spiel" anklicken, sobald die in den Einstellungen vorgenommen Anzahl Spieler in der Lobby sind.
 
-6. In einer Spiellobby muss das System den Spielern eine Chatfunktion zur Verfügung stellen.
+7. In einer Spiellobby muss das System den Spielern eine Chatfunktion zur Verfügung stellen.
 
 > Abnahmekriterium:
 >
