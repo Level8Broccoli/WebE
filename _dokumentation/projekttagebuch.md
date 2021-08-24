@@ -17,6 +17,38 @@ Folgende Anforderungen sind an das Projekttagebuch gestellt:
 > - Auch zum Projekttagebuch werden keine Vorgaben zur Umsetzung gemacht. Dies kann
 >   ebenfalls innerhalb der Gruppe festgelegt werden.
 
+## Sitzung 24.08.2021
+
+- Anforderungen besprochen
+
+  - Anforderungen überarbeiten -> Fragen miteinbeziehen und Kann Anforderungen formulieren:
+
+    - Mobile Version
+    - Einladungslink zur Lobby
+    - Tutorial
+    - Zuschauer
+    - Benutzerspezifischer Chat
+    - Monetarisierungssystem -> Päckli (Lootboxen)
+
+  - GUI Entwurf bei Anforderungen ergänzen
+
+- Spielablauf erster Entwurf GUI für Verständnis
+  ![Gui Draft](gui_draft_final.png)
+
+- Projekt Setup in Entwicklungsumgebung geprüft via Github -> läuft
+
+- Fragen für Dozenten (via Moodle)
+
+  - Ausblick Meilenstein Authentifizierung nötig ?
+  - Müssen Spielregeln auch als Anforderungen explizit formuliert werden?
+
+- Nächste Schritte:
+
+  - Oliver: Fragen ins Moodle stellen, Heroku aufsetzen, Protokollentwurf Client-Server
+  - Thierry: Anforderungen überarbeiten und UI Entwurf.
+
+- Bisherige Probleme / Verzögerungen: _Keine_
+
 ## Sitzung 15.08.2021
 
 - Spiel ausgewählt -> Level 8
