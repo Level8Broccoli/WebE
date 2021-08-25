@@ -208,6 +208,8 @@ Für die Formulierung der Use Cases (funktionale Anforderungen) halten wir uns a
 
 ![Use Case Schablone](use_case_schablone.png)
 
+Für das bessere Verständnis der Abläufe werden einzelne Anforderungen direkt mit UI Entwürfen unterstützt.
+
 ## 4.1 Funktionale Anforderungen
 
 1. Auf der Willkommensseite muss das Spiel dem Benutzer die Möglichkeit bieten, einen Benutzernamen zu wählen.
