@@ -212,6 +212,8 @@ Für das bessere Verständnis der Abläufe werden einzelne Anforderungen direkt 
 
 ## 4.1 Funktionale Anforderungen
 
+### 4.1.1 MUSS
+
 1. Auf der Willkommensseite muss das Spiel dem Benutzer die Möglichkeit bieten, einen Benutzernamen zu wählen.
 
 > Abnahmekriterium:
@@ -236,7 +238,6 @@ Für das bessere Verständnis der Abläufe werden einzelne Anforderungen direkt 
 >
 > - Erstellen eines Spielraums
 > - Setzen der Einstellungen (Anzahl Spieler, Spezialregeln etc.)
-> - Einladungslink generieren
 > - Auf Beitritt aller Spieler warten
 > - Spiel starten
 
@@ -250,23 +251,40 @@ Für das bessere Verständnis der Abläufe werden einzelne Anforderungen direkt 
 
 ![Game List](resources/game_list.png)
 
-5. Nachdem ein Einladungslink erhalten wurde, kann der Benutzer dem Spiel beitreten.
-
-> Der Benutzer klickt auf den Einladungslink, gibt einen Benutzername ein und kommt direkt ins offene Spiel.
-
-6. Sobald alle Benutzer der Lobby hinzugefügt sind, kann der Ersteller das Spiel starten
+5. Sobald alle Benutzer der Lobby hinzugefügt sind, kann der Ersteller das Spiel starten
 
 > Abnahmekriterium:
 >
 > Der Ersteller kann den Button "Start Spiel" anklicken, sobald die in den Einstellungen vorgenommen Anzahl Spieler in der Lobby sind.
 
-7. In einer Spiellobby muss das System den Spielern eine Chatfunktion zur Verfügung stellen.
+6. In einer Spiellobby muss das System den Spielern eine Chatfunktion zur Verfügung stellen.
 
 > Abnahmekriterium:
 >
 > Die Spieler haben in der Lobby und während des Spiels eine Chatfunktion zur Verfügung.
 
 ![Game and chat](resources/game_and_chat.png)
+
+7. Nachdem das Spiel gestartet ist, bietet das System den Spielern die Möglichkeit das Spiel effektiv zu spielen.
+
+> Abnahmekriterium:
+>
+> Die Spieler der Lobby können ein Spiel anhand des unter Kapitel 3 beschriebenen Ablaufs und den definierten Regeln in der Spiellobby spielen.
+
+8. Nach Spielende soll das System Daten speichern.
+
+> Abnahmekriterium:
+>
+> Das System speichert die Teilnehmer der Runde (Id und Name), sowie der Gewinner in einer Datenbank ab.
+
+### 4.1.2 Optionale Erweiterungen
+
+- Mobile Version für Handy
+- Einladungslink zur Lobby
+- Tutorial
+- Zuschauermodus
+- Benutzerspezifischer Chat
+- Monetarisierungssystem -> Päckli (Lootboxen)
 
 ## 4.2 Nicht-Funktionale Anforderungen
 
