@@ -33,7 +33,7 @@ Folgende Anforderungen sind an das Projekttagebuch gestellt:
   - GUI Entwurf bei Anforderungen ergänzen
 
 - Spielablauf erster Entwurf GUI für Verständnis
-  ![Gui Draft](gui_draft_final.png)
+  ![Gui Draft](resources/gui_draft_final.png)
 
 - Projekt Setup in Entwicklungsumgebung geprüft via Github -> läuft
 

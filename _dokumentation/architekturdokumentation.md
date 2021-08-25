@@ -206,7 +206,7 @@ Aus der Aufgabenstellung gehen für die Umsetzung funktionale -, sowie nicht-fun
 
 Für die Formulierung der Use Cases (funktionale Anforderungen) halten wir uns an die Anforderungssatzschablone aus dem Buch Basiswissen Requirements Engineering von [Klaus Pohl und Chris Rupp, dpunkt.verlag 4. Auflage](https://dpunkt.de/produkt/basiswissen-requirements-engineering/) Seite 61.
 
-![Use Case Schablone](use_case_schablone.png)
+![Use Case Schablone](resources/use_case_schablone.png)
 
 Für das bessere Verständnis der Abläufe werden einzelne Anforderungen direkt mit UI Entwürfen unterstützt.
 
@@ -218,11 +218,15 @@ Für das bessere Verständnis der Abläufe werden einzelne Anforderungen direkt 
 >
 > Benutzer erhält eine Eingabebox für seinen Namen.
 
+![Login](resources/login.png)
+
 2. Jederzeit sollte das System dem Benutzer die Möglichkeit bieten, die Regeln einzusehen.
 
 > Abnahmekriterium:
 >
 > Ein Button, der immer immer im Bild ersichtlich ist, kann angeklickt werden um die Regeln via Modalfenster einzusehen.
+
+![Rules](resources/rules.png)
 
 3. Nachdem ein Benutzername gewählt wurde, kann der Benutzer ein Spiel erstellen.
 
@@ -236,11 +240,15 @@ Für das bessere Verständnis der Abläufe werden einzelne Anforderungen direkt 
 > - Auf Beitritt aller Spieler warten
 > - Spiel starten
 
+![Create game](resources/create_lobby.png)
+
 4. Nachdem ein Benutzername gewählt wurde, kann der Benutzer einem noch nicht gestarteten Spiel beitreten.
 
 > Abnahmekriterium:
 >
 > Der Benutzer hat eine Übersichtsliste von offenen Spielen und kann einem Spiel beitreten.
+
+![Game List](resources/game_list.png)
 
 5. Nachdem ein Einladungslink erhalten wurde, kann der Benutzer dem Spiel beitreten.
 
@@ -257,6 +265,8 @@ Für das bessere Verständnis der Abläufe werden einzelne Anforderungen direkt 
 > Abnahmekriterium:
 >
 > Die Spieler haben in der Lobby und während des Spiels eine Chatfunktion zur Verfügung.
+
+![Game and chat](resources/game_and_chat.png)
 
 ## 4.2 Nicht-Funktionale Anforderungen
 
