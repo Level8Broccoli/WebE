@@ -277,6 +277,27 @@ Für das bessere Verständnis der Abläufe werden einzelne Anforderungen direkt 
 >
 > Das System speichert die Teilnehmer der Runde (Id und Name), sowie der Gewinner in einer Datenbank ab.
 
+9. Falls ein Spieler während des Spiels aussteigt (freiwillig oder unfreiwillig), soll das System das Spiel nicht blockieren.
+
+> Abnahmekriterium:
+>
+> Durch Esetzen eines 30 Sekunden Timers und automatischem durchführen eines zufälligen Zuges, nach dessen Ablauf, kann dies gewährleistet werden.
+
+10. Wenn alle Spieler einverstanden sind, kann ein Spiel auch abgebrochen werden.
+
+> Abnahmekriterium:
+>
+> Möchte ein Spieler das Spiel verlassen, erscheint eine Votingbox für die Spieler.
+> Sind alle einverstanden, wird das Spiel beendet. In diesem Fall wird das Spiel als "Abgebrochen" in der Datenbank gespeichert.
+
+![Stop Voting](resources/stop_vote.png)
+
+11. Falls ein Fehler / Browsertab neuladen / Verbindungsproblem besteht soll das System dafür sorgen, dass der Benutzer noch angemeldet ist.
+
+> Abnahmekriterium:
+>
+> Was passiert, wenn man das Browsertab neu lädt / den Browser neu startet oder Verbindungsprobleme hat? Soll weiterhin eingeloggt sein (z.B. durch UUID vom Server, die beim Client im Session Storage gespeichert wird)
+
 ### 4.1.2 Optionale Erweiterungen
 
 - Mobile Version für Handy
@@ -294,6 +315,9 @@ Für das bessere Verständnis der Abläufe werden einzelne Anforderungen direkt 
    - Datensammler
 2. Das Spiel muss eine Client/Server Architektur haben
 3. Der Server und die Clients kommunizieren über ein Text-basiertes Protokoll. Das Protokoll muss lesbar sein.
+
+   > Das Protokoll wird in einem separaten Kapitel beschrieben.
+
 4. Die Server-Funktionalität ist wie folgt definiert:
    - Er verwaltet den Spielverlauf (überprüft und stellt sicher, dass alle Spielzüge regelkonform sind, erkennt das Ende des Spiels, zählt Punkte, etc.)
    - Wenn alle Spieler das Spiel verlassen, dann beendet der Server das Spiel.
