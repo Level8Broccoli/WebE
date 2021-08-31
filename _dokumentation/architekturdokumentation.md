@@ -328,3 +328,252 @@ Für das bessere Verständnis der Abläufe werden einzelne Anforderungen direkt 
 6. Sollten mehrere Sprachen gewünscht sein, sollte das Spiel den Entwicklern die einfache Möglichkeit bieten, Sprachübersetzungen hinzuzufügen.
 7. Das Spiel soll mindestens 3 verschiedene Levels haben.
 8. Das User Interface passt sich an verschiedene Bildschirmgrössen an.
+
+# 5. Server-Client Protokoll
+
+Im folgenden werden die Nachrichten aufgeführt, die zwischen Clients und Server ausgetauscht werden können.
+
+Grundsätzlich werden folgende Datenpunkte regelmässig verwendet:
+
+Datenpunkt | Beschreibung
+--- | ---
+`type` | Klassifizierung der Nachricht
+`data` | Objekt mit den Informationen benötigt für den Austausch
+`room` | UUID des Spielraums
+`timestamp` | Server-Zeitstempel
+`playerId` | um Client zu identifizieren
+`playerName` | wird vom GUI verwendet (z.B. Autor einer Chatnachricht, aktiver Spieler)
+`state` | beinhaltet den Spielstand, aus der Perspektive des jeweiligen Spielers _(verdeckte Karten werden nicht mitgesendet, die Anzahl der verdeckten Karten jedoch schon)_
+
+## 5.1 Chat-Nachrichten
+
+Sendet Nachrichten an den Server, welcher wiederum die Nachrichten den anderen Spielern im selben Raum weiterleitet.
+
+### 5.1.1 Spieler sendet Chat-Nachricht an Server
+
+Sender | Empfänger | Typ
+--- | --- | ---
+Client | Server | `chat`
+
+### Body
+
+```json
+{
+   "type": "chat",
+   "data": {
+      "room": "[roomId]",
+      "playerName": "[playerName]",
+      "playerId": "[playerId]",
+      "message": "[chatMessage]"
+   }
+}
+```
+
+### 5.1.2 Server broadcastet Chat-Nachricht an alle Spieler in Spielraum
+
+Sender | Empfänger | Typ
+--- | --- | ---
+Server | Client | `chat`
+
+### Body
+
+```json
+{
+   "type": "chat",
+   "data": {
+      "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+      "playerName": "[playerName]",
+      "playerId": "[playerId]",
+      "message": "[chatMessage]"
+   }
+}
+```
+
+## 5.2 Spiel starten
+
+Der Ersteller des Spiels kann das Spiel starten, sobald die minimale Spieleranzahl erreicht wurde.
+
+### 5.2.1 Spieler sendet Server Bitte um Start des Spiels
+
+Sender | Empfänger | Typ
+--- | --- | ---
+Client | Server | `gameStart`
+
+### Body
+
+```json
+{
+   "type": "gameStart",
+   "data": {
+      "room": "[roomId]",
+      "playerName": "[playerName]",
+      "playerId": "[playerId]"
+   }
+}
+```
+
+### 5.2.2 Server broadcastet initialen Spielstand an alle Spieler im Raum
+
+Sender | Empfänger | Typ
+--- | --- | ---
+Server | Client | `gameStart`
+
+### Body
+
+```json
+{
+   "type": "gameStart",
+   "data": {
+      "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+      "state": {
+         // aktueller Spielstand inkl.
+         // * playerId des aktiven Spielers
+         // * Karten auf dem Spieltisch
+         // * Karten auf der Hand des Spielers, der die Anfrage gesendet hat
+         // * Liste von erlaubten Spielzügen, falls der aktive Spieler die Anfrage gesendet hat
+         // * Protokoll aller vergangenen Spielzügen
+      }
+   }
+}
+```
+
+## 5.3 Spielstand
+
+Gibt dem Client die Möglichkeit den aktuellen Spielstand abzufragen, um das korrekte GUI anzuzeigen. Wird u.a. verwendet, wenn ein Spieler den Browser neulädt.
+
+### 5.3.1 Spieler sendet Server Bitte um aktuellen Spielstand
+
+Sender | Empfänger | Typ
+--- | --- | ---
+Client | Server | `gameState`
+
+### Body
+
+```json
+{
+   "type": "gameState",
+   "data": {
+      "room": "[roomId]",
+      "playerName": "[playerName]",
+      "playerId": "[playerId]"
+   }
+}
+```
+
+### 5.3.2 Server sendet aktuellen Spielstand an Spieler
+
+Sender | Empfänger | Typ
+--- | --- | ---
+Server | Client | `gameState`
+
+### Body
+
+```json
+{
+   "type": "gameState",
+   "data": {
+      "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+      "state": {
+         // aktueller Spielstand inkl.
+         // * playerId des aktiven Spielers
+         // * Karten auf dem Spieltisch
+         // * Karten auf der Hand des Spielers, der die Anfrage gesendet hat
+         // * Liste von erlaubten Spielzügen, falls der aktive Spieler die Anfrage gesendet hat
+         // * Protokoll aller vergangenen Spielzügen
+      }
+   }
+}
+```
+
+## 5.4 Spielzug
+
+Der aktive Spieler kann einen Spielzug durchführen. Falls dieser valide ist, erhalten alle Spieler im Raum einen aktualisierten Spielstand.
+
+### 5.4.1 Spieler sendet einen Spielzug
+
+Sender | Empfänger | Typ
+--- | --- | ---
+Client | Server | `gameMove`
+
+### Body
+
+```json
+{
+   "type": "gameMove",
+   "data": {
+      "room": "[roomId]",
+      "playerName": "[playerName]",
+      "playerId": "[playerId]",
+      "move": "[move]"
+   }
+}
+```
+
+### 5.4.2 Server broadcastet aktuellen Spielstand an alle Spieler im Raum
+
+Sender | Empfänger | Typ
+--- | --- | ---
+Server | Client | `gameMove`
+
+### Body
+
+```json
+{
+   "type": "gameMove",
+   "data": {
+      "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+      "state": {
+         // aktueller Spielstand inkl.
+         // * playerId des aktiven Spielers
+         // * Karten auf dem Spieltisch
+         // * Karten auf der Hand des Spielers, der die Anfrage gesendet hat
+         // * Liste von erlaubten Spielzügen, falls der aktive Spieler die Anfrage gesendet hat
+         // * Protokoll aller vergangenen Spielzügen
+      }
+   }
+}
+```
+
+## 5.5 Spiel abbrechen
+
+Jeder Spieler kann die restlichen Spieler um ein Spielabbruch bitten. Sollte innert festgelegter Frist kein anderer Spieler dem Abbruch widersprechen, wird das Spiel abgebrochen.
+
+### 5.5.1 Spieler sendet Anfrage um Spielabbruch bzw. Mitspieler bestätigen Abbruch oder widersprechen Abbruch
+
+Sender | Empfänger | Typ
+--- | --- | ---
+Client | Server | `gameAbort`
+
+### Body
+
+```json
+{
+   "type": "gameAbort",
+   "data": {
+      "room": "[roomId]",
+      "playerName": "[playerName]",
+      "playerId": "[playerId]",
+      "wantsToAbort": [true|false]
+   }
+}
+```
+
+### 5.5.2 Server broadcastet Anfrage an alle Spieler im Raum
+
+Sender | Empfänger | Typ
+--- | --- | ---
+Server | Client | `gameAbort`
+
+### Body
+
+```json
+{
+   "type": "gameAbort",
+   "data": {
+      "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+      "playerName": "[playerName]",
+      "playerId": "[playerId]",
+      "wantsToAbort": [true|false]
+   }
+}
+```
