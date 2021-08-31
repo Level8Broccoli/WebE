@@ -111,7 +111,7 @@ Die folgende Tabelle stellt die Stakeholder von unserem Projekt und ihre jeweili
 | Dokumentation         | Die Dokumentation des Projektes, sowie das Tagebuch wird in Markdown direkt im Repository geführt.                                     |
 | Kommunikation         | Whatsapp, Telefon, 1x monatlich persönlich in der Schule                                                                               |
 | Zeitplan              | Beginn der Entwicklung August 2021, danach Erarbeitung der Meilensteine                                                                |
-| Vorgehensmodel        | Entwicklung iterativ und inkrementell. Zur Dokumentation der Architektur wird die Gliederung an das deutsche arc42-Template angelehnt. |
+| Vorgehensmodel        | Entwicklung iterativ und inkrementell.                                                                                                 |
 | Entwicklungswerkzeuge | Erstellung des Quelltextes erfolgt mit Visual Studio Code. Die Bereitstellung der lauffähigen Version wird mit Docker realisiert.      |
 | Versionsverwaltung    | Als Versionsverwaltung wird Git und die Plattform [github.com](https://github.com/Level8Broccoli/WebE/) verwendet.                     |
 
