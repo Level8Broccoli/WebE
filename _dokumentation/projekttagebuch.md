@@ -17,6 +17,27 @@ Folgende Anforderungen sind an das Projekttagebuch gestellt:
 > - Auch zum Projekttagebuch werden keine Vorgaben zur Umsetzung gemacht. Dies kann
 >   ebenfalls innerhalb der Gruppe festgelegt werden.
 
+## Sitzung 01.09.2021
+
+- Anforderungen überarbeitet
+- Protokollentwurf besprochen und diskutiert
+
+  - Es wird eine reine Websockets angestrebt
+  - Ein neuer Raum wird erst gebroadcastet, wenn alle Regeln gesetzt sind und der Button "Create" betätigt wird. In der Lobby können die Regeln nicht mehr angepasst werden.
+
+- Client Server Authetifizierung wird mit Spieler ID und Secret realisiert.
+
+  - Server prüft bei jeder Anfrage, ob Secret stimmt.
+
+- Abgaben werden via Github Releases durchgeführt.
+
+- Nächste Schritte:
+
+  - Oliver: Abgabe durchführen
+  - Thierry: keine
+
+- Bisherige Probleme / Verzögerungen: _Keine_
+
 ## Sitzung 24.08.2021
 
 - Anforderungen besprochen
