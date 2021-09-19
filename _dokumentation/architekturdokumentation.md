@@ -285,7 +285,7 @@ _Voraussetzung: Player muss in einem (von sich selbst) erstellten Spiel sein._
 
 - [Client] Player klickt auf "Spiel abbrechen" Button
 - [Client] Nachricht (type: deleteGame) an Server 
-- [Server] Validation (playerId + Secret) -> Errorfeedback
+- [Server] Validation (playerId + Secret + roomId, playerId muss Spielraum-Ersteller sein) -> Errorfeedback
 - [Server] Game in ServerState entfernen
 - [Server] Nachricht (type: deleteGame) an alle Clients
 - [Client] Aktualisierung der Gameübersicht, falls Player noch keinem Spiel beigetreten ist bwz. dem eben gelöschten Spiel beigetreten war
@@ -298,6 +298,17 @@ _Voraussetzung: Player muss in einem (von sich selbst) erstellten Spiel sein._
 
 ![Game List](resources/game_list.png)
 
+#### Ablauf
+
+- [Client] Player klickt auf "Spiel beitreten" Button
+- [Client] Validation (Spielraum hat noch Plätze frei) -> Errorfeedback
+- [Client] Nachricht (type: joinGame) an Server 
+- [Server] Validation (playerId + Secret, Spielraum hat noch Plätze frei) -> Errorfeedback
+- [Server] PlayerId in ServerState -> Game als Spieler hinzufügen
+- [Server] Nachricht (type: joinGame) an alle Clients
+- [Client] Aktualisierung der Gameübersicht, falls Player noch keinem Spiel beigetreten ist
+- [Client] Aktualisierung des GUI, beim Player, der dem Spiel beigetreten ist
+
 5. In einer Spiellobby und während dem Spiel muss das System den Spielern eine Chatfunktion zur Verfügung stellen.
 
 > Abnahmekriterium:
@@ -307,11 +318,26 @@ _Voraussetzung: Player muss in einem (von sich selbst) erstellten Spiel sein._
 
 ![Game and chat](resources/game_and_chat.png)
 
+#### Ablauf
+
+- [Client] Player schreibt Nachricht
+- [Client] Validation (nicht leer) -> Errorfeedback
+- [Client] Nachricht (type: chat) an Server 
+- [Server] Validation (playerId + Secret + roomId, nicht leer) -> Errorfeedback
+- [Server] PlayerId in ServerState -> Game als Spieler hinzufügen
+- [Server] Nachricht (type: chat) an alle Clients
+- [Client] Aktualisierung der Gameübersicht, falls Player noch keinem Spiel beigetreten ist
+- [Client] Aktualisierung des GUI, beim Player, der dem Spiel beigetreten ist
+
 6. Nachdem das Spiel gestartet ist, bietet das System den Spielern die Möglichkeit das Spiel zu spielen.
 
 > Abnahmekriterium:
 >
 > Die Spieler der Lobby können ein Spiel anhand des unter Kapitel 3 beschriebenen Ablaufs spielen.
+
+#### Ablauf
+
+- `TBD`
 
 7. Nach Spielende soll das System Daten speichern.
 
@@ -319,11 +345,19 @@ _Voraussetzung: Player muss in einem (von sich selbst) erstellten Spiel sein._
 >
 > Das System speichert die Teilnehmer der Runde (ID und Name), sowie den Gewinner in einer Datenbank ab.
 
+#### Ablauf
+
+- `TBD`
+
 8. Falls ein Spieler während des Spiels aussteigt (freiwillig oder unfreiwillig), soll das System das Spiel nicht blockieren.
 
 > Abnahmekriterium:
 >
 > Wenn ein aktiver Spieler nicht innerhalb von 30 Sekunden einen gültigen Zug durchführt, wird zufällig ein gültiger Spielzug ausgewählt und ausgeführt.
+
+#### Ablauf
+
+- `TBD`
 
 9. Wenn alle Spieler einverstanden sind, kann ein Spiel auch abgebrochen werden.
 
@@ -334,17 +368,45 @@ _Voraussetzung: Player muss in einem (von sich selbst) erstellten Spiel sein._
 
 ![Stop Voting](resources/stop_vote.png)
 
+#### Ablauf
+
+- `TBD`
+
 10. Falls ein Fehler / Browsertab neuladen / Verbindungsproblem besteht, soll das System dafür sorgen, dass der Benutzer weiterspielen kann.
 
 > Abnahmekriterium:
 >
 > Spieler ID und "Secret" werden wo möglich im Browser gespeichert und bei Neuladen der Webapplikation wird der aktuelle Spielstand geladen.
 
+#### Ablauf
+
+- [Client] Player lädt Browser neu
+- [Client] Zugangsdaten aus Session Storage laden
+
+##### Ablauf A: Player ist in einem Spielraum
+
+- [Client] Nachricht (type: gameState) an Server 
+- [Server] Validation (playerId + Secret + roomId) -> Errorfeedback
+- [Server] Nachricht (type: gameState) an Client
+- [Client] Aktualisierung des GUI
+
+##### Ablauf B: Player ist nicht in einem Spielraum
+
+- [Client] Nachricht (type: roomState) an Server 
+- [Server] Validation (playerId + Secret) -> Errorfeedback
+- [Server] Nachricht (type: roomState) an Client
+- [Client] Aktualisierung des GUI
+
 11. Jederzeit kann ein Benutzer zwischen Deutscher und Englischer Sprache wechseln.
 
 > Abnahmekriterium:
 >
 > Auf jeder Seite existiert ein Button, der die Sprache der Benutzeroberfläche wechselt.
+
+#### Ablauf
+
+- [Client] Player wählt andere Sprache aus
+- [Client] Aktualisierung der Sprache im User Interface
 
 ### 4.1.2 Optionale Erweiterungen
 
@@ -511,7 +573,8 @@ Client [1] | Server | `deleteGame`
    "data": {
       "playerName": "[playerName]",
       "playerId": "[playerId]",
-      "secret": "[secret]"
+      "secret": "[secret]",
+      *roomId": "[roomId]"
    }
 }
 ```
@@ -597,6 +660,7 @@ Client [1] | Server | `chat`
       "playerName": "[playerName]",
       "playerId": "[playerId]",
       "secret": "[secret]",
+      *roomId": "[roomId]",
       "message": "[chatMessage]"
    }
 }
@@ -640,7 +704,8 @@ Client [1] | Server | `gameStart`
    "data": {
       "playerName": "[playerName]",
       "playerId": "[playerId]",
-      "secret": "[secret]"
+      "secret": "[secret]",
+      *roomId": "[roomId]"
    }
 }
 ```
@@ -681,7 +746,8 @@ Client [1] | Server | `gameState`
    "data": {
       "playerName": "[playerName]",
       "playerId": "[playerId]",
-      "secret": "[secret]"
+      "secret": "[secret]",
+      *roomId": "[roomId]"
    }
 }
 ```
@@ -723,6 +789,7 @@ Client [1] | Server | `gameMove`
       "playerName": "[playerName]",
       "playerId": "[playerId]",
       "secret": "[secret]",
+      *roomId": "[roomId]",
       "move": "[move]"
    }
 }
@@ -765,6 +832,7 @@ Client [1] | Server | `gameAbort`
       "playerName": "[playerName]",
       "playerId": "[playerId]",
       "secret": "[secret]",
+      *roomId": "[roomId]",
       "wantsToAbort": [true|false]
    }
 }
