@@ -17,18 +17,34 @@ Folgende Anforderungen sind an das Projekttagebuch gestellt:
 > - Auch zum Projekttagebuch werden keine Vorgaben zur Umsetzung gemacht. Dies kann
 >   ebenfalls innerhalb der Gruppe festgelegt werden.
 
+## Sitzung 19.09.2021
+
+- Serverdiagramm erstellt
+- Abläufe der Sequenzen besprochen und schriftlich für die einzelnen Anforderungen festgehalten.
+- Spielbezogene Abläufe sind noch nicht festgehalten.
+- Erster Gehversuch mit Socket.io (Problem: Es kann nicht verbunden werden)
+
+- Nächste Schritte:
+
+  - Beide: Socket.io Problem lösen
+  - Oliver: Diagramm Serverübersicht schöner gestalten.
+
+- Bisherige Probleme / Verzögerungen: _Keine_
+
 ## Sitzung 16.09.2021
 
 - Neue Tasks für Iteration 2 besprochen und erstellt
 - Spezifikation Netzwerkprotokoll erster Entwurf ist schon erledigt
 - GUI Entwurf ebenfalls erledigt.
 - MVP definiert für Abgabe:
-  - Anmelden 
+
+  - Anmelden
   - Spielliste einsehen
   - Lobby erstellen und schliessen (nur mit Chatfunktion)
   - Lobby beitreten
 
 - Nächste Schritte:
+
   - Beide: Termin am 19.09.2021 15:00 für Server Entwurf und nächste Schritte besprechen
 
 - Bisherige Probleme / Verzögerungen: _Keine_
