@@ -222,6 +222,20 @@ Für das bessere Verständnis der Abläufe werden einzelne Anforderungen direkt 
 
 ![Login](resources/login.png)
 
+#### Ablauf
+
+- [Client] Usereingabe
+- [Client] Validation (nicht leer, gültige UTF-8 Zeichen) -> Errorfeedback
+- [Client] Verbindungsaufbau mit Server
+- [Client] Nachricht (type: registerPlayer) an Server
+- [Server] Validation (nicht leer, gültige UTF-8 Zeichen) -> Errorfeedback
+- [Server] PlayerId und Secret generieren
+- [Server] Player in ServerState anlegen
+- [Server] Liste aller aktiven Spielräume abfragen
+- [Server] Nachricht (type: registerPlayer) an Client
+- [Client] Zugagnsdaten in Session Storage speichern
+- [Client] Anzeige aller aktiven Spielräume
+
 2. Jederzeit sollte das System dem Benutzer die Möglichkeit bieten, die Regeln einzusehen.
 
 > Abnahmekriterium:
@@ -229,6 +243,13 @@ Für das bessere Verständnis der Abläufe werden einzelne Anforderungen direkt 
 > Ein Button, der immer immer im Bild ersichtlich ist, kann angeklickt werden um die Regeln via Modalfenster einzusehen.
 
 ![Rules](resources/rules.png)
+
+#### Ablauf
+
+- [Client] Player klickt auf "Regeln" Button
+- [Client] Spielregeln werden angezeigt
+- [Client] Player klickt auf "Schliessen" Button
+- [Client] Spielregeln werden nicht mehr angezeigt
 
 3. Nachdem ein Benutzername gewählt wurde, kann der Benutzer ein Spiel erstellen.
 
@@ -242,8 +263,32 @@ Für das bessere Verständnis der Abläufe werden einzelne Anforderungen direkt 
 > - Spiel starten
 > - Spiel abbrechen
 
-
 ![Create game](resources/create_lobby.png)
+
+#### Ablauf: Spiel erstellen
+
+- [Client] Player klickt auf "Neues Spiel" Button
+- [Client] Spielraumkonfiguration öffnen
+- [Client] Player konfiguriert Spielraum
+- [Client] Validation (keine ungültigen Regeln) -> Errorfeedback
+- [Client] Player klickt auf "Spiel erstellen" Button
+- [Client] Nachricht (type: createGame) an Server 
+- [Server] Validation (playerId + Secret, keine ungültigen Regeln) -> Errorfeedback
+- [Server] RoomId generieren
+- [Server] Game in ServerState anlegen (Konfiguration, Ersteller)
+- [Server] Nachricht (type: createGame) an alle Clients
+- [Client] Aktualisierung der Gameübersicht, falls Player noch keinem Spiel beigetreten ist
+
+#### Ablauf: Spiel abbrechen
+
+_Voraussetzung: Player muss in einem (von sich selbst) erstellten Spiel sein._
+
+- [Client] Player klickt auf "Spiel abbrechen" Button
+- [Client] Nachricht (type: deleteGame) an Server 
+- [Server] Validation (playerId + Secret) -> Errorfeedback
+- [Server] Game in ServerState entfernen
+- [Server] Nachricht (type: deleteGame) an alle Clients
+- [Client] Aktualisierung der Gameübersicht, falls Player noch keinem Spiel beigetreten ist bwz. dem eben gelöschten Spiel beigetreten war
 
 4. Nachdem ein Benutzername gewählt wurde, kann der Benutzer einem noch nicht gestarteten Spiel beitreten.
 
@@ -741,6 +786,47 @@ Server | Client [n] | `gameAbort`
       "playerName": "[playerName]",
       "playerId": "[playerId]",
       "wantsToAbort": [true|false]
+   }
+}
+```
+
+## 5.11 Spielraumübersicht
+
+Gibt dem Client die Möglichkeit den offnen Spielräume abzufragen, um das korrekte GUI anzuzeigen. Wird u.a. verwendet, wenn ein Spieler den Browser neulädt oder ein Spiel verlässt.
+
+### 5.11.1 Spieler sendet Server Bitte um aktuelle Spielraumübersicht
+
+Sender | Empfänger | Typ
+--- | --- | ---
+Client [1] | Server | `roomState`
+
+### Body
+
+```json
+{
+   "type": "roomState",
+   "data": {
+      "playerName": "[playerName]",
+      "playerId": "[playerId]",
+      "secret": "[secret]"
+   }
+}
+```
+
+### 5.11.2 Server sendet aktuelle Spielraumübersicht an Spieler
+
+Sender | Empfänger | Typ
+--- | --- | ---
+Server | Client [1] | `roomState`
+
+### Body
+
+```json
+{
+   "type": "roomState",
+   "data": {
+      "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+      "rooms": [ /* Liste aller aktiven Spielräume, deren Konfiguration und Anzahl besetzter Plätze */ ]
    }
 }
 ```
