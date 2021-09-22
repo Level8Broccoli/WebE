@@ -9,4 +9,12 @@ export class ServerState {
     this._players = [];
     this._rooms = [];
   }
+
+  registerPlayer(player: Player) {
+    this._players.push(player);
+  }
+
+  public get rooms(): Room[] {
+    return this._rooms;
+  }
 }
