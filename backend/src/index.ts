@@ -35,6 +35,19 @@ io.on("connection", (socket) => {
       });
   });
 
+  socket.on("createGame", (request) => {
+    api
+      .createGame(request)
+      .then((response) => socket.emit("createGame", response))
+      .catch((error) => {
+        const response = {
+          status: ErrorCode.ERROR,
+          message: error.message,
+        };
+        socket.emit("registerPlayer", response);
+      });
+  });
+
   socket.on("disconnect", () => {
     console.log(`Disconnected ${socket.id}`);
   });

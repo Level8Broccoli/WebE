@@ -3,6 +3,7 @@ import { ServerState } from "../server/ServerState";
 import { ITokenGenerator } from "../util/ITokenGenerator";
 import moment from "moment";
 import { ErrorCode } from "./ErrorCode";
+import { Room } from "../server/Room";
 
 const DATE_TIME_FORMAT = "YYYY-MM-DDThh:mm:ss";
 
@@ -42,6 +43,39 @@ export class Api {
         timestamp: moment(new Date(), DATE_TIME_FORMAT),
         player: player,
         rooms: rooms,
+      };
+
+      resolve(response);
+    });
+  }
+
+  createGame(request: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const json = JSON.parse(request);
+
+      // [Server] Validation (playerId + Secret, keine ungültigen Regeln) -> Errorfeedback
+      if (!this._serverState.playerExist(json.player.id, json.player.secret)) {
+        throw new Error("Id / secret combination not valid.");
+      }
+
+      // TBD: Regeln überprüfen
+
+      // [Server] RoomId generieren
+      const id = this._tokenGenerator.getUUID();
+
+      // [Server] Game in ServerState anlegen (Konfiguration, Ersteller)
+      const room = new Room(id, json.player.id);
+      this._serverState.createGame(room);
+
+      // [Server] Nachricht (type: createGame) an alle Clients
+      const response = {
+        status: ErrorCode.OK,
+        timestamp: moment(new Date(), DATE_TIME_FORMAT),
+        player: {
+          name: json.player.name,
+          id: json.player.id,
+        },
+        room: room,
       };
 
       resolve(response);

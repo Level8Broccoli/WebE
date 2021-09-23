@@ -14,7 +14,19 @@ export class ServerState {
     this._players.push(player);
   }
 
+  createGame(room: Room) {
+    this._rooms.push(room);
+  }
+
   public get rooms(): Room[] {
     return this._rooms;
+  }
+
+  playerExist(id: string, secret: string): boolean {
+    const filtered = this._players.filter(
+      (p) => p.id === id && p.secret === secret
+    );
+
+    return filtered.length !== 0 ? true : false;
   }
 }
