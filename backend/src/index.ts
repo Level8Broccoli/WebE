@@ -35,6 +35,7 @@ io.on("connection", (socket) => {
       });
   });
 
+  // Create new game endpoint
   socket.on("createGame", (request) => {
     api
       .createGame(request)
