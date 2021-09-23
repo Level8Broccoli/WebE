@@ -45,7 +45,7 @@ io.on("connection", (socket) => {
           status: ErrorCode.ERROR,
           message: error.message,
         };
-        socket.emit("registerPlayer", response);
+        socket.emit("createGame", response);
       });
   });
 
