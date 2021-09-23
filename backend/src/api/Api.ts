@@ -72,8 +72,8 @@ export class Api {
         status: ErrorCode.OK,
         timestamp: moment(new Date(), DATE_TIME_FORMAT),
         player: {
-          name: json.player.name,
           id: json.player.id,
+          name: json.player.name,
         },
         room: room,
       };
