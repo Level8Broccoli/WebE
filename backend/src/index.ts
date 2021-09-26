@@ -22,6 +22,18 @@ io.on("connection", (socket) => {
 
   // Register new player endpoint
   socket.on("registerPlayer", (request: string) => {
+    // Simple Error Hacksolution (To be simplified)
+    try {
+      JSON.parse(request);
+    } catch (error) {
+      const response: ErrorResponse = {
+        status: ErrorCode.ERROR,
+        message: "You are dump and fucked something up :P",
+      };
+      socket.emit("registerPlayer", response);
+      return;
+    }
+
     api
       .registerPlayer(JSON.parse(request))
       .then((response) => {
@@ -38,6 +50,18 @@ io.on("connection", (socket) => {
 
   // Create new game endpoint
   socket.on("createGame", (request) => {
+    // Simple Error Hacksolution (To be simplified)
+    try {
+      JSON.parse(request);
+    } catch (error) {
+      const response: ErrorResponse = {
+        status: ErrorCode.ERROR,
+        message: "You are dump and fucked something up :P",
+      };
+      socket.emit("createGame", response);
+      return;
+    }
+
     api
       .createGame(JSON.parse(request))
       .then((response) => {
@@ -55,6 +79,18 @@ io.on("connection", (socket) => {
 
   // Delete created game endpoint
   socket.on("deleteGame", (request) => {
+    // Simple Error Hacksolution (To be simplified)
+    try {
+      JSON.parse(request);
+    } catch (error) {
+      const response: ErrorResponse = {
+        status: ErrorCode.ERROR,
+        message: "You are dump and fucked something up :P",
+      };
+      socket.emit("deleteGame", response);
+      return;
+    }
+
     api
       .deleteGame(JSON.parse(request))
       .then((response) => {
@@ -72,6 +108,18 @@ io.on("connection", (socket) => {
 
   // Join game endpoint
   socket.on("joinGame", (request) => {
+    // Simple Error Hacksolution (To be simplified)
+    try {
+      JSON.parse(request);
+    } catch (error) {
+      const response: ErrorResponse = {
+        status: ErrorCode.ERROR,
+        message: "You are dump and fucked something up :P",
+      };
+      socket.emit("joinGame", response);
+      return;
+    }
+
     api
       .joinGame(JSON.parse(request))
       .then((response) => {
