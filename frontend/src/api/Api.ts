@@ -1,7 +1,10 @@
 import { io, Socket } from "socket.io-client";
-import { CreateGameRequest, DeleteGameRequest, JoinGameRequest, LeaveGameRequest, RegisterPlayerRequest } from "./RequestTypes";
+import { CreateGameRequest, DeleteGameRequest, JoinGameRequest, LeaveGameRequest, PrivatePlayer, RegisterPlayerRequest, SimpleGame } from "./RequestTypes";
+import { CreateGameResponse, DeleteGameResponse, ErrorCode, ErrorResponse, JoinGameResponse, LeaveGameResponse, RegisterPlayerResponse } from "./ResponseTypes";
 
 let socket: null | Socket = null;
+const player: PrivatePlayer = { id: "", name: "", secret: "" }
+const game: SimpleGame = { id: "" };
 
 export function initApi() {
     socket = io(import.meta.env.VITE_WS_SERVER || "localhost:3000");
@@ -14,23 +17,48 @@ export function initApi() {
         console.log("disconnected", reason);
     });
 
-    socket.on("registerPlayer", (data: unknown) => {
-        console.log("registerPlayer", data);
+    socket.on("registerPlayer", (res: RegisterPlayerResponse | ErrorResponse) => {
+        if ("message" in res) {
+            console.error(res.message);
+        } else {
+            console.log("registerPlayer", res);
+            player.id = res.player.id;
+            player.name = res.player.name;
+            player.secret = res.player.secret;
+        }
     });
 
-    socket.on("createGame", (data: unknown) => {
-        console.log("createGame", data);
-    });
-    socket.on("deleteGame", (data: unknown) => {
-        console.log("deleteGame", data);
-    });
-
-    socket.on("joinGame", (data: unknown) => {
-        console.log("joinGame", data);
+    socket.on("createGame", (res: CreateGameResponse | ErrorResponse) => {
+        if ("message" in res) {
+            console.error(res.message);
+        } else {
+            console.log("createGame", res);
+            game.id = res.game.id;
+        }
     });
 
-    socket.on("leaveGame", (data: unknown) => {
-        console.log("leaveGame", data);
+    socket.on("deleteGame", (res: DeleteGameResponse | ErrorResponse) => {
+        if ("message" in res) {
+            console.error(res.message);
+        } else {
+            console.log("deleteGame", res);
+        }
+    });
+
+    socket.on("joinGame", (res: JoinGameResponse | ErrorResponse) => {
+        if ("message" in res) {
+            console.error(res.message);
+        } else {
+            console.log("joinGame", res);
+        }
+    });
+
+    socket.on("leaveGame", (res: LeaveGameResponse | ErrorResponse) => {
+        if ("message" in res) {
+            console.error(res.message);
+        } else {
+            console.log("leaveGame", res);
+        }
     });
 }
 
@@ -39,49 +67,34 @@ export function registerPlayer(playerName: string) {
     socket?.emit("registerPlayer", request);
 }
 
-export function createGame() {
+export function createGame(maxPlayerCountForGame: number) {
     const request: CreateGameRequest = {
-        player: {
-            id: "number1",
-            name: "Tony",
-            secret: "top-secret"
-        }, gameConfig: { maxPlayerCountForGame: 1 }
+        player,
+        gameConfig: { maxPlayerCountForGame }
     };
     socket?.emit("createGame", request);
 }
 
 export function deleteGame() {
     const request: DeleteGameRequest = {
-        player: {
-            id: "number1",
-            name: "Tony",
-            secret: "top-secret"
-        },
-        game: { id: "gameId" }
+        player,
+        game
     };
     socket?.emit("deleteGame", request);
 }
 
 export function joinGame() {
     const request: JoinGameRequest = {
-        player: {
-            id: "number1",
-            name: "Tony",
-            secret: "top-secret"
-        },
-        game: { id: "gameId" }
+        player,
+        game
     };
     socket?.emit("joinGame", request);
 }
 
 export function leaveGame() {
     const request: LeaveGameRequest = {
-        player: {
-            id: "number1",
-            name: "Tony",
-            secret: "top-secret"
-        },
-        game: { id: "gameId" }
+        player,
+        game
     };
     socket?.emit("leaveGame", request);
 }
