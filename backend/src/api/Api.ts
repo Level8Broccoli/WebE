@@ -1,6 +1,6 @@
 import { PrivatePlayer } from "../model/Player";
 import { ServerState } from "../model/ServerState";
-import moment from "moment";
+import { DateTime } from "luxon";
 import { ErrorCode } from "./ErrorCode";
 import { getSecret, getUUID } from "../services/TokenGeneratorService";
 import {
@@ -42,13 +42,13 @@ export class Api {
     request: RegisterPlayerRequest
   ): Promise<RegisterPlayerResponse> {
     return new Promise((resolve, reject) => {
-      // [Server] Validation (nicht leer, gültige UTF-8 Zeichen) -> Errorfeedback
+      // [Server] Validation (not empty, valid UTF-8 Symbols) -> Errorfeedback
       if (request.playerName.length === 0 || request.playerName === "") {
         throw new Error("Player name is empty.");
       }
 
-      // [Server] PlayerId und Secret generieren
-      // [Server] Player in ServerState anlegen
+      // [Server] PlayerId and secret generation
+      // [Server] Player add to server state
       const player: PrivatePlayer = {
         id: getUUID(),
         name: request.playerName,
@@ -56,11 +56,11 @@ export class Api {
       };
       registerPlayer(this._serverState, player);
 
-      // [Server] Liste aller aktiven Spielräume abfragen
-      // [Server] Response senden
+      // [Server] Get all games
+      // [Server] and send response of type: registerPlayer
       const response = {
         status: ErrorCode.OK,
-        timestamp: moment(new Date(), DATE_TIME_FORMAT),
+        timestamp: DateTime.now(),
         player: player,
         games: this._serverState.games,
       };
@@ -71,18 +71,18 @@ export class Api {
 
   createGame(request: CreateGameRequest): Promise<CreateGameResponse> {
     return new Promise((resolve, reject) => {
-      // [Server] Validation (playerId + Secret, keine ungültigen Regeln) -> Errorfeedback
+      // [Server] Validation (playerId + secret, no invalid rules) -> Errorfeedback
       if (!playerExists(this._serverState, request.player)) {
         throw new Error("Id / secret combination not valid.");
       }
 
-      // TBD: Regeln überprüfen
+      // TBD: Check rules
       if (request.gameConfig === undefined) {
         throw new Error("No game config set.");
       }
 
-      // [Server] gameId generieren
-      // [Server] Game in ServerState anlegen (Konfiguration, Ersteller)
+      // [Server] Generate gameId
+      // [Server] Add game to server state
       const game = {
         id: getUUID(),
         creatorId: request.player.id,
@@ -92,10 +92,10 @@ export class Api {
 
       createGame(this._serverState, game);
 
-      // [Server] Nachricht (type: createGame) an alle Clients
+      // [Server] Send response of type: createGame to all clients
       const response = {
         status: ErrorCode.OK,
-        timestamp: moment(new Date(), DATE_TIME_FORMAT),
+        timestamp: DateTime.now(),
         player: {
           id: request.player.id,
           name: request.player.name,
@@ -109,7 +109,7 @@ export class Api {
 
   deleteGame(request: DeleteGameRequest): Promise<DeleteGameResponse> {
     return new Promise((resolve, reject) => {
-      // [Server] Validation (playerId + Secret + gameId, playerId muss Spielraum-Ersteller sein) -> Errorfeedback
+      // [Server] Validation (playerId + Secret + gameId, playerId must be equal to creatorId of game) -> Errorfeedback
       if (!playerExists(this._serverState, request.player)) {
         throw new Error("Id / secret combination not valid.");
       }
@@ -120,13 +120,13 @@ export class Api {
         );
       }
 
-      // [Server] Game in ServerState entfernen
+      // [Server] Remove game from server state
       deleteGame(this._serverState, request.game);
 
-      // [Server] Nachricht (type: deleteGame) an alle Clients
+      // [Server] Send response of type: deleteGame to all clients
       const response = {
         status: ErrorCode.OK,
-        timestamp: moment(new Date(), DATE_TIME_FORMAT),
+        timestamp: DateTime.now(),
         game: {
           id: request.game.id,
         },
@@ -138,7 +138,7 @@ export class Api {
 
   joinGame(request: JoinGameRequest): Promise<JoinGameResponse> {
     return new Promise((resolve, reject) => {
-      // [Server] Validation (playerId + Secret, Spielraum hat noch Plätze frei) -> Errorfeedback
+      // [Server] Validation (playerId + Secret, is there a free place in the game room?) -> Errorfeedback
       if (!playerExists(this._serverState, request.player)) {
         throw new Error("Id / secret combination not valid.");
       }
@@ -153,13 +153,13 @@ export class Api {
         );
       }
 
-      // [Server] PlayerId in ServerState -> Game als Spieler hinzufügen
+      // [Server] Add playerId to the requested game in server state
       joinGame(this._serverState, request.player, request.game);
 
-      // [Server] Nachricht (type: joinGame) an alle Clients
+      // [Server] Send response of type: joinGame to all clients
       const response = {
         status: ErrorCode.OK,
-        timestamp: moment(new Date(), DATE_TIME_FORMAT),
+        timestamp: DateTime.now(),
         player: {
           id: request.player.id,
           name: request.player.name,
@@ -180,13 +180,13 @@ export class Api {
         throw new Error("Id / secret combination not valid.");
       }
 
-      // [Server] PlayerId in ServerState -> Game als Spieler entfernen
+      // [Server] Remove playerId in the requested game
       leaveGame(this._serverState, request.player, request.game);
 
-      // [Server] Nachricht (type: leaveGame) an alle Clients
+      // [Server] Send response of type: leaveGame to all clients
       const response = {
         status: ErrorCode.OK,
-        timestamp: moment(new Date(), DATE_TIME_FORMAT),
+        timestamp: DateTime.now(),
         player: {
           id: request.player.id,
           name: request.player.name,

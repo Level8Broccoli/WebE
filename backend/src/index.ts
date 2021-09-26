@@ -1,7 +1,13 @@
 import { Server } from "socket.io";
 import { Api } from "./api/Api";
 import { ErrorCode } from "./api/ErrorCode";
-import { CreateGameRequest, DeleteGameRequest, JoinGameRequest, LeaveGameRequest, RegisterPlayerRequest } from "./model/RequestTypes";
+import {
+  CreateGameRequest,
+  DeleteGameRequest,
+  JoinGameRequest,
+  LeaveGameRequest,
+  RegisterPlayerRequest,
+} from "./model/RequestTypes";
 import { ErrorResponse } from "./model/ResponseTypes";
 
 const PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
@@ -20,7 +26,6 @@ const io = new Server(PORT, {
 io.on("connection", (socket) => {
   console.log(`Connected ${socket.id}`);
 
-  // Register new player endpoint
   socket.on("registerPlayer", (request: RegisterPlayerRequest) => {
     api
       .registerPlayer(request)
@@ -36,13 +41,12 @@ io.on("connection", (socket) => {
       });
   });
 
-  // Create new game endpoint
   socket.on("createGame", (request: CreateGameRequest) => {
     api
       .createGame(request)
       .then((response) => {
         // Broadcast to all connected sockets
-        socket.emit("createGame", response);
+        io.emit("createGame", response);
       })
       .catch((error) => {
         const response: ErrorResponse = {
@@ -53,13 +57,12 @@ io.on("connection", (socket) => {
       });
   });
 
-  // Delete created game endpoint
   socket.on("deleteGame", (request: DeleteGameRequest) => {
     api
       .deleteGame(request)
       .then((response) => {
         // Broadcast to all connected sockets
-        socket.emit("deleteGame", response);
+        io.emit("deleteGame", response);
       })
       .catch((error) => {
         const response: ErrorResponse = {
@@ -70,12 +73,11 @@ io.on("connection", (socket) => {
       });
   });
 
-  // Join game endpoint
   socket.on("joinGame", (request: JoinGameRequest) => {
     api
       .joinGame(request)
       .then((response) => {
-        // Broadcast to all connected sockets
+        socket.join(response.game.id);
         io.emit("joinGame", response);
       })
       .catch((error) => {
@@ -87,13 +89,12 @@ io.on("connection", (socket) => {
       });
   });
 
-  // Leave game endpoint
   socket.on("leaveGame", (request: LeaveGameRequest) => {
     api
       .leaveGame(request)
       .then((response) => {
-        // Broadcast to all connected sockets
-        socket.emit("leaveGame", response);
+        socket.leave(response.game.id);
+        io.emit("leaveGame", response);
       })
       .catch((error) => {
         const response: ErrorResponse = {
