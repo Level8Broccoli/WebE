@@ -4,7 +4,7 @@ import { CreateGameRequest, DeleteGameRequest, JoinGameRequest, RegisterPlayerRe
 let socket: null | Socket = null;
 
 export function initApi() {
-    socket = io("ws://localhost:3000");
+    socket = io(import.meta.env.VITE_WS_SERVER || "localhost:3000");
 
     socket.on("connect", () => {
         console.log("connected", socket?.id);
