@@ -1,6 +1,6 @@
 import { Server } from "socket.io";
 import { Api } from "./api/Api";
-import { ErrorCode } from "./api/ErrorCode";
+import { StatusCode } from "./api/StatusCode";
 import {
   ChatRequest,
   CreateGameRequest,
@@ -35,7 +35,7 @@ io.on("connection", (socket) => {
       })
       .catch((error) => {
         const response: ErrorResponse = {
-          status: ErrorCode.ERROR,
+          status: StatusCode.ERROR,
           message: error.message,
         };
         socket.emit("registerPlayer", response);
@@ -51,7 +51,7 @@ io.on("connection", (socket) => {
       })
       .catch((error) => {
         const response: ErrorResponse = {
-          status: ErrorCode.ERROR,
+          status: StatusCode.ERROR,
           message: error.message,
         };
         socket.emit("createGame", response);
@@ -67,7 +67,7 @@ io.on("connection", (socket) => {
       })
       .catch((error) => {
         const response: ErrorResponse = {
-          status: ErrorCode.ERROR,
+          status: StatusCode.ERROR,
           message: error.message,
         };
         socket.emit("deleteGame", response);
@@ -83,7 +83,7 @@ io.on("connection", (socket) => {
       })
       .catch((error) => {
         const response: ErrorResponse = {
-          status: ErrorCode.ERROR,
+          status: StatusCode.ERROR,
           message: error.message,
         };
         socket.emit("joinGame", response);
@@ -99,7 +99,7 @@ io.on("connection", (socket) => {
       })
       .catch((error) => {
         const response: ErrorResponse = {
-          status: ErrorCode.ERROR,
+          status: StatusCode.ERROR,
           message: error.message,
         };
         socket.emit("leaveGame", response);
@@ -114,7 +114,7 @@ io.on("connection", (socket) => {
       })
       .catch((error) => {
         const response: ErrorResponse = {
-          status: ErrorCode.ERROR,
+          status: StatusCode.ERROR,
           message: error.message,
         };
         socket.emit("chat", response);

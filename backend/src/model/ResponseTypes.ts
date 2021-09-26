@@ -1,37 +1,37 @@
 import { DateTime } from "luxon";
-import { ErrorCode } from "../api/ErrorCode";
+import { StatusCode } from "../api/StatusCode";
 import { PublicPlayer, PrivatePlayer } from "./Player";
 import { Game, SimpleGame } from "./Game";
 
 export type RegisterPlayerResponse = {
-  status: ErrorCode;
+  status: StatusCode;
   timestamp: DateTime;
   player: PrivatePlayer;
   games: Game[];
 };
 
 export type CreateGameResponse = {
-  status: ErrorCode;
+  status: StatusCode;
   timestamp: DateTime;
   player: PublicPlayer;
   game: Game;
 };
 
 export type DeleteGameResponse = {
-  status: ErrorCode;
+  status: StatusCode;
   timestamp: DateTime;
   game: SimpleGame;
 };
 
 export type JoinGameResponse = {
-  status: ErrorCode;
+  status: StatusCode;
   timestamp: DateTime;
   player: PublicPlayer;
   game: SimpleGame;
 };
 
 export type LeaveGameResponse = {
-  status: ErrorCode;
+  status: StatusCode;
   timestamp: DateTime;
   player: PublicPlayer;
   game: SimpleGame;
@@ -44,6 +44,6 @@ export type ChatResponse = {
 };
 
 export type ErrorResponse = {
-  status: ErrorCode;
+  status: StatusCode;
   message: string;
 };

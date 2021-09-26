@@ -1,7 +1,7 @@
 import { PrivatePlayer } from "../model/Player";
 import { ServerState } from "../model/ServerState";
 import { DateTime } from "luxon";
-import { ErrorCode } from "./ErrorCode";
+import { StatusCode } from "./StatusCode";
 import { getSecret, getUUID } from "../services/TokenGeneratorService";
 import {
   ChatRequest,
@@ -63,7 +63,7 @@ export class Api {
       // [Server] Get all games
       // [Server] and send response of type: registerPlayer
       const response = {
-        status: ErrorCode.OK,
+        status: StatusCode.OK,
         timestamp: DateTime.now(),
         player: player,
         games: this._serverState.games,
@@ -99,7 +99,7 @@ export class Api {
 
       // [Server] Send response of type: createGame to all clients
       const response = {
-        status: ErrorCode.OK,
+        status: StatusCode.OK,
         timestamp: DateTime.now(),
         player: {
           id: request.player.id,
@@ -130,7 +130,7 @@ export class Api {
 
       // [Server] Send response of type: deleteGame to all clients
       const response = {
-        status: ErrorCode.OK,
+        status: StatusCode.OK,
         timestamp: DateTime.now(),
         game: {
           id: request.game.id,
@@ -163,7 +163,7 @@ export class Api {
 
       // [Server] Send response of type: joinGame to all clients
       const response = {
-        status: ErrorCode.OK,
+        status: StatusCode.OK,
         timestamp: DateTime.now(),
         player: {
           id: request.player.id,
@@ -190,7 +190,7 @@ export class Api {
 
       // [Server] Send response of type: leaveGame to all clients
       const response = {
-        status: ErrorCode.OK,
+        status: StatusCode.OK,
         timestamp: DateTime.now(),
         player: {
           id: request.player.id,
