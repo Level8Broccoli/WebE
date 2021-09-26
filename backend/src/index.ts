@@ -5,7 +5,7 @@ import { ServerState } from "./server/ServerState";
 import { ITokenGenerator } from "./util/ITokenGenerator";
 import { TokenGenerator } from "./util/TokenGenerator";
 
-const PORT: number = 3000;
+const PORT: number = process.env.PORT ? Number(process.env.PORT) : 3000;
 const serverState: ServerState = new ServerState();
 const tokenGenerator: ITokenGenerator = new TokenGenerator();
 const api: Api = new Api(serverState, tokenGenerator);
