@@ -105,15 +105,15 @@ Die folgende Tabelle stellt die Stakeholder von unserem Projekt und ihre jeweili
 
 ## 2.2 Organisatiorisch
 
-| Randbedinung          | Beschreibung, Hintergrund                                                                                                              |
-| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| Team                  | Oliver Bucher, Thierry Girod                                                                                                           |
-| Dokumentation         | Die Dokumentation des Projektes, sowie das Tagebuch wird in Markdown direkt im Repository geführt.                                     |
-| Kommunikation         | Whatsapp, Telefon, 1x monatlich persönlich in der Schule                                                                               |
-| Zeitplan              | Beginn der Entwicklung August 2021, danach Erarbeitung der Meilensteine                                                                |
-| Vorgehensmodel        | Entwicklung iterativ und inkrementell.                                                                                                 |
-| Entwicklungswerkzeuge | Erstellung des Quelltextes erfolgt mit Visual Studio Code. Die Bereitstellung der lauffähigen Version wird mit Docker realisiert.      |
-| Versionsverwaltung    | Als Versionsverwaltung wird Git und die Plattform [github.com](https://github.com/Level8Broccoli/WebE/) verwendet.                     |
+| Randbedinung          | Beschreibung, Hintergrund                                                                                                         |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| Team                  | Oliver Bucher, Thierry Girod                                                                                                      |
+| Dokumentation         | Die Dokumentation des Projektes, sowie das Tagebuch wird in Markdown direkt im Repository geführt.                                |
+| Kommunikation         | Whatsapp, Telefon, 1x monatlich persönlich in der Schule                                                                          |
+| Zeitplan              | Beginn der Entwicklung August 2021, danach Erarbeitung der Meilensteine                                                           |
+| Vorgehensmodel        | Entwicklung iterativ und inkrementell.                                                                                            |
+| Entwicklungswerkzeuge | Erstellung des Quelltextes erfolgt mit Visual Studio Code. Die Bereitstellung der lauffähigen Version wird mit Docker realisiert. |
+| Versionsverwaltung    | Als Versionsverwaltung wird Git und die Plattform [github.com](https://github.com/Level8Broccoli/WebE/) verwendet.                |
 
 # 3. Spielregeln
 
@@ -272,9 +272,9 @@ Für das bessere Verständnis der Abläufe werden einzelne Anforderungen direkt 
 - [Client] Player konfiguriert Spielraum
 - [Client] Validation (keine ungültigen Regeln) -> Errorfeedback
 - [Client] Player klickt auf "Spiel erstellen" Button
-- [Client] Nachricht (type: createGame) an Server 
+- [Client] Nachricht (type: createGame) an Server
 - [Server] Validation (playerId + Secret, keine ungültigen Regeln) -> Errorfeedback
-- [Server] RoomId generieren
+- [Server] gameId generieren
 - [Server] Game in ServerState anlegen (Konfiguration, Ersteller)
 - [Server] Nachricht (type: createGame) an alle Clients
 - [Client] Aktualisierung der Gameübersicht, falls Player noch keinem Spiel beigetreten ist
@@ -284,8 +284,8 @@ Für das bessere Verständnis der Abläufe werden einzelne Anforderungen direkt 
 _Voraussetzung: Player muss in einem (von sich selbst) erstellten Spiel sein._
 
 - [Client] Player klickt auf "Spiel abbrechen" Button
-- [Client] Nachricht (type: deleteGame) an Server 
-- [Server] Validation (playerId + Secret + roomId, playerId muss Spielraum-Ersteller sein) -> Errorfeedback
+- [Client] Nachricht (type: deleteGame) an Server
+- [Server] Validation (playerId + Secret + gameId, playerId muss Spielraum-Ersteller sein) -> Errorfeedback
 - [Server] Game in ServerState entfernen
 - [Server] Nachricht (type: deleteGame) an alle Clients
 - [Client] Aktualisierung der Gameübersicht, falls Player noch keinem Spiel beigetreten ist bwz. dem eben gelöschten Spiel beigetreten war
@@ -302,7 +302,7 @@ _Voraussetzung: Player muss in einem (von sich selbst) erstellten Spiel sein._
 
 - [Client] Player klickt auf "Spiel beitreten" Button
 - [Client] Validation (Spielraum hat noch Plätze frei) -> Errorfeedback
-- [Client] Nachricht (type: joinGame) an Server 
+- [Client] Nachricht (type: joinGame) an Server
 - [Server] Validation (playerId + Secret, Spielraum hat noch Plätze frei) -> Errorfeedback
 - [Server] PlayerId in ServerState -> Game als Spieler hinzufügen
 - [Server] Nachricht (type: joinGame) an alle Clients
@@ -322,8 +322,8 @@ _Voraussetzung: Player muss in einem (von sich selbst) erstellten Spiel sein._
 
 - [Client] Player schreibt Nachricht
 - [Client] Validation (nicht leer) -> Errorfeedback
-- [Client] Nachricht (type: chat) an Server 
-- [Server] Validation (playerId + Secret + roomId, nicht leer) -> Errorfeedback
+- [Client] Nachricht (type: chat) an Server
+- [Server] Validation (playerId + Secret + gameId, nicht leer) -> Errorfeedback
 - [Server] PlayerId in ServerState -> Game als Spieler hinzufügen
 - [Server] Nachricht (type: chat) an alle Clients
 - [Client] Aktualisierung der Gameübersicht, falls Player noch keinem Spiel beigetreten ist
@@ -385,16 +385,16 @@ _Voraussetzung: Player muss in einem (von sich selbst) erstellten Spiel sein._
 
 ##### Ablauf A: Player ist in einem Spielraum
 
-- [Client] Nachricht (type: gameState) an Server 
-- [Server] Validation (playerId + Secret + roomId) -> Errorfeedback
+- [Client] Nachricht (type: gameState) an Server
+- [Server] Validation (playerId + Secret + gameId) -> Errorfeedback
 - [Server] Nachricht (type: gameState) an Client
 - [Client] Aktualisierung des GUI
 
 ##### Ablauf B: Player ist nicht in einem Spielraum
 
-- [Client] Nachricht (type: roomState) an Server 
+- [Client] Nachricht (type: gameState) an Server
 - [Server] Validation (playerId + Secret) -> Errorfeedback
-- [Server] Nachricht (type: roomState) an Client
+- [Server] Nachricht (type: gameState) an Client
 - [Client] Aktualisierung des GUI
 
 11. Jederzeit kann ein Benutzer zwischen Deutscher und Englischer Sprache wechseln.
@@ -445,28 +445,28 @@ Im folgenden werden die Nachrichten aufgeführt, die zwischen Clients und Server
 
 Grundsätzlich werden folgende Datenpunkte regelmässig verwendet:
 
-Datenpunkt | Beschreibung
---- | ---
-`type` | Klassifizierung der Nachricht
-`data` | Objekt mit den Informationen benötigt für den Austausch
-`roomId` | UUID des Spielraums
-`timestamp` | Server-Zeitstempel
-`playerId` | UUID um Spieler zu identifizieren (wird auch an andere Spieler weitergegeben)
-`secretId` | UUID um Spieler zu authentifizieren (wird nur zwischen Client und Server verwendet)
-`playerName` | wird vom GUI verwendet (z.B. Autor einer Chatnachricht, aktiver Spieler)
-`gameState` | beinhaltet den Spielstand (siehe unten)
+| Datenpunkt   | Beschreibung                                                                        |
+| ------------ | ----------------------------------------------------------------------------------- |
+| `type`       | Klassifizierung der Nachricht                                                       |
+| `data`       | Objekt mit den Informationen benötigt für den Austausch                             |
+| `gameId`     | UUID des Spielraums                                                                 |
+| `timestamp`  | Server-Zeitstempel                                                                  |
+| `playerId`   | UUID um Spieler zu identifizieren (wird auch an andere Spieler weitergegeben)       |
+| `secretId`   | UUID um Spieler zu authentifizieren (wird nur zwischen Client und Server verwendet) |
+| `playerName` | wird vom GUI verwendet (z.B. Autor einer Chatnachricht, aktiver Spieler)            |
+| `gameState`  | beinhaltet den Spielstand (siehe unten)                                             |
 
 ## 5.1 Spielstand
 
 Der Spielstand beinhaltet:
 
-* `playerId` des aktiven Spielers
-* Karten auf dem Spieltisch
-* Karten auf der Hand des Spielers, der die Nachricht erhält
-* Anzahl Karten aller Spieler auf deren Händen
-* Anzahl Karten auf dem Ziehstapel
-* Liste von erlaubten Spielzügen, falls der aktive Spieler die Anfrage gesendet hat
-* Protokoll aller vergangenen Spielzügen
+- `playerId` des aktiven Spielers
+- Karten auf dem Spieltisch
+- Karten auf der Hand des Spielers, der die Nachricht erhält
+- Anzahl Karten aller Spieler auf deren Händen
+- Anzahl Karten auf dem Ziehstapel
+- Liste von erlaubten Spielzügen, falls der aktive Spieler die Anfrage gesendet hat
+- Protokoll aller vergangenen Spielzügen
 
 ## 5.2 Spieler registration
 
@@ -474,39 +474,41 @@ Jeder Spieler muss sich mit einem Benutzernamen registrieren.
 
 ### 5.2.1 Spieler sendet Benutzername an Server
 
-Sender | Empfänger | Typ
---- | --- | ---
-Client [1] | Server | `registerPlayer`
+| Sender     | Empfänger | Typ              |
+| ---------- | --------- | ---------------- |
+| Client [1] | Server    | `registerPlayer` |
 
 ### Body
 
 ```json
 {
-   "type": "registerPlayer",
-   "data": {
-      "playerName": "[playerName]",
-   }
+  "type": "registerPlayer",
+  "data": {
+    "playerName": "[playerName]"
+  }
 }
 ```
 
 ### 5.2.2 Server teilt Spieler ID und verfügbare Räume mit
 
-Sender | Empfänger | Typ
---- | --- | ---
-Server | Client [1] | `registerPlayer`
+| Sender | Empfänger  | Typ              |
+| ------ | ---------- | ---------------- |
+| Server | Client [1] | `registerPlayer` |
 
 ### Body
 
 ```json
 {
-   "type": "registerPlayer",
-   "data": {
-      "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
-      "playerName": "[playerName]",
-      "playerId": "[playerId]",
-      "secret": "[secret]",
-      "rooms": [ /* Liste aller aktiven Spielräume, deren Konfiguration und Anzahl besetzter Plätze */ ]
-   }
+  "type": "registerPlayer",
+  "data": {
+    "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+    "playerName": "[playerName]",
+    "playerId": "[playerId]",
+    "secret": "[secret]",
+    "games": [
+      /* Liste aller aktiven Spielräume, deren Konfiguration und Anzahl besetzter Plätze */
+    ]
+  }
 }
 ```
 
@@ -516,42 +518,46 @@ Jeder Spieler kann ein Spiel bzw. Spielraum erstellen.
 
 ### 5.3.1 Spieler sendet Server Bitte um Kreation eines Spielraums
 
-Sender | Empfänger | Typ
---- | --- | ---
-Client [1] | Server | `createGame`
+| Sender     | Empfänger | Typ          |
+| ---------- | --------- | ------------ |
+| Client [1] | Server    | `createGame` |
 
 ### Body
 
 ```json
 {
-   "type": "createGame",
-   "data": {
-      "playerName": "[playerName]",
-      "playerId": "[playerId]",
-      "secret": "[secret]",
-      "roomConfig": { /* Spielkonfiguration */ }
-   }
+  "type": "createGame",
+  "data": {
+    "playerName": "[playerName]",
+    "playerId": "[playerId]",
+    "secret": "[secret]",
+    "gameConfig": {
+      /* Spielkonfiguration */
+    }
+  }
 }
 ```
 
 ### 5.3.2 Server broadcastet allen Spielern, die keinem Raum zugewiesen sind, diesen neuen Raum
 
-Sender | Empfänger | Typ
---- | --- | ---
-Server | Client [n] | `createGame`
+| Sender | Empfänger  | Typ          |
+| ------ | ---------- | ------------ |
+| Server | Client [n] | `createGame` |
 
 ### Body
 
 ```json
 {
-   "type": "createGame",
-   "data": {
-      "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
-      "roomId": "[roomId]",
-      "roomConfig": { /* Spielkonfiguration */ },
-      "playerName": "[playerName]",
-      "playerId": "[playerId]"
-   }
+  "type": "createGame",
+  "data": {
+    "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+    "gameId": "[gameId]",
+    "gameConfig": {
+      /* Spielkonfiguration */
+    },
+    "playerName": "[playerName]",
+    "playerId": "[playerId]"
+  }
 }
 ```
 
@@ -561,39 +567,39 @@ Der Ersteller eines Spiels kann diesen löschen, solange das Spiel noch nicht ge
 
 ### 5.4.1 Spieler sendet Server Bitte um Löschung eines Spielraums
 
-Sender | Empfänger | Typ
---- | --- | ---
-Client [1] | Server | `deleteGame`
+| Sender     | Empfänger | Typ          |
+| ---------- | --------- | ------------ |
+| Client [1] | Server    | `deleteGame` |
 
 ### Body
 
 ```json
 {
-   "type": "deleteGame",
-   "data": {
-      "playerName": "[playerName]",
-      "playerId": "[playerId]",
-      "secret": "[secret]",
-      *roomId": "[roomId]"
-   }
+  "type": "deleteGame",
+  "data": {
+    "playerName": "[playerName]",
+    "playerId": "[playerId]",
+    "secret": "[secret]",
+    "gameId": "[gameId]"
+  }
 }
 ```
 
 ### 5.4.2 Server broadcastet allen Spielern, die keinem Raum zugewiesen sind und allen Spielern, die bereits beigetretten sind, dass dieser Raum gelöscht wurde
 
-Sender | Empfänger | Typ
---- | --- | ---
-Server | Client [n] | `deleteGame`
+| Sender | Empfänger  | Typ          |
+| ------ | ---------- | ------------ |
+| Server | Client [n] | `deleteGame` |
 
 ### Body
 
 ```json
 {
-   "type": "deleteGame",
-   "data": {
-      "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
-      "roomId": "[roomId]"
-   }
+  "type": "deleteGame",
+  "data": {
+    "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+    "gameId": "[gameId]"
+  }
 }
 ```
 
@@ -603,41 +609,41 @@ Jeder Spieler kann einem Spiel beitreten, welches noch nicht gestartet wurde und
 
 ### 5.5.1 Spieler sendet Server die gewünschte Raum ID
 
-Sender | Empfänger | Typ
---- | --- | ---
-Client [1] | Server | `joinGame`
+| Sender     | Empfänger | Typ        |
+| ---------- | --------- | ---------- |
+| Client [1] | Server    | `joinGame` |
 
 ### Body
 
 ```json
 {
-   "type": "joinGame",
-   "data": {
-      "roomId": "[roomId]",
-      "playerName": "[playerName]",
-      "playerId": "[playerId]",
-      "secret": "[secret]"
-   }
+  "type": "joinGame",
+  "data": {
+    "gameId": "[gameId]",
+    "playerName": "[playerName]",
+    "playerId": "[playerId]",
+    "secret": "[secret]"
+  }
 }
 ```
 
 ### 5.5.2 Server broadcastet allen Spieler in diesem Raum und allen Spielern, die in keinem Raum sind, dass ein Spieler einem Spiel beigetreten ist
 
-Sender | Empfänger | Typ
---- | --- | ---
-Server | Client [n] | `joinGame`
+| Sender | Empfänger  | Typ        |
+| ------ | ---------- | ---------- |
+| Server | Client [n] | `joinGame` |
 
 ### Body
 
 ```json
 {
-   "type": "joinGame",
-   "data": {
-      "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
-      "roomId": "[roomId]",
-      "playerName": "[playerName]",
-      "playerId": "[playerId]"
-   }
+  "type": "joinGame",
+  "data": {
+    "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+    "gameId": "[gameId]",
+    "playerName": "[playerName]",
+    "playerId": "[playerId]"
+  }
 }
 ```
 
@@ -647,42 +653,42 @@ Sendet Nachrichten an den Server, welcher wiederum die Nachrichten den anderen S
 
 ### 5.6.1 Spieler sendet Chat-Nachricht an Server
 
-Sender | Empfänger | Typ
---- | --- | ---
-Client [1] | Server | `chat`
+| Sender     | Empfänger | Typ    |
+| ---------- | --------- | ------ |
+| Client [1] | Server    | `chat` |
 
 ### Body
 
 ```json
 {
-   "type": "chat",
-   "data": {
-      "playerName": "[playerName]",
-      "playerId": "[playerId]",
-      "secret": "[secret]",
-      *roomId": "[roomId]",
-      "message": "[chatMessage]"
-   }
+  "type": "chat",
+  "data": {
+    "playerName": "[playerName]",
+    "playerId": "[playerId]",
+    "secret": "[secret]",
+    "gameId": "[gameId]",
+    "message": "[chatMessage]"
+  }
 }
 ```
 
 ### 5.6.2 Server broadcastet Chat-Nachricht an alle Spieler in Spielraum
 
-Sender | Empfänger | Typ
---- | --- | ---
-Server | Client [n] | `chat`
+| Sender | Empfänger  | Typ    |
+| ------ | ---------- | ------ |
+| Server | Client [n] | `chat` |
 
 ### Body
 
 ```json
 {
-   "type": "chat",
-   "data": {
-      "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
-      "playerName": "[playerName]",
-      "playerId": "[playerId]",
-      "message": "[chatMessage]"
-   }
+  "type": "chat",
+  "data": {
+    "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+    "playerName": "[playerName]",
+    "playerId": "[playerId]",
+    "message": "[chatMessage]"
+  }
 }
 ```
 
@@ -692,39 +698,41 @@ Der Ersteller des Spiels kann das Spiel starten, sobald die minimale Spieleranza
 
 ### 5.7.1 Spieler sendet Server Bitte um Start des Spiels
 
-Sender | Empfänger | Typ
---- | --- | ---
-Client [1] | Server | `gameStart`
+| Sender     | Empfänger | Typ         |
+| ---------- | --------- | ----------- |
+| Client [1] | Server    | `gameStart` |
 
 ### Body
 
 ```json
 {
-   "type": "gameStart",
-   "data": {
-      "playerName": "[playerName]",
-      "playerId": "[playerId]",
-      "secret": "[secret]",
-      *roomId": "[roomId]"
-   }
+  "type": "gameStart",
+  "data": {
+    "playerName": "[playerName]",
+    "playerId": "[playerId]",
+    "secret": "[secret]",
+    "gameId": "[gameId]"
+  }
 }
 ```
 
 ### 5.7.2 Server broadcastet initialen Spielstand an alle Spieler im Raum
 
-Sender | Empfänger | Typ
---- | --- | ---
-Server | Client [n] | `gameStart`
+| Sender | Empfänger  | Typ         |
+| ------ | ---------- | ----------- |
+| Server | Client [n] | `gameStart` |
 
 ### Body
 
 ```json
 {
-   "type": "gameStart",
-   "data": {
-      "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
-      "gameState": { /* initialer Spielstand */ }
-   }
+  "type": "gameStart",
+  "data": {
+    "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+    "gameState": {
+      /* initialer Spielstand */
+    }
+  }
 }
 ```
 
@@ -734,39 +742,41 @@ Gibt dem Client die Möglichkeit den aktuellen Spielstand abzufragen, um das kor
 
 ### 5.8.1 Spieler sendet Server Bitte um aktuellen Spielstand
 
-Sender | Empfänger | Typ
---- | --- | ---
-Client [1] | Server | `gameState`
+| Sender     | Empfänger | Typ         |
+| ---------- | --------- | ----------- |
+| Client [1] | Server    | `gameState` |
 
 ### Body
 
 ```json
 {
-   "type": "gameState",
-   "data": {
-      "playerName": "[playerName]",
-      "playerId": "[playerId]",
-      "secret": "[secret]",
-      *roomId": "[roomId]"
-   }
+  "type": "gameState",
+  "data": {
+    "playerName": "[playerName]",
+    "playerId": "[playerId]",
+    "secret": "[secret]",
+    "gameId": "[gameId]"
+  }
 }
 ```
 
 ### 5.8.2 Server sendet aktuellen Spielstand an Spieler
 
-Sender | Empfänger | Typ
---- | --- | ---
-Server | Client [1] | `gameState`
+| Sender | Empfänger  | Typ         |
+| ------ | ---------- | ----------- |
+| Server | Client [1] | `gameState` |
 
 ### Body
 
 ```json
 {
-   "type": "gameState",
-   "data": {
-      "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
-      "gameState": { /* aktueller Spielstand */ }
-   }
+  "type": "gameState",
+  "data": {
+    "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+    "gameState": {
+      /* aktueller Spielstand */
+    }
+  }
 }
 ```
 
@@ -776,40 +786,42 @@ Der aktive Spieler kann einen Spielzug durchführen. Falls dieser valide ist, er
 
 ### 5.9.1 Spieler sendet einen Spielzug
 
-Sender | Empfänger | Typ
---- | --- | ---
-Client [1] | Server | `gameMove`
+| Sender     | Empfänger | Typ        |
+| ---------- | --------- | ---------- |
+| Client [1] | Server    | `gameMove` |
 
 ### Body
 
 ```json
 {
-   "type": "gameMove",
-   "data": {
-      "playerName": "[playerName]",
-      "playerId": "[playerId]",
-      "secret": "[secret]",
-      *roomId": "[roomId]",
-      "move": "[move]"
-   }
+  "type": "gameMove",
+  "data": {
+    "playerName": "[playerName]",
+    "playerId": "[playerId]",
+    "secret": "[secret]",
+    "gameId": "[gameId]",
+    "move": "[move]"
+  }
 }
 ```
 
 ### 5.9.2 Server broadcastet aktuellen Spielstand an alle Spieler im Raum
 
-Sender | Empfänger | Typ
---- | --- | ---
-Server | Client [n] | `gameMove`
+| Sender | Empfänger  | Typ        |
+| ------ | ---------- | ---------- |
+| Server | Client [n] | `gameMove` |
 
 ### Body
 
 ```json
 {
-   "type": "gameMove",
-   "data": {
-      "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
-      "gameState": { /* aktueller Spielstand */ }
-   }
+  "type": "gameMove",
+  "data": {
+    "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+    "gameState": {
+      /* aktueller Spielstand */
+    }
+  }
 }
 ```
 
@@ -819,9 +831,9 @@ Jeder Spieler kann die restlichen Spieler um ein Spielabbruch bitten. Sollte inn
 
 ### 5.10.1 Spieler sendet Anfrage um Spielabbruch bzw. Mitspieler bestätigen Abbruch oder widersprechen Abbruch
 
-Sender | Empfänger | Typ
---- | --- | ---
-Client [1] | Server | `gameAbort`
+| Sender     | Empfänger | Typ         |
+| ---------- | --------- | ----------- |
+| Client [1] | Server    | `gameAbort` |
 
 ### Body
 
@@ -832,7 +844,7 @@ Client [1] | Server | `gameAbort`
       "playerName": "[playerName]",
       "playerId": "[playerId]",
       "secret": "[secret]",
-      *roomId": "[roomId]",
+      "gameId": "[gameId]",
       "wantsToAbort": [true|false]
    }
 }
@@ -840,9 +852,9 @@ Client [1] | Server | `gameAbort`
 
 ### 5.10.2 Server broadcastet Anfrage an alle Spieler im Raum
 
-Sender | Empfänger | Typ
---- | --- | ---
-Server | Client [n] | `gameAbort`
+| Sender | Empfänger  | Typ         |
+| ------ | ---------- | ----------- |
+| Server | Client [n] | `gameAbort` |
 
 ### Body
 
@@ -864,37 +876,39 @@ Gibt dem Client die Möglichkeit den offnen Spielräume abzufragen, um das korre
 
 ### 5.11.1 Spieler sendet Server Bitte um aktuelle Spielraumübersicht
 
-Sender | Empfänger | Typ
---- | --- | ---
-Client [1] | Server | `roomState`
+| Sender     | Empfänger | Typ         |
+| ---------- | --------- | ----------- |
+| Client [1] | Server    | `gameState` |
 
 ### Body
 
 ```json
 {
-   "type": "roomState",
-   "data": {
-      "playerName": "[playerName]",
-      "playerId": "[playerId]",
-      "secret": "[secret]"
-   }
+  "type": "gameState",
+  "data": {
+    "playerName": "[playerName]",
+    "playerId": "[playerId]",
+    "secret": "[secret]"
+  }
 }
 ```
 
 ### 5.11.2 Server sendet aktuelle Spielraumübersicht an Spieler
 
-Sender | Empfänger | Typ
---- | --- | ---
-Server | Client [1] | `roomState`
+| Sender | Empfänger  | Typ         |
+| ------ | ---------- | ----------- |
+| Server | Client [1] | `gameState` |
 
 ### Body
 
 ```json
 {
-   "type": "roomState",
-   "data": {
-      "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
-      "rooms": [ /* Liste aller aktiven Spielräume, deren Konfiguration und Anzahl besetzter Plätze */ ]
-   }
+  "type": "gameState",
+  "data": {
+    "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+    "games": [
+      /* Liste aller aktiven Spielräume, deren Konfiguration und Anzahl besetzter Plätze */
+    ]
+  }
 }
 ```
