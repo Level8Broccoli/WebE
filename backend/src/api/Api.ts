@@ -1,81 +1,101 @@
-import { Player } from "../server/Player";
-import { ServerState } from "../server/ServerState";
+import { PrivatePlayer } from "../model/Player";
+import { ServerState } from "../model/ServerState";
 import moment from "moment";
 import { ErrorCode } from "./ErrorCode";
-import { Room } from "../server/Room";
-import { RoomConfig } from "../server/RoomConfig";
-import { TokenGenerator } from "../util/TokenGenerator";
+import { getSecret, getUUID } from "./services/TokenGeneratorService";
+import {
+  CreateGameRequest,
+  DeleteGameRequest,
+  JoinGameRequest,
+  RegisterPlayerRequest,
+} from "../model/RequestTypes";
+import {
+  CreateGameResponse,
+  DeleteGameResponse,
+  JoinGameResponse,
+  RegisterPlayerResponse,
+} from "../model/ResponseTypes";
+import {
+  registerPlayer,
+  playerExists,
+  createGame,
+  canRoomBeDeleted,
+  deleteGame,
+  roomExists,
+  isFreePlaceInRoomAvailabe,
+  joinGame,
+} from "./services/ServerStateService";
 
 const DATE_TIME_FORMAT = "YYYY-MM-DDThh:mm:ss";
 
 export class Api {
   private _serverState: ServerState;
-  private _tokenGenerator: TokenGenerator;
 
-  constructor(serverState: ServerState, tokenGenerator: TokenGenerator) {
+  constructor(serverState: ServerState) {
     this._serverState = serverState;
-    this._tokenGenerator = tokenGenerator;
   }
 
-  registerPlayer(request: string): Promise<any> {
+  registerPlayer(
+    request: RegisterPlayerRequest
+  ): Promise<RegisterPlayerResponse> {
     return new Promise((resolve, reject) => {
-      const json = JSON.parse(request);
-
       // [Server] Validation (nicht leer, gültige UTF-8 Zeichen) -> Errorfeedback
-      if (json.playerName.length === 0 || json.playerName === "") {
+      if (request.playerName.length === 0 || request.playerName === "") {
         throw new Error("Player name is empty.");
       }
 
       // [Server] PlayerId und Secret generieren
-      const id = this._tokenGenerator.getUUID();
-      const secret = this._tokenGenerator.getSecret();
-      const name = json.playerName;
-
       // [Server] Player in ServerState anlegen
-      const player = new Player(id, name, secret);
-      this._serverState.registerPlayer(player);
+      const player: PrivatePlayer = {
+        id: getUUID(),
+        name: request.playerName,
+        secret: getSecret(),
+      };
+      registerPlayer(this._serverState, player);
 
       // [Server] Liste aller aktiven Spielräume abfragen
-      const rooms = this._serverState.rooms;
-
       // [Server] Response senden
       const response = {
         status: ErrorCode.OK,
         timestamp: moment(new Date(), DATE_TIME_FORMAT),
         player: player,
-        rooms: rooms,
+        rooms: this._serverState.rooms,
       };
 
       resolve(response);
     });
   }
 
-  createGame(request: string): Promise<any> {
+  createGame(request: CreateGameRequest): Promise<CreateGameResponse> {
     return new Promise((resolve, reject) => {
-      const json = JSON.parse(request);
-
       // [Server] Validation (playerId + Secret, keine ungültigen Regeln) -> Errorfeedback
-      if (!this._serverState.playerExist(json.player.id, json.player.secret)) {
+      if (!playerExists(this._serverState, request.player)) {
         throw new Error("Id / secret combination not valid.");
       }
 
       // TBD: Regeln überprüfen
+      if (request.roomConfig === undefined) {
+        throw new Error("No roomconfig set.");
+      }
 
       // [Server] RoomId generieren
-      const id = this._tokenGenerator.getUUID();
-
       // [Server] Game in ServerState anlegen (Konfiguration, Ersteller)
-      const roomConfig = new RoomConfig(json.roomConfig.maxPlayerCountForRoom);
-      const room = new Room(id, json.player.id, roomConfig);
-      this._serverState.createGame(room);
+      const room = {
+        id: getUUID(),
+        creatorId: request.player.id,
+        roomConfig: request.roomConfig,
+        players: [request.player.id],
+      };
+
+      createGame(this._serverState, room);
 
       // [Server] Nachricht (type: createGame) an alle Clients
       const response = {
         status: ErrorCode.OK,
         timestamp: moment(new Date(), DATE_TIME_FORMAT),
         player: {
-          id: json.player.id,
-          name: json.player.name,
+          id: request.player.id,
+          name: request.player.name,
         },
         room: room,
       };
@@ -84,32 +104,28 @@ export class Api {
     });
   }
 
-  deleteGame(request: string): Promise<any> {
+  deleteGame(request: DeleteGameRequest): Promise<DeleteGameResponse> {
     return new Promise((resolve, reject) => {
-      const json = JSON.parse(request);
-
       // [Server] Validation (playerId + Secret + roomId, playerId muss Spielraum-Ersteller sein) -> Errorfeedback
-      if (!this._serverState.playerExist(json.player.id, json.player.secret)) {
+      if (!playerExists(this._serverState, request.player)) {
         throw new Error("Id / secret combination not valid.");
       }
 
-      if (
-        !this._serverState.roomReadyForDeletion(json.room.id, json.player.id)
-      ) {
+      if (!canRoomBeDeleted(this._serverState, request.room, request.player)) {
         throw new Error(
           "Room / creator combination not valid. Cannot delete room."
         );
       }
 
       // [Server] Game in ServerState entfernen
-      this._serverState.deleteGame(json.room.id);
+      deleteGame(this._serverState, request.room);
 
       // [Server] Nachricht (type: deleteGame) an alle Clients
       const response = {
         status: ErrorCode.OK,
         timestamp: moment(new Date(), DATE_TIME_FORMAT),
         room: {
-          id: json.room.id,
+          id: request.room.id,
         },
       };
 
@@ -117,38 +133,36 @@ export class Api {
     });
   }
 
-  joinGame(request: string): Promise<any> {
+  joinGame(request: JoinGameRequest): Promise<JoinGameResponse> {
     return new Promise((resolve, reject) => {
-      const json = JSON.parse(request);
-
       // [Server] Validation (playerId + Secret, Spielraum hat noch Plätze frei) -> Errorfeedback
-      if (!this._serverState.playerExist(json.player.id, json.player.secret)) {
+      if (!playerExists(this._serverState, request.player)) {
         throw new Error("Id / secret combination not valid.");
       }
 
-      if (!this._serverState.roomExist(json.room.id)) {
+      if (!roomExists(this._serverState, request.room)) {
         throw new Error("Room with id does not exist.");
       }
 
-      if (!this._serverState.freePlaceInRoomAvailabe(json.room.id)) {
+      if (!isFreePlaceInRoomAvailabe(this._serverState, request.room)) {
         throw new Error(
           "Room cannot be joined. Room has no available space for new player."
         );
       }
 
       // [Server] PlayerId in ServerState -> Game als Spieler hinzufügen
-      this._serverState.joinGame(json.player.id, json.room.id);
+      joinGame(this._serverState, request.player, request.room);
 
       // [Server] Nachricht (type: joinGame) an alle Clients
       const response = {
         status: ErrorCode.OK,
         timestamp: moment(new Date(), DATE_TIME_FORMAT),
         player: {
-          id: json.player.id,
-          name: json.player.name,
+          id: request.player.id,
+          name: request.player.name,
         },
         room: {
-          id: json.room.id,
+          id: request.room.id,
         },
       };
 
