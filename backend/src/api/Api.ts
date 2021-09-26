@@ -1,18 +1,18 @@
 import { Player } from "../server/Player";
 import { ServerState } from "../server/ServerState";
-import { ITokenGenerator } from "../util/ITokenGenerator";
 import moment from "moment";
 import { ErrorCode } from "./ErrorCode";
 import { Room } from "../server/Room";
 import { RoomConfig } from "../server/RoomConfig";
+import { TokenGenerator } from "../util/TokenGenerator";
 
 const DATE_TIME_FORMAT = "YYYY-MM-DDThh:mm:ss";
 
 export class Api {
   private _serverState: ServerState;
-  private _tokenGenerator: ITokenGenerator;
+  private _tokenGenerator: TokenGenerator;
 
-  constructor(serverState: ServerState, tokenGenerator: ITokenGenerator) {
+  constructor(serverState: ServerState, tokenGenerator: TokenGenerator) {
     this._serverState = serverState;
     this._tokenGenerator = tokenGenerator;
   }

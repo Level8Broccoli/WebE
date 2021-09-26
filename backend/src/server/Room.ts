@@ -1,4 +1,3 @@
-import { ITokenGenerator } from "../util/ITokenGenerator";
 import { RoomConfig } from "./RoomConfig";
 
 export class Room {
