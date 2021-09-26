@@ -42,7 +42,7 @@ io.on("connection", (socket) => {
       .createGame(request)
       .then((response) => {
         // Broadcast to all connected sockets
-        io.emit("createGame", response);
+        socket.emit("createGame", response);
       })
       .catch((error) => {
         const response: ErrorResponse = {
@@ -59,7 +59,7 @@ io.on("connection", (socket) => {
       .deleteGame(request)
       .then((response) => {
         // Broadcast to all connected sockets
-        io.emit("deleteGame", response);
+        socket.emit("deleteGame", response);
       })
       .catch((error) => {
         const response: ErrorResponse = {
@@ -93,7 +93,7 @@ io.on("connection", (socket) => {
       .leaveGame(request)
       .then((response) => {
         // Broadcast to all connected sockets
-        io.emit("leaveGame", response);
+        socket.emit("leaveGame", response);
       })
       .catch((error) => {
         const response: ErrorResponse = {
