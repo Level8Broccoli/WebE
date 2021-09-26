@@ -1,6 +1,7 @@
 import { Server } from "socket.io";
 import { Api } from "./api/Api";
 import { ErrorCode } from "./api/ErrorCode";
+import { CreateGameRequest, DeleteGameRequest, JoinGameRequest, LeaveGameRequest, RegisterPlayerRequest } from "./model/RequestTypes";
 import { ErrorResponse } from "./model/ResponseTypes";
 
 const PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
@@ -20,21 +21,9 @@ io.on("connection", (socket) => {
   console.log(`Connected ${socket.id}`);
 
   // Register new player endpoint
-  socket.on("registerPlayer", (request: string) => {
-    // Simple Error Hacksolution (To be simplified)
-    try {
-      JSON.parse(request);
-    } catch (error) {
-      const response: ErrorResponse = {
-        status: ErrorCode.ERROR,
-        message: "You are dump and fucked something up :P",
-      };
-      socket.emit("registerPlayer", response);
-      return;
-    }
-
+  socket.on("registerPlayer", (request: RegisterPlayerRequest) => {
     api
-      .registerPlayer(JSON.parse(request))
+      .registerPlayer(request)
       .then((response) => {
         socket.emit("registerPlayer", response);
       })
@@ -48,21 +37,9 @@ io.on("connection", (socket) => {
   });
 
   // Create new game endpoint
-  socket.on("createGame", (request) => {
-    // Simple Error Hacksolution (To be simplified)
-    try {
-      JSON.parse(request);
-    } catch (error) {
-      const response: ErrorResponse = {
-        status: ErrorCode.ERROR,
-        message: "You are dump and fucked something up :P",
-      };
-      socket.emit("createGame", response);
-      return;
-    }
-
+  socket.on("createGame", (request: CreateGameRequest) => {
     api
-      .createGame(JSON.parse(request))
+      .createGame(request)
       .then((response) => {
         // Broadcast to all connected sockets
         io.emit("createGame", response);
@@ -77,21 +54,9 @@ io.on("connection", (socket) => {
   });
 
   // Delete created game endpoint
-  socket.on("deleteGame", (request) => {
-    // Simple Error Hacksolution (To be simplified)
-    try {
-      JSON.parse(request);
-    } catch (error) {
-      const response: ErrorResponse = {
-        status: ErrorCode.ERROR,
-        message: "You are dump and fucked something up :P",
-      };
-      socket.emit("deleteGame", response);
-      return;
-    }
-
+  socket.on("deleteGame", (request: DeleteGameRequest) => {
     api
-      .deleteGame(JSON.parse(request))
+      .deleteGame(request)
       .then((response) => {
         // Broadcast to all connected sockets
         io.emit("deleteGame", response);
@@ -106,21 +71,9 @@ io.on("connection", (socket) => {
   });
 
   // Join game endpoint
-  socket.on("joinGame", (request) => {
-    // Simple Error Hacksolution (To be simplified)
-    try {
-      JSON.parse(request);
-    } catch (error) {
-      const response: ErrorResponse = {
-        status: ErrorCode.ERROR,
-        message: "You are dump and fucked something up :P",
-      };
-      socket.emit("joinGame", response);
-      return;
-    }
-
+  socket.on("joinGame", (request: JoinGameRequest) => {
     api
-      .joinGame(JSON.parse(request))
+      .joinGame(request)
       .then((response) => {
         // Broadcast to all connected sockets
         io.emit("joinGame", response);
@@ -135,21 +88,9 @@ io.on("connection", (socket) => {
   });
 
   // Leave game endpoint
-  socket.on("leaveGame", (request) => {
-    // Simple Error Hacksolution (To be simplified)
-    try {
-      JSON.parse(request);
-    } catch (error) {
-      const response: ErrorResponse = {
-        status: ErrorCode.ERROR,
-        message: "You are dump and fucked something up :P",
-      };
-      socket.emit("leaveGame", response);
-      return;
-    }
-
+  socket.on("leaveGame", (request: LeaveGameRequest) => {
     api
-      .leaveGame(JSON.parse(request))
+      .leaveGame(request)
       .then((response) => {
         // Broadcast to all connected sockets
         io.emit("leaveGame", response);

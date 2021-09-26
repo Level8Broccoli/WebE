@@ -4,6 +4,7 @@
     <button @click="createGame">Create Game</button>
     <button @click="deleteGame">Delete Game</button>
     <button @click="joinGame">Join Game</button>
+    <button @click="leaveGame">Leave Game</button>
   </div>
 </template>
 
@@ -14,6 +15,7 @@ import {
   deleteGame,
   initApi,
   joinGame,
+  leaveGame,
   registerPlayer,
 } from "./api/Api";
 
@@ -34,6 +36,9 @@ export default defineComponent({
     },
     joinGame() {
       joinGame();
+    },
+    leaveGame() {
+      leaveGame();
     },
   },
 });
