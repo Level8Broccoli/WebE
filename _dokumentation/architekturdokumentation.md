@@ -227,12 +227,12 @@ Für das bessere Verständnis der Abläufe werden einzelne Anforderungen direkt 
 - [Client] Usereingabe
 - [Client] Validation (nicht leer, gültige UTF-8 Zeichen) -> Errorfeedback
 - [Client] Verbindungsaufbau mit Server
-- [Client] Nachricht (type: registerPlayer) an Server
+- [Client] Nachricht (event: registerPlayer) an Server
 - [Server] Validation (nicht leer, gültige UTF-8 Zeichen) -> Errorfeedback
 - [Server] PlayerId und Secret generieren
 - [Server] Player in ServerState anlegen
 - [Server] Liste aller aktiven Spielräume abfragen
-- [Server] Nachricht (type: registerPlayer) an Client
+- [Server] Nachricht (event: registerPlayer) an Client
 - [Client] Zugagnsdaten in Session Storage speichern
 - [Client] Anzeige aller aktiven Spielräume
 
@@ -272,11 +272,11 @@ Für das bessere Verständnis der Abläufe werden einzelne Anforderungen direkt 
 - [Client] Player konfiguriert Spielraum
 - [Client] Validation (keine ungültigen Regeln) -> Errorfeedback
 - [Client] Player klickt auf "Spiel erstellen" Button
-- [Client] Nachricht (type: createGame) an Server
+- [Client] Nachricht (event: createGame) an Server
 - [Server] Validation (playerId + Secret, keine ungültigen Regeln) -> Errorfeedback
 - [Server] gameId generieren
 - [Server] Game in ServerState anlegen (Konfiguration, Ersteller)
-- [Server] Nachricht (type: createGame) an alle Clients
+- [Server] Nachricht (event: createGame) an alle Clients
 - [Client] Aktualisierung der Gameübersicht, falls Player noch keinem Spiel beigetreten ist
 
 #### Ablauf: Spiel abbrechen
@@ -284,10 +284,10 @@ Für das bessere Verständnis der Abläufe werden einzelne Anforderungen direkt 
 _Voraussetzung: Player muss in einem (von sich selbst) erstellten Spiel sein._
 
 - [Client] Player klickt auf "Spiel abbrechen" Button
-- [Client] Nachricht (type: deleteGame) an Server
+- [Client] Nachricht (event: deleteGame) an Server
 - [Server] Validation (playerId + Secret + gameId, playerId muss Spielraum-Ersteller sein) -> Errorfeedback
 - [Server] Game in ServerState entfernen
-- [Server] Nachricht (type: deleteGame) an alle Clients
+- [Server] Nachricht (event: deleteGame) an alle Clients
 - [Client] Aktualisierung der Gameübersicht, falls Player noch keinem Spiel beigetreten ist bwz. dem eben gelöschten Spiel beigetreten war
 
 4. Nachdem ein Benutzername gewählt wurde, kann der Benutzer einem noch nicht gestarteten Spiel beitreten.
@@ -302,10 +302,10 @@ _Voraussetzung: Player muss in einem (von sich selbst) erstellten Spiel sein._
 
 - [Client] Player klickt auf "Spiel beitreten" Button
 - [Client] Validation (Spielraum hat noch Plätze frei) -> Errorfeedback
-- [Client] Nachricht (type: joinGame) an Server
+- [Client] Nachricht (event: joinGame) an Server
 - [Server] Validation (playerId + Secret, Spielraum hat noch Plätze frei) -> Errorfeedback
 - [Server] PlayerId in ServerState -> Game als Spieler hinzufügen
-- [Server] Nachricht (type: joinGame) an alle Clients
+- [Server] Nachricht (event: joinGame) an alle Clients
 - [Client] Aktualisierung der Gameübersicht, falls Player noch keinem Spiel beigetreten ist
 - [Client] Aktualisierung des GUI, beim Player, der dem Spiel beigetreten ist
 
@@ -322,10 +322,10 @@ _Voraussetzung: Player muss in einem (von sich selbst) erstellten Spiel sein._
 
 - [Client] Player schreibt Nachricht
 - [Client] Validation (nicht leer) -> Errorfeedback
-- [Client] Nachricht (type: chat) an Server
+- [Client] Nachricht (event: chat) an Server
 - [Server] Validation (playerId + Secret + gameId, nicht leer) -> Errorfeedback
 - [Server] PlayerId in ServerState -> Game als Spieler hinzufügen
-- [Server] Nachricht (type: chat) an alle Clients
+- [Server] Nachricht (event: chat) an alle Clients
 - [Client] Aktualisierung der Gameübersicht, falls Player noch keinem Spiel beigetreten ist
 - [Client] Aktualisierung des GUI, beim Player, der dem Spiel beigetreten ist
 
@@ -339,10 +339,10 @@ _Voraussetzung: Player muss in einem (von sich selbst) erstellten Spiel sein._
 #### Ablauf
 
 - [Client] Player klickt auf Button
-- [Client] Nachricht (type: leaveGame) an Server
+- [Client] Nachricht (event: leaveGame) an Server
 - [Server] Validation (playerId + Secret)
 - [Server] Player aus Lobby entfernen
-- [Server] Nachricht (type: leaveGame) an alle Clients
+- [Server] Nachricht (event: leaveGame) an alle Clients
 - [Client] Aktualisierung der Gameübersicht, falls Player noch keinem Spiel beigetreten ist
 - [Client] Aktualisierung des GUI, beim Player, der das Spiel verlassen hat.
 
@@ -402,16 +402,16 @@ _Voraussetzung: Player muss in einem (von sich selbst) erstellten Spiel sein._
 
 ##### Ablauf A: Player ist in einem Spielraum
 
-- [Client] Nachricht (type: gameState) an Server
+- [Client] Nachricht (event: gameState) an Server
 - [Server] Validation (playerId + Secret + gameId) -> Errorfeedback
-- [Server] Nachricht (type: gameState) an Client
+- [Server] Nachricht (event: gameState) an Client
 - [Client] Aktualisierung des GUI
 
 ##### Ablauf B: Player ist nicht in einem Spielraum
 
-- [Client] Nachricht (type: gameState) an Server
+- [Client] Nachricht (event: gameState) an Server
 - [Server] Validation (playerId + Secret) -> Errorfeedback
-- [Server] Nachricht (type: gameState) an Client
+- [Server] Nachricht (event: gameState) an Client
 - [Client] Aktualisierung des GUI
 
 12. Jederzeit kann ein Benutzer zwischen Deutscher und Englischer Sprache wechseln.
@@ -462,16 +462,21 @@ Im folgenden werden die Nachrichten aufgeführt, die zwischen Clients und Server
 
 Grundsätzlich werden folgende Datenpunkte regelmässig verwendet:
 
-| Datenpunkt   | Beschreibung                                                                        |
-| ------------ | ----------------------------------------------------------------------------------- |
-| `type`       | Klassifizierung der Nachricht                                                       |
-| `data`       | Objekt mit den Informationen benötigt für den Austausch                             |
-| `gameId`     | UUID des Spielraums                                                                 |
-| `timestamp`  | Server-Zeitstempel                                                                  |
-| `playerId`   | UUID um Spieler zu identifizieren (wird auch an andere Spieler weitergegeben)       |
-| `secretId`   | UUID um Spieler zu authentifizieren (wird nur zwischen Client und Server verwendet) |
-| `playerName` | wird vom GUI verwendet (z.B. Autor einer Chatnachricht, aktiver Spieler)            |
-| `gameState`  | beinhaltet den Spielstand (siehe unten)                                             |
+| Datenpunkt        | Beschreibung                                                                        |
+| ----------------- | ----------------------------------------------------------------------------------- |
+| `event`           | Klassifizierung der Nachricht                                                       |
+| `game`            | Beinhaltet eine Spielreferenz                                                       |
+| `game.id`         | UUID des Spielraums                                                                 |
+| `game.creatorId`  | UUID des Spielraumerstellers                                                        |
+| `game.players`    | Liste der Spieler Id's in der Lobby                                                 |
+| `game.gameConfig` | Spielkonfiguration                                                                  |
+| `game.chat`       | Liste der Chatnachrichten in der Lobby                                              |
+| `timestamp`       | Server-Zeitstempel                                                                  |
+| `player`          | Beinhaltet eine Spielerreferenz                                                     |
+| `player.Id`       | UUID um Spieler zu identifizieren (wird auch an andere Spieler weitergegeben)       |
+| `player.secret`   | UUID um Spieler zu authentifizieren (wird nur zwischen Client und Server verwendet) |
+| `player.name`     | Wird vom GUI verwendet (z.B. Autor einer Chatnachricht, aktiver Spieler)            |
+| `gameState`       | beinhaltet den Spielstand (siehe unten)                                             |
 
 ## 5.1 Spielstand
 
@@ -491,7 +496,7 @@ Jeder Spieler muss sich mit einem Benutzernamen registrieren.
 
 ### 5.2.1 Spieler sendet Benutzername an Server
 
-| Sender     | Empfänger | Typ              |
+| Sender     | Empfänger | Event            |
 | ---------- | --------- | ---------------- |
 | Client [1] | Server    | `registerPlayer` |
 
@@ -499,16 +504,13 @@ Jeder Spieler muss sich mit einem Benutzernamen registrieren.
 
 ```json
 {
-  "type": "registerPlayer",
-  "data": {
-    "playerName": "[playerName]"
-  }
+  "playerName": "[playerName]"
 }
 ```
 
 ### 5.2.2 Server teilt Spieler ID und verfügbare Räume mit
 
-| Sender | Empfänger  | Typ              |
+| Sender | Empfänger  | Event            |
 | ------ | ---------- | ---------------- |
 | Server | Client [1] | `registerPlayer` |
 
@@ -516,16 +518,16 @@ Jeder Spieler muss sich mit einem Benutzernamen registrieren.
 
 ```json
 {
-  "type": "registerPlayer",
-  "data": {
-    "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
-    "playerName": "[playerName]",
-    "playerId": "[playerId]",
-    "secret": "[secret]",
-    "games": [
-      /* Liste aller aktiven Spielräume, deren Konfiguration und Anzahl besetzter Plätze */
-    ]
-  }
+  "status": "[StatusCode]",
+  "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
+    "secret": "[secret]"
+  },
+  "games": [
+    /* Liste aller aktiven Spielräume, deren Konfiguration und Anzahl besetzter Plätze */
+  ]
 }
 ```
 
@@ -535,7 +537,7 @@ Jeder Spieler kann ein Spiel bzw. Spielraum erstellen.
 
 ### 5.3.1 Spieler sendet Server Bitte um Kreation eines Spielraums
 
-| Sender     | Empfänger | Typ          |
+| Sender     | Empfänger | Event        |
 | ---------- | --------- | ------------ |
 | Client [1] | Server    | `createGame` |
 
@@ -543,21 +545,20 @@ Jeder Spieler kann ein Spiel bzw. Spielraum erstellen.
 
 ```json
 {
-  "type": "createGame",
-  "data": {
-    "playerName": "[playerName]",
-    "playerId": "[playerId]",
-    "secret": "[secret]",
-    "gameConfig": {
-      /* Spielkonfiguration */
-    }
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
+    "secret": "[secret]"
+  },
+  "gameConfig": {
+    /* Spielkonfiguration */
   }
 }
 ```
 
-### 5.3.2 Server broadcastet allen Spielern, die keinem Raum zugewiesen sind, diesen neuen Raum
+### 5.3.2 Server broadcastet allen Spielern, die keinem Spiel zugewiesen sind, den neuerstellten Spielraum
 
-| Sender | Empfänger  | Typ          |
+| Sender | Empfänger  | Event        |
 | ------ | ---------- | ------------ |
 | Server | Client [n] | `createGame` |
 
@@ -565,15 +566,24 @@ Jeder Spieler kann ein Spiel bzw. Spielraum erstellen.
 
 ```json
 {
-  "type": "createGame",
-  "data": {
-    "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
-    "gameId": "[gameId]",
+  "status": "[StatusCode]",
+  "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]"
+  },
+  "game": {
+    "id": "[gameId]",
+    "creatorId": "[creatorId]",
+    "players": [
+      /* Liste von Spieler Id's in der Lobby */
+    ],
     "gameConfig": {
       /* Spielkonfiguration */
     },
-    "playerName": "[playerName]",
-    "playerId": "[playerId]"
+    "chat": [
+      /* Liste von Chat Meldungen in der Lobby */
+    ]
   }
 }
 ```
@@ -584,7 +594,7 @@ Der Ersteller eines Spiels kann diesen löschen, solange das Spiel noch nicht ge
 
 ### 5.4.1 Spieler sendet Server Bitte um Löschung eines Spielraums
 
-| Sender     | Empfänger | Typ          |
+| Sender     | Empfänger | Event        |
 | ---------- | --------- | ------------ |
 | Client [1] | Server    | `deleteGame` |
 
@@ -592,19 +602,20 @@ Der Ersteller eines Spiels kann diesen löschen, solange das Spiel noch nicht ge
 
 ```json
 {
-  "type": "deleteGame",
-  "data": {
-    "playerName": "[playerName]",
-    "playerId": "[playerId]",
-    "secret": "[secret]",
-    "gameId": "[gameId]"
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
+    "secret": "[secret]"
+  },
+  "game": {
+    "id": "[gameId]"
   }
 }
 ```
 
-### 5.4.2 Server broadcastet allen Spielern, die keinem Raum zugewiesen sind und allen Spielern, die bereits beigetretten sind, dass dieser Raum gelöscht wurde
+### 5.4.2 Server broadcastet allen Spielern, die keinem Spiel zugewiesen sind und allen Spielern, die bereits beigetreten sind, dass dieses Spiel gelöscht wurde
 
-| Sender | Empfänger  | Typ          |
+| Sender | Empfänger  | Event        |
 | ------ | ---------- | ------------ |
 | Server | Client [n] | `deleteGame` |
 
@@ -612,21 +623,21 @@ Der Ersteller eines Spiels kann diesen löschen, solange das Spiel noch nicht ge
 
 ```json
 {
-  "type": "deleteGame",
-  "data": {
-    "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
-    "gameId": "[gameId]"
+  "status": "[StatusCode]",
+  "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+  "game": {
+    "id": "[deletedGameId]"
   }
 }
 ```
 
 ## 5.5 Spiel beitreten
 
-Jeder Spieler kann einem Spiel beitreten, welches noch nicht gestartet wurde und noch Plätze verfügbar sind.
+Jeder Spieler kann einem Spiel beitreten, welches noch nicht gestartet wurde und noch Plätze verfügbar hat.
 
-### 5.5.1 Spieler sendet Server die gewünschte Raum ID
+### 5.5.1 Spieler sendet Server die gewünschte Spiel ID
 
-| Sender     | Empfänger | Typ        |
+| Sender     | Empfänger | Event      |
 | ---------- | --------- | ---------- |
 | Client [1] | Server    | `joinGame` |
 
@@ -634,19 +645,20 @@ Jeder Spieler kann einem Spiel beitreten, welches noch nicht gestartet wurde und
 
 ```json
 {
-  "type": "joinGame",
-  "data": {
-    "gameId": "[gameId]",
-    "playerName": "[playerName]",
-    "playerId": "[playerId]",
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
     "secret": "[secret]"
+  },
+  "game": {
+    "id": "[gameId]"
   }
 }
 ```
 
-### 5.5.2 Server broadcastet allen Spieler in diesem Raum und allen Spielern, die in keinem Raum sind, dass ein Spieler einem Spiel beigetreten ist
+### 5.5.2 Server broadcastet allen Spieler, dass ein Spieler einem Spiel beigetreten ist
 
-| Sender | Empfänger  | Typ        |
+| Sender | Empfänger  | Event      |
 | ------ | ---------- | ---------- |
 | Server | Client [n] | `joinGame` |
 
@@ -654,23 +666,72 @@ Jeder Spieler kann einem Spiel beitreten, welches noch nicht gestartet wurde und
 
 ```json
 {
-  "type": "joinGame",
-  "data": {
-    "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
-    "gameId": "[gameId]",
-    "playerName": "[playerName]",
-    "playerId": "[playerId]"
+  "status": "[StatusCode]",
+  "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]"
+  },
+  "game": {
+    "id": "[gameId]"
   }
 }
 ```
 
-## 5.6 Chat-Nachrichten
+## 5.6 Spiel verlassen
 
-Sendet Nachrichten an den Server, welcher wiederum die Nachrichten den anderen Spielern im selben Raum weiterleitet.
+Jeder Spieler kann eine Lobby verlassen, nachdem er sie betreten hat.
 
-### 5.6.1 Spieler sendet Chat-Nachricht an Server
+### 5.6.1 Spieler sendet Server die gewünschte Spiel ID
 
-| Sender     | Empfänger | Typ    |
+| Sender     | Empfänger | Event       |
+| ---------- | --------- | ----------- |
+| Client [1] | Server    | `leaveGame` |
+
+### Body
+
+```json
+{
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
+    "secret": "[secret]"
+  },
+  "game": {
+    "id": "[gameId]"
+  }
+}
+```
+
+### 5.6.2 Server broadcastet allen Spieler, dass ein Spieler ein Spiel verlassen hat.
+
+| Sender | Empfänger  | Event       |
+| ------ | ---------- | ----------- |
+| Server | Client [n] | `leaveGame` |
+
+### Body
+
+```json
+{
+  "status": "[StatusCode]",
+  "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]"
+  },
+  "game": {
+    "id": "[gameId]"
+  }
+}
+```
+
+## 5.7 Chat-Nachrichten
+
+Sendet Nachrichten an den Server, welcher wiederum die Nachrichten den anderen Spielern im selben Spiel weiterleitet.
+
+### 5.7.1 Spieler sendet Chat-Nachricht an Server
+
+| Sender     | Empfänger | Event  |
 | ---------- | --------- | ------ |
 | Client [1] | Server    | `chat` |
 
@@ -678,20 +739,21 @@ Sendet Nachrichten an den Server, welcher wiederum die Nachrichten den anderen S
 
 ```json
 {
-  "type": "chat",
-  "data": {
-    "playerName": "[playerName]",
-    "playerId": "[playerId]",
-    "secret": "[secret]",
-    "gameId": "[gameId]",
-    "message": "[chatMessage]"
-  }
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
+    "secret": "[secret]"
+  },
+  "game": {
+    "id": "[gameId]"
+  },
+  "message": "[chatMessage]"
 }
 ```
 
-### 5.6.2 Server broadcastet Chat-Nachricht an alle Spieler in Spielraum
+### 5.7.2 Server broadcastet Chat-Nachricht an alle Spieler in Spielraum
 
-| Sender | Empfänger  | Typ    |
+| Sender | Empfänger  | Event  |
 | ------ | ---------- | ------ |
 | Server | Client [n] | `chat` |
 
@@ -699,23 +761,22 @@ Sendet Nachrichten an den Server, welcher wiederum die Nachrichten den anderen S
 
 ```json
 {
-  "type": "chat",
-  "data": {
-    "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
-    "playerName": "[playerName]",
-    "playerId": "[playerId]",
-    "message": "[chatMessage]"
-  }
+  "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]"
+  },
+  "message": "[chatMessage]"
 }
 ```
 
-## 5.7 Spiel starten
+## 5.8 Spiel starten
 
 Der Ersteller des Spiels kann das Spiel starten, sobald die minimale Spieleranzahl erreicht wurde.
 
-### 5.7.1 Spieler sendet Server Bitte um Start des Spiels
+### 5.8.1 Spieler sendet Server Bitte um Start des Spiels
 
-| Sender     | Empfänger | Typ         |
+| Sender     | Empfänger | Event       |
 | ---------- | --------- | ----------- |
 | Client [1] | Server    | `gameStart` |
 
@@ -723,7 +784,7 @@ Der Ersteller des Spiels kann das Spiel starten, sobald die minimale Spieleranza
 
 ```json
 {
-  "type": "gameStart",
+  "event": "gameStart",
   "data": {
     "playerName": "[playerName]",
     "playerId": "[playerId]",
@@ -733,9 +794,9 @@ Der Ersteller des Spiels kann das Spiel starten, sobald die minimale Spieleranza
 }
 ```
 
-### 5.7.2 Server broadcastet initialen Spielstand an alle Spieler im Raum
+### 5.8.2 Server broadcastet initialen Spielstand an alle Spieler im Spiel
 
-| Sender | Empfänger  | Typ         |
+| Sender | Empfänger  | Event       |
 | ------ | ---------- | ----------- |
 | Server | Client [n] | `gameStart` |
 
@@ -743,7 +804,7 @@ Der Ersteller des Spiels kann das Spiel starten, sobald die minimale Spieleranza
 
 ```json
 {
-  "type": "gameStart",
+  "event": "gameStart",
   "data": {
     "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
     "gameState": {
@@ -753,13 +814,13 @@ Der Ersteller des Spiels kann das Spiel starten, sobald die minimale Spieleranza
 }
 ```
 
-## 5.8 Spielstand
+## 5.9 Spielstand
 
 Gibt dem Client die Möglichkeit den aktuellen Spielstand abzufragen, um das korrekte GUI anzuzeigen. Wird u.a. verwendet, wenn ein Spieler den Browser neulädt.
 
-### 5.8.1 Spieler sendet Server Bitte um aktuellen Spielstand
+### 5.9.1 Spieler sendet Server Bitte um aktuellen Spielstand
 
-| Sender     | Empfänger | Typ         |
+| Sender     | Empfänger | Event       |
 | ---------- | --------- | ----------- |
 | Client [1] | Server    | `gameState` |
 
@@ -767,7 +828,7 @@ Gibt dem Client die Möglichkeit den aktuellen Spielstand abzufragen, um das kor
 
 ```json
 {
-  "type": "gameState",
+  "event": "gameState",
   "data": {
     "playerName": "[playerName]",
     "playerId": "[playerId]",
@@ -777,9 +838,9 @@ Gibt dem Client die Möglichkeit den aktuellen Spielstand abzufragen, um das kor
 }
 ```
 
-### 5.8.2 Server sendet aktuellen Spielstand an Spieler
+### 5.9.2 Server sendet aktuellen Spielstand an Spieler
 
-| Sender | Empfänger  | Typ         |
+| Sender | Empfänger  | Event       |
 | ------ | ---------- | ----------- |
 | Server | Client [1] | `gameState` |
 
@@ -787,7 +848,7 @@ Gibt dem Client die Möglichkeit den aktuellen Spielstand abzufragen, um das kor
 
 ```json
 {
-  "type": "gameState",
+  "event": "gameState",
   "data": {
     "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
     "gameState": {
@@ -797,13 +858,13 @@ Gibt dem Client die Möglichkeit den aktuellen Spielstand abzufragen, um das kor
 }
 ```
 
-## 5.9 Spielzug
+## 5.10 Spielzug
 
-Der aktive Spieler kann einen Spielzug durchführen. Falls dieser valide ist, erhalten alle Spieler im Raum einen aktualisierten Spielstand.
+Der aktive Spieler kann einen Spielzug durchführen. Falls dieser valide ist, erhalten alle Spieler im Spiel einen aktualisierten Spielstand.
 
-### 5.9.1 Spieler sendet einen Spielzug
+### 5.10.1 Spieler sendet einen Spielzug
 
-| Sender     | Empfänger | Typ        |
+| Sender     | Empfänger | Event      |
 | ---------- | --------- | ---------- |
 | Client [1] | Server    | `gameMove` |
 
@@ -811,7 +872,7 @@ Der aktive Spieler kann einen Spielzug durchführen. Falls dieser valide ist, er
 
 ```json
 {
-  "type": "gameMove",
+  "event": "gameMove",
   "data": {
     "playerName": "[playerName]",
     "playerId": "[playerId]",
@@ -822,9 +883,9 @@ Der aktive Spieler kann einen Spielzug durchführen. Falls dieser valide ist, er
 }
 ```
 
-### 5.9.2 Server broadcastet aktuellen Spielstand an alle Spieler im Raum
+### 5.10.2 Server broadcastet aktuellen Spielstand an alle Spieler im Spiel
 
-| Sender | Empfänger  | Typ        |
+| Sender | Empfänger  | Event      |
 | ------ | ---------- | ---------- |
 | Server | Client [n] | `gameMove` |
 
@@ -832,7 +893,7 @@ Der aktive Spieler kann einen Spielzug durchführen. Falls dieser valide ist, er
 
 ```json
 {
-  "type": "gameMove",
+  "event": "gameMove",
   "data": {
     "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
     "gameState": {
@@ -842,13 +903,13 @@ Der aktive Spieler kann einen Spielzug durchführen. Falls dieser valide ist, er
 }
 ```
 
-## 5.10 Spiel abbrechen
+## 5.11 Spiel abbrechen
 
 Jeder Spieler kann die restlichen Spieler um ein Spielabbruch bitten. Sollte innert festgelegter Frist kein anderer Spieler dem Abbruch widersprechen, wird das Spiel abgebrochen.
 
-### 5.10.1 Spieler sendet Anfrage um Spielabbruch bzw. Mitspieler bestätigen Abbruch oder widersprechen Abbruch
+### 5.11.1 Spieler sendet Anfrage um Spielabbruch bzw. Mitspieler bestätigen Abbruch oder widersprechen Abbruch
 
-| Sender     | Empfänger | Typ         |
+| Sender     | Empfänger | Event       |
 | ---------- | --------- | ----------- |
 | Client [1] | Server    | `gameAbort` |
 
@@ -856,7 +917,7 @@ Jeder Spieler kann die restlichen Spieler um ein Spielabbruch bitten. Sollte inn
 
 ```json
 {
-   "type": "gameAbort",
+   "event": "gameAbort",
    "data": {
       "playerName": "[playerName]",
       "playerId": "[playerId]",
@@ -867,9 +928,9 @@ Jeder Spieler kann die restlichen Spieler um ein Spielabbruch bitten. Sollte inn
 }
 ```
 
-### 5.10.2 Server broadcastet Anfrage an alle Spieler im Raum
+### 5.11.2 Server broadcastet Anfrage an alle Spieler im Spiel
 
-| Sender | Empfänger  | Typ         |
+| Sender | Empfänger  | Event       |
 | ------ | ---------- | ----------- |
 | Server | Client [n] | `gameAbort` |
 
@@ -877,7 +938,7 @@ Jeder Spieler kann die restlichen Spieler um ein Spielabbruch bitten. Sollte inn
 
 ```json
 {
-   "type": "gameAbort",
+   "event": "gameAbort",
    "data": {
       "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
       "playerName": "[playerName]",
@@ -887,13 +948,13 @@ Jeder Spieler kann die restlichen Spieler um ein Spielabbruch bitten. Sollte inn
 }
 ```
 
-## 5.11 Spielraumübersicht
+## 5.12 Spielraumübersicht
 
 Gibt dem Client die Möglichkeit den offnen Spielräume abzufragen, um das korrekte GUI anzuzeigen. Wird u.a. verwendet, wenn ein Spieler den Browser neulädt oder ein Spiel verlässt.
 
-### 5.11.1 Spieler sendet Server Bitte um aktuelle Spielraumübersicht
+### 5.12.1 Spieler sendet Server Bitte um aktuelle Spielraumübersicht
 
-| Sender     | Empfänger | Typ         |
+| Sender     | Empfänger | Event       |
 | ---------- | --------- | ----------- |
 | Client [1] | Server    | `gameState` |
 
@@ -901,7 +962,7 @@ Gibt dem Client die Möglichkeit den offnen Spielräume abzufragen, um das korre
 
 ```json
 {
-  "type": "gameState",
+  "event": "gameState",
   "data": {
     "playerName": "[playerName]",
     "playerId": "[playerId]",
@@ -910,9 +971,9 @@ Gibt dem Client die Möglichkeit den offnen Spielräume abzufragen, um das korre
 }
 ```
 
-### 5.11.2 Server sendet aktuelle Spielraumübersicht an Spieler
+### 5.12.2 Server sendet aktuelle Spielraumübersicht an Spieler
 
-| Sender | Empfänger  | Typ         |
+| Sender | Empfänger  | Event       |
 | ------ | ---------- | ----------- |
 | Server | Client [1] | `gameState` |
 
@@ -920,7 +981,7 @@ Gibt dem Client die Möglichkeit den offnen Spielräume abzufragen, um das korre
 
 ```json
 {
-  "type": "gameState",
+  "event": "gameState",
   "data": {
     "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
     "games": [
