@@ -22,7 +22,7 @@ export function playerExists(
     (p) => p.id === player.id && p.secret === player.secret
   );
 
-  return found !== undefined ? true : false;
+  return found !== undefined;
 }
 
 export function canGameBeDeleted(
@@ -35,7 +35,7 @@ export function canGameBeDeleted(
     (g) => g.id === game.id && g.creatorId === player.id
   );
 
-  return found !== undefined ? true : false;
+  return found !== undefined;
 }
 
 export function deleteGame(serverState: ServerState, game: SimpleGame) {
@@ -48,7 +48,7 @@ export function gameExists(
 ): boolean {
   const found = serverState.games.find((g) => g.id === game.id);
 
-  return found !== undefined ? true : false;
+  return found !== undefined;
 }
 
 export function isFreePlaceInGameAvailabe(
@@ -59,7 +59,7 @@ export function isFreePlaceInGameAvailabe(
   if (g === undefined) {
     return false;
   }
-  return g.players.length < g.gameConfig.maxPlayerCountForGame ? true : false;
+  return g.players.length < g.gameConfig.maxPlayerCountForGame;
 }
 
 export function joinGame(
