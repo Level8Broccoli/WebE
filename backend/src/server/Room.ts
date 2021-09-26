@@ -14,4 +14,8 @@ export class Room {
     this.players.push(creatorId);
     this.roomConfig = roomConfig;
   }
+
+  join(playerId: string) {
+    this.players.push(playerId);
+  }
 }

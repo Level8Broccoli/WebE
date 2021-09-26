@@ -30,7 +30,7 @@ export class ServerState {
     return filtered.length !== 0 ? true : false;
   }
 
-  roomExist(roomId: string, creatorId: string): boolean {
+  roomReadyForDeletion(roomId: string, creatorId: string): boolean {
     const filtered = this._rooms.filter(
       (r) => r.id === roomId && r.creatorId === creatorId
     );
@@ -43,5 +43,25 @@ export class ServerState {
       this._rooms.findIndex((room) => room.id === roomId),
       1
     );
+  }
+
+  roomExist(roomId: string) {
+    const room = this._rooms.filter((r) => r.id === roomId);
+    return room.length === 1 ? true : false;
+  }
+
+  freePlaceInRoomAvailabe(roomId: string): boolean {
+    const room = this._rooms.find((r) => r.id === roomId);
+    if (room === undefined) {
+      return false;
+    }
+    return room.players.length < room.roomConfig.maxPlayerCountForRoom
+      ? true
+      : false;
+  }
+
+  joinGame(playerId: string, roomId: string) {
+    const room = this._rooms.find((r) => r.id === roomId);
+    room?.join(playerId);
   }
 }

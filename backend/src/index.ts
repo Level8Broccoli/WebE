@@ -57,7 +57,7 @@ io.on("connection", (socket) => {
     api
       .deleteGame(request)
       .then((response) => {
-        // Boradcast to all connected sockets
+        // Broadcast to all connected sockets
         io.emit("deleteGame", response);
       })
       .catch((error) => {
@@ -66,6 +66,23 @@ io.on("connection", (socket) => {
           message: error.message,
         };
         socket.emit("deleteGame", response);
+      });
+  });
+
+  // Join game endpoint
+  socket.on("joinGame", (request) => {
+    api
+      .joinGame(request)
+      .then((response) => {
+        // Broadcast to all connected sockets
+        io.emit("joinGame", response);
+      })
+      .catch((error) => {
+        const response = {
+          status: ErrorCode.ERROR,
+          message: error.message,
+        };
+        socket.emit("joinGame", response);
       });
   });
 

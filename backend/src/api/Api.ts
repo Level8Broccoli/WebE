@@ -93,7 +93,9 @@ export class Api {
         throw new Error("Id / secret combination not valid.");
       }
 
-      if (!this._serverState.roomExist(json.room.id, json.player.id)) {
+      if (
+        !this._serverState.roomReadyForDeletion(json.room.id, json.player.id)
+      ) {
         throw new Error(
           "Room / creator combination not valid. Cannot delete room."
         );
@@ -106,6 +108,45 @@ export class Api {
       const response = {
         status: ErrorCode.OK,
         timestamp: moment(new Date(), DATE_TIME_FORMAT),
+        room: {
+          id: json.room.id,
+        },
+      };
+
+      resolve(response);
+    });
+  }
+
+  joinGame(request: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const json = JSON.parse(request);
+
+      // [Server] Validation (playerId + Secret, Spielraum hat noch Plätze frei) -> Errorfeedback
+      if (!this._serverState.playerExist(json.player.id, json.player.secret)) {
+        throw new Error("Id / secret combination not valid.");
+      }
+
+      if (!this._serverState.roomExist(json.room.id)) {
+        throw new Error("Room with id does not exist.");
+      }
+
+      if (!this._serverState.freePlaceInRoomAvailabe(json.room.id)) {
+        throw new Error(
+          "Room cannot be joined. Room has no available space for new player."
+        );
+      }
+
+      // [Server] PlayerId in ServerState -> Game als Spieler hinzufügen
+      this._serverState.joinGame(json.player.id, json.room.id);
+
+      // [Server] Nachricht (type: joinGame) an alle Clients
+      const response = {
+        status: ErrorCode.OK,
+        timestamp: moment(new Date(), DATE_TIME_FORMAT),
+        player: {
+          id: json.player.id,
+          name: json.player.name,
+        },
         room: {
           id: json.room.id,
         },
