@@ -329,7 +329,24 @@ _Voraussetzung: Player muss in einem (von sich selbst) erstellten Spiel sein._
 - [Client] Aktualisierung der Gameübersicht, falls Player noch keinem Spiel beigetreten ist
 - [Client] Aktualisierung des GUI, beim Player, der dem Spiel beigetreten ist
 
-6. Nachdem das Spiel gestartet ist, bietet das System den Spielern die Möglichkeit das Spiel zu spielen.
+6. Nachdem der Spieler einer Lobby beigetreten ist, kann er diese auch wieder verlassen.
+
+> Abnahmekriterium:
+>
+> Die Spieler haben in der Lobby die Möglichkeit,\
+> via Klick auf einen Butteon diese wieder zu verlassen.
+
+#### Ablauf
+
+- [Client] Player klickt auf Button
+- [Client] Nachricht (type: leaveGame) an Server
+- [Server] Validation (playerId + Secret)
+- [Server] Player aus Lobby entfernen
+- [Server] Nachricht (type: leaveGame) an alle Clients
+- [Client] Aktualisierung der Gameübersicht, falls Player noch keinem Spiel beigetreten ist
+- [Client] Aktualisierung des GUI, beim Player, der das Spiel verlassen hat.
+
+7. Nachdem das Spiel gestartet ist, bietet das System den Spielern die Möglichkeit das Spiel zu spielen.
 
 > Abnahmekriterium:
 >
@@ -339,7 +356,7 @@ _Voraussetzung: Player muss in einem (von sich selbst) erstellten Spiel sein._
 
 - `TBD`
 
-7. Nach Spielende soll das System Daten speichern.
+8. Nach Spielende soll das System Daten speichern.
 
 > Abnahmekriterium:
 >
@@ -349,7 +366,7 @@ _Voraussetzung: Player muss in einem (von sich selbst) erstellten Spiel sein._
 
 - `TBD`
 
-8. Falls ein Spieler während des Spiels aussteigt (freiwillig oder unfreiwillig), soll das System das Spiel nicht blockieren.
+9. Falls ein Spieler während des Spiels aussteigt (freiwillig oder unfreiwillig), soll das System das Spiel nicht blockieren.
 
 > Abnahmekriterium:
 >
@@ -359,7 +376,7 @@ _Voraussetzung: Player muss in einem (von sich selbst) erstellten Spiel sein._
 
 - `TBD`
 
-9. Wenn alle Spieler einverstanden sind, kann ein Spiel auch abgebrochen werden.
+10. Wenn alle Spieler einverstanden sind, kann ein Spiel auch abgebrochen werden.
 
 > Abnahmekriterium:
 >
@@ -372,7 +389,7 @@ _Voraussetzung: Player muss in einem (von sich selbst) erstellten Spiel sein._
 
 - `TBD`
 
-10. Falls ein Fehler / Browsertab neuladen / Verbindungsproblem besteht, soll das System dafür sorgen, dass der Benutzer weiterspielen kann.
+11. Falls ein Fehler / Browsertab neuladen / Verbindungsproblem besteht, soll das System dafür sorgen, dass der Benutzer weiterspielen kann.
 
 > Abnahmekriterium:
 >
@@ -397,7 +414,7 @@ _Voraussetzung: Player muss in einem (von sich selbst) erstellten Spiel sein._
 - [Server] Nachricht (type: gameState) an Client
 - [Client] Aktualisierung des GUI
 
-11. Jederzeit kann ein Benutzer zwischen Deutscher und Englischer Sprache wechseln.
+12. Jederzeit kann ein Benutzer zwischen Deutscher und Englischer Sprache wechseln.
 
 > Abnahmekriterium:
 >
