@@ -39,7 +39,10 @@ io.on("connection", (socket) => {
   socket.on("createGame", (request) => {
     api
       .createGame(request)
-      .then((response) => socket.emit("createGame", response))
+      .then((response) => {
+        // Broadcast to all connected sockets
+        io.emit("createGame", response);
+      })
       .catch((error) => {
         const response = {
           status: ErrorCode.ERROR,
