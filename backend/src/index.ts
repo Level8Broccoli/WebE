@@ -2,12 +2,11 @@ import { Server } from "socket.io";
 import { Api } from "./api/Api";
 import { ErrorCode } from "./api/ErrorCode";
 import { ErrorResponse } from "./model/ResponseTypes";
-import { ServerState } from "./model/ServerState";
 
 const PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
 const serverState = {
   players: [],
-  rooms: [],
+  games: [],
 };
 const api = new Api(serverState);
 

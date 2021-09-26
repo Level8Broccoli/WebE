@@ -19,10 +19,10 @@ import {
   registerPlayer,
   playerExists,
   createGame,
-  canRoomBeDeleted,
+  canGameBeDeleted,
   deleteGame,
-  roomExists,
-  isFreePlaceInRoomAvailabe,
+  gameExists,
+  isFreePlaceInGameAvailabe,
   joinGame,
 } from "./services/ServerStateService";
 
@@ -59,7 +59,7 @@ export class Api {
         status: ErrorCode.OK,
         timestamp: moment(new Date(), DATE_TIME_FORMAT),
         player: player,
-        rooms: this._serverState.rooms,
+        games: this._serverState.games,
       };
 
       resolve(response);
@@ -74,20 +74,20 @@ export class Api {
       }
 
       // TBD: Regeln überprüfen
-      if (request.roomConfig === undefined) {
-        throw new Error("No roomconfig set.");
+      if (request.gameConfig === undefined) {
+        throw new Error("No game config set.");
       }
 
-      // [Server] RoomId generieren
+      // [Server] gameId generieren
       // [Server] Game in ServerState anlegen (Konfiguration, Ersteller)
-      const room = {
+      const game = {
         id: getUUID(),
         creatorId: request.player.id,
-        roomConfig: request.roomConfig,
+        gameConfig: request.gameConfig,
         players: [request.player.id],
       };
 
-      createGame(this._serverState, room);
+      createGame(this._serverState, game);
 
       // [Server] Nachricht (type: createGame) an alle Clients
       const response = {
@@ -97,7 +97,7 @@ export class Api {
           id: request.player.id,
           name: request.player.name,
         },
-        room: room,
+        game: game,
       };
 
       resolve(response);
@@ -106,26 +106,26 @@ export class Api {
 
   deleteGame(request: DeleteGameRequest): Promise<DeleteGameResponse> {
     return new Promise((resolve, reject) => {
-      // [Server] Validation (playerId + Secret + roomId, playerId muss Spielraum-Ersteller sein) -> Errorfeedback
+      // [Server] Validation (playerId + Secret + gameId, playerId muss Spielraum-Ersteller sein) -> Errorfeedback
       if (!playerExists(this._serverState, request.player)) {
         throw new Error("Id / secret combination not valid.");
       }
 
-      if (!canRoomBeDeleted(this._serverState, request.room, request.player)) {
+      if (!canGameBeDeleted(this._serverState, request.game, request.player)) {
         throw new Error(
-          "Room / creator combination not valid. Cannot delete room."
+          "Game / creator combination not valid. Cannot delete game."
         );
       }
 
       // [Server] Game in ServerState entfernen
-      deleteGame(this._serverState, request.room);
+      deleteGame(this._serverState, request.game);
 
       // [Server] Nachricht (type: deleteGame) an alle Clients
       const response = {
         status: ErrorCode.OK,
         timestamp: moment(new Date(), DATE_TIME_FORMAT),
-        room: {
-          id: request.room.id,
+        game: {
+          id: request.game.id,
         },
       };
 
@@ -140,18 +140,18 @@ export class Api {
         throw new Error("Id / secret combination not valid.");
       }
 
-      if (!roomExists(this._serverState, request.room)) {
-        throw new Error("Room with id does not exist.");
+      if (!gameExists(this._serverState, request.game)) {
+        throw new Error("Game with id does not exist.");
       }
 
-      if (!isFreePlaceInRoomAvailabe(this._serverState, request.room)) {
+      if (!isFreePlaceInGameAvailabe(this._serverState, request.game)) {
         throw new Error(
-          "Room cannot be joined. Room has no available space for new player."
+          "Game cannot be joined. Game has no available space for new player."
         );
       }
 
       // [Server] PlayerId in ServerState -> Game als Spieler hinzufügen
-      joinGame(this._serverState, request.player, request.room);
+      joinGame(this._serverState, request.player, request.game);
 
       // [Server] Nachricht (type: joinGame) an alle Clients
       const response = {
@@ -161,8 +161,8 @@ export class Api {
           id: request.player.id,
           name: request.player.name,
         },
-        room: {
-          id: request.room.id,
+        game: {
+          id: request.game.id,
         },
       };
 

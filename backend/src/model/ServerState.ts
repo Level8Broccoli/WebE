@@ -1,7 +1,7 @@
 import { PrivatePlayer } from "./Player";
-import { Room } from "./Room";
+import { Game } from "./Game";
 
 export type ServerState = {
   players: PrivatePlayer[];
-  rooms: Room[];
+  games: Game[];
 };

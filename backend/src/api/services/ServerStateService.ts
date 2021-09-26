@@ -1,5 +1,5 @@
 import { PrivatePlayer } from "../../model/Player";
-import { Room, SimpleRoom } from "../../model/Room";
+import { Game, SimpleGame } from "../../model/Game";
 import { ServerState } from "../../model/ServerState";
 
 export function registerPlayer(
@@ -9,8 +9,8 @@ export function registerPlayer(
   serverState.players.push(player);
 }
 
-export function createGame(serverState: ServerState, room: Room) {
-  serverState.rooms.push(room);
+export function createGame(serverState: ServerState, game: Game) {
+  serverState.games.push(game);
 }
 
 export function playerExists(
@@ -25,48 +25,47 @@ export function playerExists(
   return found !== undefined ? true : false;
 }
 
-export function canRoomBeDeleted(
+export function canGameBeDeleted(
   serverState: ServerState,
-  room: SimpleRoom,
+  game: SimpleGame,
   player: PrivatePlayer
 ): boolean {
-  // Find room with correct roomId and creatorId pair
-  const found = serverState.rooms.find(
-    (r) => r.id === room.id && r.creatorId === player.id
+  // Find game with correct gameId and creatorId pair
+  const found = serverState.games.find(
+    (g) => g.id === game.id && g.creatorId === player.id
   );
 
   return found !== undefined ? true : false;
 }
 
-export function deleteGame(serverState: ServerState, room: SimpleRoom) {
-  serverState.rooms = serverState.rooms.filter((r) => r.id !== room.id);
+export function deleteGame(serverState: ServerState, game: SimpleGame) {
+  serverState.games = serverState.games.filter((g) => g.id !== game.id);
 }
 
-export function roomExists(
+export function gameExists(
   serverState: ServerState,
-  room: SimpleRoom
+  game: SimpleGame
 ): boolean {
-  const found = serverState.rooms.find((r) => r.id === room.id);
+  const found = serverState.games.find((g) => g.id === game.id);
 
   return found !== undefined ? true : false;
 }
 
-export function isFreePlaceInRoomAvailabe(
+export function isFreePlaceInGameAvailabe(
   serverState: ServerState,
-  room: SimpleRoom
+  game: SimpleGame
 ): boolean {
-  const r = serverState.rooms.find((r) => r.id === room.id);
-  if (r === undefined) {
+  const g = serverState.games.find((g) => g.id === game.id);
+  if (g === undefined) {
     return false;
   }
-  return r.players.length < r.roomConfig.maxPlayerCountForRoom ? true : false;
+  return g.players.length < g.gameConfig.maxPlayerCountForGame ? true : false;
 }
 
 export function joinGame(
   serverState: ServerState,
   player: PrivatePlayer,
-  room: SimpleRoom
+  game: SimpleGame
 ) {
-  const r = serverState.rooms.find((r) => r.id === room.id);
-  r?.players.push(player.id);
+  serverState.games.find((g) => g.id === game.id)?.players.push(player.id);
 }

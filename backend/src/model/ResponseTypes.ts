@@ -1,33 +1,33 @@
 import moment from "moment";
 import { ErrorCode } from "../api/ErrorCode";
 import { PublicPlayer, PrivatePlayer } from "./Player";
-import { Room, SimpleRoom } from "./Room";
+import { Game, SimpleGame } from "./Game";
 
 export type RegisterPlayerResponse = {
   status: ErrorCode;
   timestamp: moment.Moment;
   player: PrivatePlayer;
-  rooms: Room[];
+  games: Game[];
 };
 
 export type CreateGameResponse = {
   status: ErrorCode;
   timestamp: moment.Moment;
   player: PublicPlayer;
-  room: Room;
+  game: Game;
 };
 
 export type DeleteGameResponse = {
   status: ErrorCode;
   timestamp: moment.Moment;
-  room: SimpleRoom;
+  game: SimpleGame;
 };
 
 export type JoinGameResponse = {
   status: ErrorCode;
   timestamp: moment.Moment;
   player: PublicPlayer;
-  room: SimpleRoom;
+  game: SimpleGame;
 };
 
 export type ErrorResponse = {
