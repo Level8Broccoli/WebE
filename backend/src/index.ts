@@ -4,10 +4,10 @@ import { ErrorCode } from "./api/ErrorCode";
 import { ServerState } from "./server/ServerState";
 import { TokenGenerator } from "./util/TokenGenerator";
 
-const PORT: number = process.env.PORT ? Number(process.env.PORT) : 3000;
-const serverState: ServerState = new ServerState();
+const PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
+const serverState = new ServerState();
 const tokenGenerator = new TokenGenerator();
-const api: Api = new Api(serverState, tokenGenerator);
+const api = new Api(serverState, tokenGenerator);
 
 const io = new Server(PORT, {
   cors: {

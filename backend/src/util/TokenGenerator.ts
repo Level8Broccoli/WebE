@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 
 export class TokenGenerator {
-  private SECRET_LENGTH: number = 12;
+  private SECRET_LENGTH = 12;
 
   getUUID(): string {
     return uuidv4();
