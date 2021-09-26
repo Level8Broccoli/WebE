@@ -4,6 +4,7 @@ import { ITokenGenerator } from "../util/ITokenGenerator";
 import moment from "moment";
 import { ErrorCode } from "./ErrorCode";
 import { Room } from "../server/Room";
+import { RoomConfig } from "../server/RoomConfig";
 
 const DATE_TIME_FORMAT = "YYYY-MM-DDThh:mm:ss";
 
@@ -64,7 +65,8 @@ export class Api {
       const id = this._tokenGenerator.getUUID();
 
       // [Server] Game in ServerState anlegen (Konfiguration, Ersteller)
-      const room = new Room(id, json.player.id);
+      const roomConfig = new RoomConfig(json.roomConfig.maxPlayerCountForRoom);
+      const room = new Room(id, json.player.id, roomConfig);
       this._serverState.createGame(room);
 
       // [Server] Nachricht (type: createGame) an alle Clients
