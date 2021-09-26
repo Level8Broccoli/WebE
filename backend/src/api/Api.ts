@@ -4,6 +4,7 @@ import { DateTime } from "luxon";
 import { ErrorCode } from "./ErrorCode";
 import { getSecret, getUUID } from "../services/TokenGeneratorService";
 import {
+  ChatRequest,
   CreateGameRequest,
   DeleteGameRequest,
   JoinGameRequest,
@@ -11,6 +12,7 @@ import {
   RegisterPlayerRequest,
 } from "../model/RequestTypes";
 import {
+  ChatResponse,
   CreateGameResponse,
   DeleteGameResponse,
   JoinGameResponse,
@@ -27,6 +29,8 @@ import {
   isFreePlaceInGameAvailabe,
   joinGame,
   leaveGame,
+  playerInGame,
+  addChatMessage,
 } from "../services/ServerStateService";
 
 const DATE_TIME_FORMAT = "YYYY-MM-DDThh:mm:ss";
@@ -88,6 +92,7 @@ export class Api {
         creatorId: request.player.id,
         gameConfig: request.gameConfig,
         players: [request.player.id],
+        chat: [],
       };
 
       createGame(this._serverState, game);
@@ -194,6 +199,44 @@ export class Api {
         game: {
           id: request.game.id,
         },
+      };
+
+      resolve(response);
+    });
+  }
+
+  chat(request: ChatRequest): Promise<ChatResponse> {
+    return new Promise((resolve, reject) => {
+      // [Server] Validation (playerId + Secret) -> Errorfeedback
+      if (!playerExists(this._serverState, request.player)) {
+        throw new Error("Id / secret combination not valid.");
+      }
+
+      // [Server] Check if player exists in game
+      if (!playerInGame(this._serverState, request.player, request.game)) {
+        throw new Error(
+          "Player cannot chat with room, because he is not part of it"
+        );
+      }
+
+      // [Server] Add chat message to the corresponding game
+      const message = {
+        player: {
+          id: request.player.id,
+          name: request.player.name,
+        },
+        message: request.message,
+      };
+
+      addChatMessage(this._serverState, request.game, message);
+
+      const response = {
+        timestamp: DateTime.now(),
+        player: {
+          id: request.player.id,
+          name: request.player.name,
+        },
+        message: request.message,
       };
 
       resolve(response);

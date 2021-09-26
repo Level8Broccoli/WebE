@@ -37,6 +37,12 @@ export type LeaveGameResponse = {
   game: SimpleGame;
 };
 
+export type ChatResponse = {
+  timestamp: DateTime;
+  player: PublicPlayer;
+  message: string;
+};
+
 export type ErrorResponse = {
   status: ErrorCode;
   message: string;

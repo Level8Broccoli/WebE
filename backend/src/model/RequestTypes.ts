@@ -24,3 +24,9 @@ export type LeaveGameRequest = {
   player: PrivatePlayer;
   game: SimpleGame;
 };
+
+export type ChatRequest = {
+  player: PrivatePlayer;
+  game: SimpleGame;
+  message: string;
+};

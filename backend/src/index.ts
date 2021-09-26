@@ -2,6 +2,7 @@ import { Server } from "socket.io";
 import { Api } from "./api/Api";
 import { ErrorCode } from "./api/ErrorCode";
 import {
+  ChatRequest,
   CreateGameRequest,
   DeleteGameRequest,
   JoinGameRequest,
@@ -102,6 +103,21 @@ io.on("connection", (socket) => {
           message: error.message,
         };
         socket.emit("leaveGame", response);
+      });
+  });
+
+  socket.on("chat", (request: ChatRequest) => {
+    api
+      .chat(request)
+      .then((response) => {
+        socket.to(request.game.id).emit(response.message);
+      })
+      .catch((error) => {
+        const response: ErrorResponse = {
+          status: ErrorCode.ERROR,
+          message: error.message,
+        };
+        socket.emit("chat", response);
       });
   });
 

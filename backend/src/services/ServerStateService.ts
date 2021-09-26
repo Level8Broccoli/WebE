@@ -1,6 +1,7 @@
 import { PrivatePlayer } from "../model/Player";
 import { Game, SimpleGame } from "../model/Game";
 import { ServerState } from "../model/ServerState";
+import { ChatMessage } from "../model/Chat";
 
 export function registerPlayer(
   serverState: ServerState,
@@ -79,4 +80,31 @@ export function leaveGame(
   if (g !== undefined) {
     g.players = g.players.filter((id) => id !== player.id);
   }
+}
+
+export function playerInGame(
+  serverState: ServerState,
+  player: PrivatePlayer,
+  game: SimpleGame
+) {
+  // To be simplified
+  const g = serverState.games.find((g) => g.id === game.id);
+  if (g !== undefined) {
+    const p = g.players.find((id) => id === player.id);
+    if (p !== undefined) {
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
+}
+
+export function addChatMessage(
+  serverState: ServerState,
+  game: SimpleGame,
+  chatMessage: ChatMessage
+) {
+  serverState.games.find((g) => g.id === game.id)?.chat.push(chatMessage);
 }
