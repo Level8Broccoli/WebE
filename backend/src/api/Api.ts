@@ -81,4 +81,35 @@ export class Api {
       resolve(response);
     });
   }
+
+  deleteGame(request: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const json = JSON.parse(request);
+
+      // [Server] Validation (playerId + Secret + roomId, playerId muss Spielraum-Ersteller sein) -> Errorfeedback
+      if (!this._serverState.playerExist(json.player.id, json.player.secret)) {
+        throw new Error("Id / secret combination not valid.");
+      }
+
+      if (!this._serverState.roomExist(json.room.id, json.player.id)) {
+        throw new Error(
+          "Room / creator combination not valid. Cannot delete room."
+        );
+      }
+
+      // [Server] Game in ServerState entfernen
+      this._serverState.deleteGame(json.room.id);
+
+      // [Server] Nachricht (type: deleteGame) an alle Clients
+      const response = {
+        status: ErrorCode.OK,
+        timestamp: moment(new Date(), DATE_TIME_FORMAT),
+        room: {
+          id: json.room.id,
+        },
+      };
+
+      resolve(response);
+    });
+  }
 }

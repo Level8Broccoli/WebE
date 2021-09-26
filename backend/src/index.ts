@@ -52,6 +52,23 @@ io.on("connection", (socket) => {
       });
   });
 
+  // Delete created game endpoint
+  socket.on("deleteGame", (request) => {
+    api
+      .deleteGame(request)
+      .then((response) => {
+        // Boradcast to all connected sockets
+        io.emit("deleteGame", response);
+      })
+      .catch((error) => {
+        const response = {
+          status: ErrorCode.ERROR,
+          message: error.message,
+        };
+        socket.emit("deleteGame", response);
+      });
+  });
+
   socket.on("disconnect", () => {
     console.log(`Disconnected ${socket.id}`);
   });

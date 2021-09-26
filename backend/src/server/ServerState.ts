@@ -29,4 +29,19 @@ export class ServerState {
 
     return filtered.length !== 0 ? true : false;
   }
+
+  roomExist(roomId: string, creatorId: string): boolean {
+    const filtered = this._rooms.filter(
+      (r) => r.id === roomId && r.creatorId === creatorId
+    );
+
+    return filtered.length !== 0 ? true : false;
+  }
+
+  deleteGame(roomId: string) {
+    this._rooms = this._rooms.splice(
+      this._rooms.findIndex((room) => room.id === roomId),
+      1
+    );
+  }
 }
