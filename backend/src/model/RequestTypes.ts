@@ -19,3 +19,8 @@ export type JoinGameRequest = {
   player: PrivatePlayer;
   game: SimpleGame;
 };
+
+export type LeaveGameRequest = {
+  player: PrivatePlayer;
+  game: SimpleGame;
+};

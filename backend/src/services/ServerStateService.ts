@@ -1,6 +1,6 @@
-import { PrivatePlayer } from "../../model/Player";
-import { Game, SimpleGame } from "../../model/Game";
-import { ServerState } from "../../model/ServerState";
+import { PrivatePlayer } from "../model/Player";
+import { Game, SimpleGame } from "../model/Game";
+import { ServerState } from "../model/ServerState";
 
 export function registerPlayer(
   serverState: ServerState,
@@ -68,4 +68,15 @@ export function joinGame(
   game: SimpleGame
 ) {
   serverState.games.find((g) => g.id === game.id)?.players.push(player.id);
+}
+
+export function leaveGame(
+  serverState: ServerState,
+  player: PrivatePlayer,
+  game: SimpleGame
+) {
+  const g = serverState.games.find((g) => g.id === game.id);
+  if (g !== undefined) {
+    g.players = g.players.filter((id) => id !== player.id);
+  }
 }

@@ -2,17 +2,19 @@ import { PrivatePlayer } from "../model/Player";
 import { ServerState } from "../model/ServerState";
 import moment from "moment";
 import { ErrorCode } from "./ErrorCode";
-import { getSecret, getUUID } from "./services/TokenGeneratorService";
+import { getSecret, getUUID } from "../services/TokenGeneratorService";
 import {
   CreateGameRequest,
   DeleteGameRequest,
   JoinGameRequest,
+  LeaveGameRequest,
   RegisterPlayerRequest,
 } from "../model/RequestTypes";
 import {
   CreateGameResponse,
   DeleteGameResponse,
   JoinGameResponse,
+  LeaveGameResponse,
   RegisterPlayerResponse,
 } from "../model/ResponseTypes";
 import {
@@ -24,7 +26,8 @@ import {
   gameExists,
   isFreePlaceInGameAvailabe,
   joinGame,
-} from "./services/ServerStateService";
+  leaveGame,
+} from "../services/ServerStateService";
 
 const DATE_TIME_FORMAT = "YYYY-MM-DDThh:mm:ss";
 
@@ -154,6 +157,33 @@ export class Api {
       joinGame(this._serverState, request.player, request.game);
 
       // [Server] Nachricht (type: joinGame) an alle Clients
+      const response = {
+        status: ErrorCode.OK,
+        timestamp: moment(new Date(), DATE_TIME_FORMAT),
+        player: {
+          id: request.player.id,
+          name: request.player.name,
+        },
+        game: {
+          id: request.game.id,
+        },
+      };
+
+      resolve(response);
+    });
+  }
+
+  leaveGame(request: LeaveGameRequest): Promise<LeaveGameResponse> {
+    return new Promise((resolve, reject) => {
+      // [Server] Validation (playerId + Secret) -> Errorfeedback
+      if (!playerExists(this._serverState, request.player)) {
+        throw new Error("Id / secret combination not valid.");
+      }
+
+      // [Server] PlayerId in ServerState -> Game als Spieler entfernen
+      leaveGame(this._serverState, request.player, request.game);
+
+      // [Server] Nachricht (type: leaveGame) an alle Clients
       const response = {
         status: ErrorCode.OK,
         timestamp: moment(new Date(), DATE_TIME_FORMAT),

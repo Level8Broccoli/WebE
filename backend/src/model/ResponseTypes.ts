@@ -30,6 +30,13 @@ export type JoinGameResponse = {
   game: SimpleGame;
 };
 
+export type LeaveGameResponse = {
+  status: ErrorCode;
+  timestamp: moment.Moment;
+  player: PublicPlayer;
+  game: SimpleGame;
+};
+
 export type ErrorResponse = {
   status: ErrorCode;
   message: string;
