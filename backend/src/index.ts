@@ -46,7 +46,7 @@ io.on("connection", (socket) => {
     api
       .createGame(request)
       .then((response) => {
-        // Broadcast to all connected sockets
+        socket.join(response.game.id);
         io.emit("createGame", response);
       })
       .catch((error) => {
@@ -62,7 +62,7 @@ io.on("connection", (socket) => {
     api
       .deleteGame(request)
       .then((response) => {
-        // Broadcast to all connected sockets
+        socket.leave(response.game.id);
         io.emit("deleteGame", response);
       })
       .catch((error) => {
@@ -110,7 +110,7 @@ io.on("connection", (socket) => {
     api
       .chat(request)
       .then((response) => {
-        socket.to(request.game.id).emit(response.message);
+        socket.to(request.game.id).emit("chat", response.message);
       })
       .catch((error) => {
         const response: ErrorResponse = {
