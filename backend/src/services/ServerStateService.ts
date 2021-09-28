@@ -60,7 +60,7 @@ export function isFreePlaceInGameAvailabe(
   if (g === undefined) {
     return false;
   }
-  return g.players.length < g.gameConfig.maxPlayerCountForGame;
+  return g.players.length < g.config.maxPlayerCountForGame;
 }
 
 export function joinGame(
