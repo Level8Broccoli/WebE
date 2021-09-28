@@ -462,21 +462,21 @@ Im folgenden werden die Nachrichten aufgeführt, die zwischen Clients und Server
 
 Grundsätzlich werden folgende Datenpunkte regelmässig verwendet:
 
-| Datenpunkt        | Beschreibung                                                                        |
-| ----------------- | ----------------------------------------------------------------------------------- |
-| `event`           | Klassifizierung der Nachricht                                                       |
-| `game`            | Beinhaltet eine Spielreferenz                                                       |
-| `game.id`         | UUID des Spielraums                                                                 |
-| `game.creatorId`  | UUID des Spielraumerstellers                                                        |
-| `game.players`    | Liste der Spieler Id's in der Lobby                                                 |
-| `game.gameConfig` | Spielkonfiguration                                                                  |
-| `game.chat`       | Liste der Chatnachrichten in der Lobby                                              |
-| `timestamp`       | Server-Zeitstempel                                                                  |
-| `player`          | Beinhaltet eine Spielerreferenz                                                     |
-| `player.Id`       | UUID um Spieler zu identifizieren (wird auch an andere Spieler weitergegeben)       |
-| `player.secret`   | UUID um Spieler zu authentifizieren (wird nur zwischen Client und Server verwendet) |
-| `player.name`     | Wird vom GUI verwendet (z.B. Autor einer Chatnachricht, aktiver Spieler)            |
-| `gameState`       | beinhaltet den Spielstand (siehe unten)                                             |
+| Datenpunkt       | Beschreibung                                                                        |
+| ---------------- | ----------------------------------------------------------------------------------- |
+| `event`          | Klassifizierung der Nachricht                                                       |
+| `game`           | Beinhaltet eine Spielreferenz                                                       |
+| `game.id`        | UUID des Spielraums                                                                 |
+| `game.creatorId` | UUID des Spielraumerstellers                                                        |
+| `game.players`   | Liste der Spieler Id's in der Lobby                                                 |
+| `game.config`    | Spielkonfiguration                                                                  |
+| `game.chat`      | Liste der Chatnachrichten in der Lobby                                              |
+| `timestamp`      | Server-Zeitstempel                                                                  |
+| `player`         | Beinhaltet eine Spielerreferenz                                                     |
+| `player.Id`      | UUID um Spieler zu identifizieren (wird auch an andere Spieler weitergegeben)       |
+| `player.secret`  | UUID um Spieler zu authentifizieren (wird nur zwischen Client und Server verwendet) |
+| `player.name`    | Wird vom GUI verwendet (z.B. Autor einer Chatnachricht, aktiver Spieler)            |
+| `gameState`      | beinhaltet den Spielstand (siehe unten)                                             |
 
 ## 5.1 Spielstand
 
@@ -550,7 +550,7 @@ Jeder Spieler kann ein Spiel bzw. Spielraum erstellen.
     "name": "[playerName]",
     "secret": "[secret]"
   },
-  "gameConfig": {
+  "config": {
     /* Spielkonfiguration */
   }
 }
@@ -578,7 +578,7 @@ Jeder Spieler kann ein Spiel bzw. Spielraum erstellen.
     "players": [
       /* Liste von Spieler Id's in der Lobby */
     ],
-    "gameConfig": {
+    "config": {
       /* Spielkonfiguration */
     },
     "chat": [

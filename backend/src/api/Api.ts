@@ -79,7 +79,7 @@ export class Api {
       }
 
       // TBD: Check rules
-      if (request.gameConfig === undefined) {
+      if (request.config === undefined) {
         reject(new Error(StatusCode.GAME_CONFIG_INVALID));
       }
 
@@ -88,7 +88,7 @@ export class Api {
       const game = {
         id: getUUID(),
         creatorId: request.player.id,
-        gameConfig: request.gameConfig,
+        config: request.config,
         players: [request.player.id],
         chat: [],
       };

@@ -4,7 +4,7 @@ export type Game = {
   id: string;
   creatorId: string;
   players: string[];
-  gameConfig: GameConfig;
+  config: Config;
   chat: ChatMessage[];
 };
 
@@ -12,6 +12,6 @@ export type SimpleGame = {
   id: string;
 };
 
-export type GameConfig = {
+export type Config = {
   maxPlayerCountForGame: number;
 };

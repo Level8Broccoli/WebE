@@ -1,5 +1,5 @@
 import { PrivatePlayer } from "./Player";
-import { GameConfig, SimpleGame } from "./Game";
+import { Config, SimpleGame } from "./Game";
 
 export type RegisterPlayerRequest = {
   playerName: string;
@@ -7,7 +7,7 @@ export type RegisterPlayerRequest = {
 
 export type CreateGameRequest = {
   player: PrivatePlayer;
-  gameConfig: GameConfig;
+  config: Config;
 };
 
 export type DeleteGameRequest = {
