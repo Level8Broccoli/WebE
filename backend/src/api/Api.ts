@@ -45,7 +45,7 @@ export class Api {
   ): Promise<RegisterPlayerResponse> {
     return new Promise((resolve, reject) => {
       // [Server] Validation (not empty, valid UTF-8 Symbols) -> Errorfeedback
-      if (request.playerName.length === 0 || request.playerName === "") {
+      if (request.playerName.trim().length === 0) {
         reject(new Error(StatusCode.PLAYER_INVALID));
       }
 
