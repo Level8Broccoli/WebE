@@ -46,7 +46,7 @@ export class Api {
     return new Promise((resolve, reject) => {
       // [Server] Validation (not empty, valid UTF-8 Symbols) -> Errorfeedback
       if (request.playerName.length === 0 || request.playerName === "") {
-        throw new Error("Player name is empty.");
+        reject(new Error("Player name is empty."));
       }
 
       // [Server] PlayerId and secret generation
@@ -75,12 +75,12 @@ export class Api {
     return new Promise((resolve, reject) => {
       // [Server] Validation (playerId + secret, no invalid rules) -> Errorfeedback
       if (!playerExists(this._serverState, request.player)) {
-        throw new Error("Id / secret combination not valid.");
+        reject(new Error("Id / secret combination not valid."));
       }
 
       // TBD: Check rules
       if (request.gameConfig === undefined) {
-        throw new Error("No game config set.");
+        reject(new Error("No game config set."));
       }
 
       // [Server] Generate gameId
@@ -114,12 +114,12 @@ export class Api {
     return new Promise((resolve, reject) => {
       // [Server] Validation (playerId + Secret + gameId, playerId must be equal to creatorId of game) -> Errorfeedback
       if (!playerExists(this._serverState, request.player)) {
-        throw new Error("Id / secret combination not valid.");
+        reject(new Error("Id / secret combination not valid."));
       }
 
       if (!canGameBeDeleted(this._serverState, request.game, request.player)) {
-        throw new Error(
-          "Game / creator combination not valid. Cannot delete game."
+        reject(
+          new Error("Game / creator combination not valid. Cannot delete game.")
         );
       }
 
@@ -143,16 +143,18 @@ export class Api {
     return new Promise((resolve, reject) => {
       // [Server] Validation (playerId + Secret, is there a free place in the game room?) -> Errorfeedback
       if (!playerExists(this._serverState, request.player)) {
-        throw new Error("Id / secret combination not valid.");
+        reject(new Error("Id / secret combination not valid."));
       }
 
       if (!gameExists(this._serverState, request.game)) {
-        throw new Error("Game with id does not exist.");
+        reject(new Error("Game with id does not exist."));
       }
 
       if (!isFreePlaceInGameAvailabe(this._serverState, request.game)) {
-        throw new Error(
-          "Game cannot be joined. Game has no available space for new player."
+        reject(
+          new Error(
+            "Game cannot be joined. Game has no available space for new player."
+          )
         );
       }
 
@@ -180,7 +182,7 @@ export class Api {
     return new Promise((resolve, reject) => {
       // [Server] Validation (playerId + Secret) -> Errorfeedback
       if (!playerExists(this._serverState, request.player)) {
-        throw new Error("Id / secret combination not valid.");
+        reject(new Error("Id / secret combination not valid."));
       }
 
       // [Server] Remove playerId in the requested game
@@ -207,13 +209,15 @@ export class Api {
     return new Promise((resolve, reject) => {
       // [Server] Validation (playerId + Secret) -> Errorfeedback
       if (!playerExists(this._serverState, request.player)) {
-        throw new Error("Id / secret combination not valid.");
+        reject(new Error("Id / secret combination not valid."));
       }
 
       // [Server] Check if player exists in game
       if (!playerInGame(this._serverState, request.player, request.game)) {
-        throw new Error(
-          "Player cannot chat with room, because he is not part of it"
+        reject(
+          new Error(
+            "Player cannot chat with room, because he is not part of it"
+          )
         );
       }
 
