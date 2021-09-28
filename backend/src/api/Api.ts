@@ -33,8 +33,6 @@ import {
   addChatMessage,
 } from "../services/ServerStateService";
 
-const DATE_TIME_FORMAT = "YYYY-MM-DDThh:mm:ss";
-
 export class Api {
   private _serverState: ServerState;
 
