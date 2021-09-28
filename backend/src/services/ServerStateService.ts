@@ -52,7 +52,7 @@ export function gameExists(
   return found !== undefined;
 }
 
-export function isFreePlaceInGameAvailabe(
+export function freeSpaceInGame(
   serverState: ServerState,
   game: SimpleGame
 ): boolean {

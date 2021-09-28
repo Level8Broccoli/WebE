@@ -26,7 +26,7 @@ import {
   canGameBeDeleted,
   deleteGame,
   gameExists,
-  isFreePlaceInGameAvailabe,
+  freeSpaceInGame,
   joinGame,
   leaveGame,
   playerInGame,
@@ -148,7 +148,7 @@ export class Api {
         reject(new Error(StatusCode.GAME_NOT_EXISTS));
       }
 
-      if (!isFreePlaceInGameAvailabe(this._serverState, request.game)) {
+      if (!freeSpaceInGame(this._serverState, request.game)) {
         reject(
           new Error(
             "Game cannot be joined. Game has no available space for new player."
