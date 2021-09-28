@@ -22,13 +22,13 @@ Folgende Anforderungen sind an das Projekttagebuch gestellt:
 - Aktueller Projektstand besprochen
   - Server soweit implementiert
   - Code refactoring nötig
-    - Variablenamen verkürzen (z.B. maxPlayerCountForGame) und redundante Benennung wie GameConfig entfernen 
+    - Variablenamen verkürzen (z.B. maxPlayerCountForGame) und redundante Benennung wie GameConfig entfernen
   - Diverse Diskussionspunkte besprochen:
     - Code-Kommentare sind z.T. Deutsch und z.T. Englisch. Wollen wir uns auf Englisch einigen? _Ja, Englisch_
     - Nichts aussagende Kommentare löschen
     - Promise reject verwenden statt nur throw? _Thierry investiert Zeit, um das richtige Vorgehen herauszufinden_
     - Benutzereingaben zuerst trimmen und redundante if-Bedingungen auflösen
-    - ErrorCodes statt Text, in der Form: "LVL8-ERRORCODE"
+    - ErrorCodes statt Text, in der Form: "ERROR_CODE"
     - Luxon update. _Ja, im Backend bereits durchgeführt_
 - Types möglicherweise extrahieren, da beide Projekte die gleichen Types verwenden und sonst beide jeweils angepasst werden müssen.
 - Socket.io Problem (nicht lauffähig via Dockercontainer) behoben
@@ -38,11 +38,10 @@ Folgende Anforderungen sind an das Projekttagebuch gestellt:
   - Oliver: Frontend implementieren, Types extrahieren
   - Thierry: Promise reject prüfen, Errorcodes implementieren, Benutzereingaben trimmen und if-Bedingungen auflösen, Naming verbessern (Code Refactoring)
 
-- Bisherige Probleme / Verzögerungen: 
-  - Erste Interaktion mit Socket.io 
+- Bisherige Probleme / Verzögerungen:
+  - Erste Interaktion mit Socket.io
   - Protokoll musste angepasst werden.
   - Websockets kennen lernen und via Postman integrieren.
-
 
 ## Sitzung 19.09.2021
 
