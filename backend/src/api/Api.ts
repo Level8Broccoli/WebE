@@ -23,7 +23,7 @@ import {
   registerPlayer,
   playerExists,
   createGame,
-  canGameBeDeleted,
+  deletableGame,
   deleteGame,
   gameExists,
   freeSpaceInGame,
@@ -117,7 +117,7 @@ export class Api {
         reject(new Error(StatusCode.PLAYER_INVALID));
       }
 
-      if (!canGameBeDeleted(this._serverState, request.game, request.player)) {
+      if (!deletableGame(this._serverState, request.game, request.player)) {
         reject(new Error(StatusCode.GAME_CREATOR_INVALID));
       }
 

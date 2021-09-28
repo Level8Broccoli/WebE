@@ -26,7 +26,7 @@ export function playerExists(
   return found !== undefined;
 }
 
-export function canGameBeDeleted(
+export function deletableGame(
   serverState: ServerState,
   game: SimpleGame,
   player: PrivatePlayer
