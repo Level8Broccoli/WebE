@@ -35,8 +35,7 @@ io.on("connection", (socket) => {
       })
       .catch((error) => {
         const response: ErrorResponse = {
-          status: StatusCode.ERROR,
-          message: error.message,
+          status: error.message,
         };
         socket.emit("registerPlayer", response);
       });
@@ -51,8 +50,7 @@ io.on("connection", (socket) => {
       })
       .catch((error) => {
         const response: ErrorResponse = {
-          status: StatusCode.ERROR,
-          message: error.message,
+          status: error.message,
         };
         socket.emit("createGame", response);
       });
@@ -67,8 +65,7 @@ io.on("connection", (socket) => {
       })
       .catch((error) => {
         const response: ErrorResponse = {
-          status: StatusCode.ERROR,
-          message: error.message,
+          status: error.message,
         };
         socket.emit("deleteGame", response);
       });
@@ -83,8 +80,7 @@ io.on("connection", (socket) => {
       })
       .catch((error) => {
         const response: ErrorResponse = {
-          status: StatusCode.ERROR,
-          message: error.message,
+          status: error.message,
         };
         socket.emit("joinGame", response);
       });
@@ -99,8 +95,7 @@ io.on("connection", (socket) => {
       })
       .catch((error) => {
         const response: ErrorResponse = {
-          status: StatusCode.ERROR,
-          message: error.message,
+          status: error.message,
         };
         socket.emit("leaveGame", response);
       });
@@ -114,8 +109,7 @@ io.on("connection", (socket) => {
       })
       .catch((error) => {
         const response: ErrorResponse = {
-          status: StatusCode.ERROR,
-          message: error.message,
+          status: error.message,
         };
         socket.emit("chat", response);
       });

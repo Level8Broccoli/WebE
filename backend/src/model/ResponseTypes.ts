@@ -45,5 +45,4 @@ export type ChatResponse = {
 
 export type ErrorResponse = {
   status: StatusCode;
-  message: string;
 };
