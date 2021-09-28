@@ -149,11 +149,7 @@ export class Api {
       }
 
       if (!freeSpaceInGame(this._serverState, request.game)) {
-        reject(
-          new Error(
-            "Game cannot be joined. Game has no available space for new player."
-          )
-        );
+        reject(new Error(StatusCode.GAME_FULL));
       }
 
       // [Server] Add playerId to the requested game in server state
