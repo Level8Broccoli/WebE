@@ -120,7 +120,8 @@ io.on("connection", (socket) => {
     api
       .chat(request)
       .then((response) => {
-        socket.to(request.game.id).emit("chat", response.message);
+        socket.emit("chat", response);
+        socket.to(request.game.id).emit("chat", response);
       })
       .catch((error) => {
         const response: ErrorResponse = {
