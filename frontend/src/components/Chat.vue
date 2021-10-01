@@ -28,6 +28,7 @@ export default defineComponent({
     const submit = (e: any) => {
       e.preventDefault();
       store.commit("chat", chatMsg.value);
+      chatMsg.value = "";
     };
     return { chat, submit, chatMsg };
   },
