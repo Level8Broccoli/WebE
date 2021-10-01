@@ -27,7 +27,7 @@ export default defineComponent({
   setup() {
     const store = useStore(key);
     const games = computed(() => store.state.games);
-    const joinGame = (id) => {
+    const joinGame = (id: string) => {
       store.commit("joinGame", id);
     };
     return { games, joinGame };
