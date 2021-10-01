@@ -11,6 +11,7 @@
       />
     </label>
     <button v-if="registered" @click="update">Update</button>
+    <button v-if="registered" @click="logout">Logout</button>
     <button v-else @click="register">Register</button>
   </form>
 </template>
@@ -28,18 +29,29 @@ export default defineComponent({
     const updatePlayerName = (e: any) => {
       store.commit("updatePlayerName", e.target.value);
     };
-    const register = (e: any) => {
+    const register = (e: Event) => {
       e.preventDefault();
       store.commit("registerPlayer");
     };
     const registered = computed(
       () => store.state.player.secret.trim().length > 0
     );
-    const update = (e: any) => {
+    const update = (e: Event) => {
       e.preventDefault();
       store.commit("editPlayerName");
     };
-    return { playerName, updatePlayerName, register, update, registered };
+    const logout = (e: Event) => {
+      e.preventDefault();
+      store.commit("logout");
+    };
+    return {
+      playerName,
+      updatePlayerName,
+      register,
+      update,
+      registered,
+      logout,
+    };
   },
 });
 </script>
