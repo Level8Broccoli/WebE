@@ -3,6 +3,7 @@
     <h2>My Game</h2>
     <pre>{{ game }}</pre>
     <button @click="deleteGame">Delete Game</button>
+    <button @click="leaveGame">Leave Game</button>
   </div>
 </template>
 
@@ -17,7 +18,8 @@ export default defineComponent({
     const store = useStore(key);
     const game = computed(() => store.state.activeGame);
     const deleteGame = () => store.commit("deleteGame");
-    return { game, deleteGame };
+    const leaveGame = () => store.commit("leaveGame");
+    return { game, deleteGame, leaveGame };
   },
 });
 </script>

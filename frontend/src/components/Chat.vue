@@ -25,10 +25,8 @@ export default defineComponent({
     const store = useStore(key);
     const chat = computed(() => store.state.activeGame?.chat || []);
     const chatMsg = ref("");
-    const submit = (e) => {
+    const submit = (e: any) => {
       e.preventDefault();
-      console.log(chatMsg.value);
-
       store.commit("chat", chatMsg.value);
     };
     return { chat, submit, chatMsg };

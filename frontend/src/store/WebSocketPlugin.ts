@@ -1,7 +1,7 @@
 import { Socket } from "socket.io-client";
 import { Store } from "vuex";
-import { ChatRequest, CreateGameRequest, DeleteGameRequest, JoinGameRequest, RegisterPlayerRequest } from "../api/RequestTypes";
-import { ChatResponse, CreateGameResponse, DeleteGameResponse, ErrorResponse, JoinGameResponse, RegisterPlayerResponse } from "../api/ResponseTypes";
+import { ChatRequest, CreateGameRequest, DeleteGameRequest, JoinGameRequest, LeaveGameRequest, RegisterPlayerRequest } from "../api/RequestTypes";
+import { ChatResponse, CreateGameResponse, DeleteGameResponse, ErrorResponse, JoinGameResponse, LeaveGameResponse, RegisterPlayerResponse } from "../api/ResponseTypes";
 import { State } from "./store";
 
 export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
@@ -61,6 +61,15 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
         }
     });
 
+    socket.on("leaveGame", (res: LeaveGameResponse | ErrorResponse) => {
+        if ("game" in res) {
+            store.commit("updateActiveGame", null);
+        } else {
+            console.error(res.status);
+            store.commit("addToErrorLog", res.status);
+        }
+    });
+
     store.subscribe((mutation, state) => {
         if (mutation.type === "registerPlayer") {
             const payload: RegisterPlayerRequest = { playerName: state.player.name };
@@ -112,6 +121,21 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
                 },
             };
             socket.emit("joinGame", payload);
+        }
+
+        if (mutation.type === "leaveGame") {
+            if (state.activeGame === null) {
+                console.error("can't leave an empty game");
+                store.commit("addToErrorLog", "can't leave an empty game");
+                return;
+            }
+            const payload: LeaveGameRequest = {
+                player: state.player,
+                game: {
+                    id: state.activeGame.id,
+                },
+            };
+            socket.emit("leaveGame", payload);
         }
     });
 }

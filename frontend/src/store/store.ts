@@ -37,11 +37,12 @@ export const store = createStore<State>({
         updateGames(state, value: Game[]) {
             state.games = value;
         },
-        registerPlayer() { },
-        createGame() { },
-        deleteGame() { },
-        chat() { },
-        joinGame() { },
+        registerPlayer() { /* handled by WebSocketPlugin */ },
+        createGame() { /* handled by WebSocketPlugin */ },
+        deleteGame() { /* handled by WebSocketPlugin */ },
+        chat() { /* handled by WebSocketPlugin */ },
+        joinGame() { /* handled by WebSocketPlugin */ },
+        leaveGame() { /* handled by WebSocketPlugin */ },
         updateActiveGame(state, value: Game | null) {
             state.activeGame = value;
         },
