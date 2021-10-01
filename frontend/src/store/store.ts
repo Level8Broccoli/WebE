@@ -8,7 +8,8 @@ import { WebSocketPlugin } from './WebSocketPlugin';
 export interface State {
     player: PrivatePlayer,
     maxPlayerCount: number,
-    activeGame: Game
+    activeGame: Game,
+    errorLog: String[]
 }
 
 export const key: InjectionKey<Store<State>> = Symbol()
@@ -31,13 +32,15 @@ export const store = createStore<State>({
             creatorId: "",
             id: "",
             players: []
-        }
+        },
+        errorLog: [],
     },
     mutations: {
         updatePlayerName(state, value) {
             state.player.name = value;
         },
         updatePlayer(state, value) {
+            console.log("updatePlayer", { value });
             state.player = value;
         },
         registerPlayer() { },
@@ -48,6 +51,9 @@ export const store = createStore<State>({
         updateActiveGame(state, value) {
             state.activeGame = value;
         },
+        addToErrorLog(state, value) {
+            state.errorLog.unshift(value);
+        }
     },
     plugins: [WebSocketPlugin(socket)]
 })

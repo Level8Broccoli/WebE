@@ -6,6 +6,9 @@
     <CreateGame />
     <hr />
     <StoreOutput />
+    <hr />
+    <ErrorOutput />
+    <hr />
     <small>by Thierry and Oliver</small>
   </div>
 </template>
@@ -15,6 +18,7 @@ import { defineComponent } from "vue";
 import PlayerName from "./components/PlayerName.vue";
 import CreateGame from "./components/CreateGame.vue";
 import StoreOutput from "./components/StoreOutput.vue";
+import ErrorOutput from "./components/ErrorOutput.vue";
 
 export default defineComponent({
   name: "App",
@@ -22,6 +26,7 @@ export default defineComponent({
     StoreOutput,
     PlayerName,
     CreateGame,
+    ErrorOutput,
   },
 });
 </script>

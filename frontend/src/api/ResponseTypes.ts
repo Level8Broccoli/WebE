@@ -1,14 +1,20 @@
 import moment from "moment";
 
-export enum ErrorCode {
-    OK = "LVL8-OK",
-    ERROR = "LVL8-ERROR",
+export enum StatusCode {
+    OK = "OK",
+    PLAYER_INVALID = "PLAYER_INVALID",
+    ID_SECRET_INVALID = "ID_SECRET_INVALID",
+    GAME_CONFIG_INVALID = "GAME_CONFIG_INVALID",
+    GAME_CREATOR_INVALID = "GAME_CREATOR_INVALID",
+    GAME_NOT_EXISTS = "GAME_NOT_EXISTS",
+    PLAYER_ROOM_INVALID = "PLAYER_ROOM_INVALID",
+    GAME_FULL = "GAME_FULL",
 }
 
 export type ErrorResponse = {
-    status: ErrorCode;
-    message: string;
+    status: StatusCode;
 };
+
 export interface PublicPlayer {
     id: string;
     name: string;
@@ -23,27 +29,27 @@ export type SimpleGame = {
 };
 
 export type CreateGameResponse = {
-    status: ErrorCode;
+    status: StatusCode;
     timestamp: moment.Moment;
     player: PublicPlayer;
     game: Game;
 };
 
 export type DeleteGameResponse = {
-    status: ErrorCode;
+    status: StatusCode;
     timestamp: moment.Moment;
     game: SimpleGame;
 };
 
 export type JoinGameResponse = {
-    status: ErrorCode;
+    status: StatusCode;
     timestamp: moment.Moment;
     player: PublicPlayer;
     game: SimpleGame;
 };
 
 export type LeaveGameResponse = {
-    status: ErrorCode;
+    status: StatusCode;
     timestamp: moment.Moment;
     player: PublicPlayer;
     game: SimpleGame;
@@ -67,7 +73,7 @@ export type Game = {
 };
 
 export type RegisterPlayerResponse = {
-    status: ErrorCode;
+    status: StatusCode;
     timestamp: moment.Moment;
     player: PrivatePlayer;
     games: Game[];
