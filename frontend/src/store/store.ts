@@ -7,8 +7,7 @@ import { WebSocketPlugin } from './WebSocketPlugin';
 
 export interface State {
     player: PrivatePlayer,
-    maxPlayerCount: number,
-    activeGame: Game,
+    activeGame: null | Game,
     errorLog: String[]
 }
 
@@ -23,16 +22,7 @@ export const store = createStore<State>({
             id: "",
             secret: "",
         },
-        maxPlayerCount: 4,
-        activeGame: {
-            chat: [],
-            config: {
-                maxPlayerCountForGame: 4
-            },
-            creatorId: "",
-            id: "",
-            players: []
-        },
+        activeGame: null,
         errorLog: [],
     },
     mutations: {
@@ -44,9 +34,6 @@ export const store = createStore<State>({
             state.player = value;
         },
         registerPlayer() { },
-        updateMaxPlayerCount(state, value) {
-            state.maxPlayerCount = value;
-        },
         createGame() { },
         updateActiveGame(state, value) {
             state.activeGame = value;

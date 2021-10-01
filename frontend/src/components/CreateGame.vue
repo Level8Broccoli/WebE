@@ -4,8 +4,7 @@
       Max Player Count
       <input
         type="number"
-        :value="maxPlayerCount"
-        @input="updateMaxPlayerCount"
+        v-model="maxPlayerCount"
         name="maxPlayerCount"
         min="2"
         max="4"
@@ -17,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 import { useStore } from "vuex";
 import { key } from "../store/store";
 
@@ -25,15 +24,12 @@ export default defineComponent({
   name: "CreateGame",
   setup() {
     const store = useStore(key);
-    const maxPlayerCount = store.state.maxPlayerCount;
-    const updateMaxPlayerCount = (e: any) => {
-      store.commit("updateMaxPlayerCount", Number(e.target.value));
-    };
+    const maxPlayerCount = ref(4);
     const submit = (e: any) => {
       e.preventDefault();
-      store.commit("createGame");
+      store.commit("createGame", maxPlayerCount.value);
     };
-    return { maxPlayerCount, updateMaxPlayerCount, submit };
+    return { maxPlayerCount, submit };
   },
 });
 </script>

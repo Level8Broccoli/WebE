@@ -41,10 +41,12 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
         }
 
         if (mutation.type === "createGame") {
+            console.log(mutation.payload);
+
             const payload: CreateGameRequest = {
                 player: state.player,
                 config: {
-                    maxPlayerCountForGame: state.maxPlayerCount
+                    maxPlayerCountForGame: mutation.payload
                 }
             };
             socket.emit("createGame", payload);
