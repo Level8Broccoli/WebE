@@ -69,7 +69,9 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
 
     socket.on("leaveGame", (res: LeaveGameResponse | ErrorResponse) => {
         if ("game" in res) {
-            store.commit("updateActiveGame", null);
+            if (res.player.id === store.state.player.id) {
+                store.commit("updateActiveGame", null);
+            }
         } else {
             console.error(res.status);
             store.commit("addToErrorLog", res.status);
