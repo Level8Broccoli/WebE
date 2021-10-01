@@ -41,6 +41,7 @@ export const store = createStore<State>({
         createGame() { },
         deleteGame() { },
         chat() { },
+        joinGame() { },
         updateActiveGame(state, value: Game | null) {
             state.activeGame = value;
         },

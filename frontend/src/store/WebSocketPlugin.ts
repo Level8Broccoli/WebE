@@ -1,7 +1,7 @@
 import { Socket } from "socket.io-client";
 import { Store } from "vuex";
-import { ChatRequest, CreateGameRequest, DeleteGameRequest, RegisterPlayerRequest } from "../api/RequestTypes";
-import { ChatResponse, CreateGameResponse, DeleteGameResponse, ErrorResponse, RegisterPlayerResponse } from "../api/ResponseTypes";
+import { ChatRequest, CreateGameRequest, DeleteGameRequest, JoinGameRequest, RegisterPlayerRequest } from "../api/RequestTypes";
+import { ChatResponse, CreateGameResponse, DeleteGameResponse, ErrorResponse, JoinGameResponse, RegisterPlayerResponse } from "../api/ResponseTypes";
 import { State } from "./store";
 
 export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
@@ -52,6 +52,15 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
         }
     });
 
+    socket.on("joinGame", (res: JoinGameResponse | ErrorResponse) => {
+        if ("game" in res) {
+            store.commit("updateActiveGame", res.game);
+        } else {
+            console.error(res.status);
+            store.commit("addToErrorLog", res.status);
+        }
+    });
+
     store.subscribe((mutation, state) => {
         if (mutation.type === "registerPlayer") {
             const payload: RegisterPlayerRequest = { playerName: state.player.name };
@@ -74,11 +83,11 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
                 store.commit("addToErrorLog", "can't delete empty game");
                 return;
             }
-            const request: DeleteGameRequest = {
+            const payload: DeleteGameRequest = {
                 player: state.player,
                 game: state.activeGame
             };
-            socket.emit("deleteGame", request);
+            socket.emit("deleteGame", payload);
         }
 
         if (mutation.type === "chat") {
@@ -87,12 +96,22 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
                 store.commit("addToErrorLog", "can't chat with empty game");
                 return;
             }
-            const request: ChatRequest = {
+            const payload: ChatRequest = {
                 player: state.player,
                 game: state.activeGame,
                 message: mutation.payload
             };
-            socket.emit("chat", request);
+            socket.emit("chat", payload);
+        }
+
+        if (mutation.type === "joinGame") {
+            const payload: JoinGameRequest = {
+                player: state.player,
+                game: {
+                    id: mutation.payload,
+                },
+            };
+            socket.emit("joinGame", payload);
         }
     });
 }
