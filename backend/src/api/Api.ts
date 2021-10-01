@@ -7,6 +7,7 @@ import {
   ChatRequest,
   CreateGameRequest,
   DeleteGameRequest,
+  EditPlayerNameRequest,
   JoinGameRequest,
   LeaveGameRequest,
   RegisterPlayerRequest,
@@ -15,6 +16,7 @@ import {
   ChatResponse,
   CreateGameResponse,
   DeleteGameResponse,
+  EditPlayerNameResponse,
   JoinGameResponse,
   LeaveGameResponse,
   RegisterPlayerResponse,
@@ -31,6 +33,7 @@ import {
   leaveGame,
   playerInGame,
   addChatMessage,
+  editPlayerName,
 } from "../services/ServerStateService";
 
 export class Api {
@@ -65,6 +68,32 @@ export class Api {
         timestamp: DateTime.now(),
         player: player,
         games: this._serverState.games,
+      };
+
+      resolve(response);
+    });
+  }
+
+  editPlayerName(request: EditPlayerNameRequest): Promise<EditPlayerNameResponse> {
+    return new Promise((resolve, reject) => {
+      // [Server] Validation (not empty, valid UTF-8 Symbols) -> Errorfeedback
+      if (request.player.name.trim().length === 0) {
+        reject(new Error(StatusCode.PLAYER_INVALID));
+      }
+
+      // [Server] Validation (playerId + secret, no invalid rules) -> Errorfeedback
+      if (!playerExists(this._serverState, request.player)) {
+        reject(new Error(StatusCode.PLAYER_INVALID));
+      }
+
+      // [Server] Edit player name
+      editPlayerName(this._serverState, request.player);
+
+      // [Server] send response of type: registerPlayer
+      const response = {
+        status: StatusCode.OK,
+        timestamp: DateTime.now(),
+        player: request.player,
       };
 
       resolve(response);

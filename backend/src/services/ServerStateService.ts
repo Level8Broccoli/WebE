@@ -10,6 +10,13 @@ export function registerPlayer(
   serverState.players.push(player);
 }
 
+export function editPlayerName(
+  serverState: ServerState,
+  player: PrivatePlayer
+) {
+  serverState.players = serverState.players.map(p => (p.id === player.id && p.secret === player.secret) ? { ...p, name: player.name } : p);
+}
+
 export function createGame(serverState: ServerState, game: Game) {
   serverState.games.push(game);
 }

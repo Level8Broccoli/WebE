@@ -44,3 +44,7 @@ export type ChatRequest = {
     game: SimpleGame;
     message: string;
 };
+
+export type EditPlayerNameRequest = {
+    player: PrivatePlayer
+}

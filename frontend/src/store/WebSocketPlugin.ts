@@ -1,6 +1,6 @@
 import { Socket } from "socket.io-client";
 import { Store } from "vuex";
-import { ChatRequest, CreateGameRequest, DeleteGameRequest, JoinGameRequest, LeaveGameRequest, RegisterPlayerRequest } from "../api/RequestTypes";
+import { ChatRequest, CreateGameRequest, DeleteGameRequest, EditPlayerNameRequest, JoinGameRequest, LeaveGameRequest, PrivatePlayer, RegisterPlayerRequest } from "../api/RequestTypes";
 import { ChatResponse, CreateGameResponse, DeleteGameResponse, ErrorResponse, JoinGameResponse, LeaveGameResponse, RegisterPlayerResponse } from "../api/ResponseTypes";
 import { State } from "./store";
 
@@ -136,6 +136,13 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
                 },
             };
             socket.emit("leaveGame", payload);
+        }
+
+        if (mutation.type === "editPlayerName") {
+            const payload: EditPlayerNameRequest = {
+                player: state.player
+            };
+            socket.emit("editPlayerName", payload);
         }
     });
 }

@@ -5,6 +5,7 @@ import {
   ChatRequest,
   CreateGameRequest,
   DeleteGameRequest,
+  EditPlayerNameRequest,
   JoinGameRequest,
   LeaveGameRequest,
   RegisterPlayerRequest,
@@ -32,6 +33,20 @@ io.on("connection", (socket) => {
       .registerPlayer(request)
       .then((response) => {
         socket.emit("registerPlayer", response);
+      })
+      .catch((error) => {
+        const response: ErrorResponse = {
+          status: error.message,
+        };
+        socket.emit("registerPlayer", response);
+      });
+  });
+
+  socket.on("editPlayerName", (request: EditPlayerNameRequest) => {
+    api
+      .editPlayerName(request)
+      .then((response) => {
+        socket.emit("editPlayerName", response);
       })
       .catch((error) => {
         const response: ErrorResponse = {

@@ -10,12 +10,13 @@
         id="playerName"
       />
     </label>
-    <button type="submit" @click="submit">Register</button>
+    <button v-if="registered" @click="update">Update</button>
+    <button v-else @click="register">Register</button>
   </form>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { computed, defineComponent } from "vue";
 import { useStore } from "vuex";
 import { key } from "../store/store";
 
@@ -23,15 +24,22 @@ export default defineComponent({
   name: "PlayerName",
   setup() {
     const store = useStore(key);
-    const playerName = store.state.player.name;
+    const playerName = computed(() => store.state.player.name);
     const updatePlayerName = (e: any) => {
       store.commit("updatePlayerName", e.target.value);
     };
-    const submit = (e: any) => {
+    const register = (e: any) => {
       e.preventDefault();
       store.commit("registerPlayer");
     };
-    return { playerName, updatePlayerName, submit };
+    const registered = computed(
+      () => store.state.player.secret.trim().length > 0
+    );
+    const update = (e: any) => {
+      e.preventDefault();
+      store.commit("editPlayerName");
+    };
+    return { playerName, updatePlayerName, register, update, registered };
   },
 });
 </script>

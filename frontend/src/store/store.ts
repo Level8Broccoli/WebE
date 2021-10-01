@@ -43,6 +43,7 @@ export const store = createStore<State>({
         chat() { /* handled by WebSocketPlugin */ },
         joinGame() { /* handled by WebSocketPlugin */ },
         leaveGame() { /* handled by WebSocketPlugin */ },
+        editPlayerName() { /* handled by WebSocketPlugin */ },
         updateActiveGame(state, value: Game | null) {
             state.activeGame = value;
         },
