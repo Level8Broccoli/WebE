@@ -13,5 +13,5 @@ export type SimpleGame = {
 };
 
 export type Config = {
-  maxPlayerCountForGame: number;
+  maxPlayerCount: number;
 };

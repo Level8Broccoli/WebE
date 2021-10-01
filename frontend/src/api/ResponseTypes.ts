@@ -56,7 +56,7 @@ export type LeaveGameResponse = {
 };
 
 export type Config = {
-    maxPlayerCountForGame: number;
+    maxPlayerCount: number;
 };
 
 export type ChatMessage = {

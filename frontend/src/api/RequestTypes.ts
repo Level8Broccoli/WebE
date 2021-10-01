@@ -12,7 +12,7 @@ export interface PrivatePlayer extends PublicPlayer {
 }
 
 export type Config = {
-    maxPlayerCountForGame: number;
+    maxPlayerCount: number;
 };
 
 export type CreateGameRequest = {

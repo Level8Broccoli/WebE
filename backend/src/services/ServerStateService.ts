@@ -60,7 +60,7 @@ export function freeSpaceInGame(
   if (g === undefined) {
     return false;
   }
-  return g.players.length < g.config.maxPlayerCountForGame;
+  return g.players.length < g.config.maxPlayerCount;
 }
 
 export function joinGame(

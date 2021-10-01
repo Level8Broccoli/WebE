@@ -7,6 +7,7 @@ import { WebSocketPlugin } from './WebSocketPlugin';
 
 export interface State {
     player: PrivatePlayer,
+    games: Game[],
     activeGame: null | Game,
     errorLog: String[]
 }
@@ -22,23 +23,27 @@ export const store = createStore<State>({
             id: "",
             secret: "",
         },
+        games: [],
         activeGame: null,
         errorLog: [],
     },
     mutations: {
-        updatePlayerName(state, value) {
+        updatePlayerName(state, value: string) {
             state.player.name = value;
         },
-        updatePlayer(state, value) {
-            console.log("updatePlayer", { value });
+        updatePlayer(state, value: PrivatePlayer) {
             state.player = value;
+        },
+        updateGames(state, value: Game[]) {
+            state.games = value;
         },
         registerPlayer() { },
         createGame() { },
-        updateActiveGame(state, value) {
+        deleteGame() { },
+        updateActiveGame(state, value: Game | null) {
             state.activeGame = value;
         },
-        addToErrorLog(state, value) {
+        addToErrorLog(state, value: string) {
             state.errorLog.unshift(value);
         }
     },
