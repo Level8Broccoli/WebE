@@ -1,16 +1,38 @@
+import { io } from 'socket.io-client';
 import { InjectionKey } from 'vue'
 import { createStore, Store } from 'vuex'
+import { registerPlayer } from '../api/Api';
+import { WebSocketPlugin } from './WebSocketPlugin';
 
-// define your typings for the store state
 export interface State {
-    count: number
+    playerName: string,
+    playerId: string,
+    playerSecret: string
 }
 
-// define injection key
 export const key: InjectionKey<Store<State>> = Symbol()
+
+const socket = io(import.meta.env.VITE_WS_SERVER || "localhost:3000");
 
 export const store = createStore<State>({
     state: {
-        count: 0
-    }
+        playerName: "",
+        playerId: "",
+        playerSecret: ""
+    },
+    mutations: {
+        updatePlayerName(state, value) {
+            state.playerName = value;
+        },
+        updatePlayerId(state, value) {
+            state.playerId = value;
+        },
+        updatePlayerSecret(state, value) {
+            state.playerSecret = value;
+        },
+        registerPlayer() {
+
+        }
+    },
+    plugins: [WebSocketPlugin(socket)]
 })

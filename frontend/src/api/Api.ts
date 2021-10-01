@@ -17,17 +17,6 @@ export function initApi() {
         console.log("disconnected", reason);
     });
 
-    socket.on("registerPlayer", (res: RegisterPlayerResponse | ErrorResponse) => {
-        if ("message" in res) {
-            console.error(res.message);
-        } else {
-            console.log("registerPlayer", res);
-            player.id = res.player.id;
-            player.name = res.player.name;
-            player.secret = res.player.secret;
-        }
-    });
-
     socket.on("createGame", (res: CreateGameResponse | ErrorResponse) => {
         if ("message" in res) {
             console.error(res.message);
