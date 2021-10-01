@@ -1,7 +1,7 @@
 import { Socket } from "socket.io-client";
 import { Store } from "vuex";
-import { CreateGameRequest, DeleteGameRequest, RegisterPlayerRequest } from "../api/RequestTypes";
-import { CreateGameResponse, DeleteGameResponse, ErrorResponse, RegisterPlayerResponse } from "../api/ResponseTypes";
+import { ChatRequest, CreateGameRequest, DeleteGameRequest, RegisterPlayerRequest } from "../api/RequestTypes";
+import { ChatResponse, CreateGameResponse, DeleteGameResponse, ErrorResponse, RegisterPlayerResponse } from "../api/ResponseTypes";
 import { State } from "./store";
 
 export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
@@ -43,6 +43,15 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
         }
     });
 
+    socket.on("chat", (res: ChatResponse | ErrorResponse) => {
+        if ("message" in res) {
+            store.commit("addChatMessage", res);
+        } else {
+            console.error(res.status);
+            store.commit("addToErrorLog", res.status);
+        }
+    });
+
     store.subscribe((mutation, state) => {
         if (mutation.type === "registerPlayer") {
             const payload: RegisterPlayerRequest = { playerName: state.player.name };
@@ -69,7 +78,21 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
                 player: state.player,
                 game: state.activeGame
             };
-            socket?.emit("deleteGame", request);
+            socket.emit("deleteGame", request);
+        }
+
+        if (mutation.type === "chat") {
+            if (state.activeGame === null) {
+                console.error("can't chat with empty game");
+                store.commit("addToErrorLog", "can't chat with empty game");
+                return;
+            }
+            const request: ChatRequest = {
+                player: state.player,
+                game: state.activeGame,
+                message: mutation.payload
+            };
+            socket.emit("chat", request);
         }
     });
 }

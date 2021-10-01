@@ -2,7 +2,7 @@ import { io } from 'socket.io-client';
 import { InjectionKey } from 'vue';
 import { createStore, Store } from 'vuex';
 import { PrivatePlayer } from '../api/RequestTypes';
-import { Game } from '../api/ResponseTypes';
+import { ChatResponse, Game } from '../api/ResponseTypes';
 import { WebSocketPlugin } from './WebSocketPlugin';
 
 export interface State {
@@ -40,12 +40,16 @@ export const store = createStore<State>({
         registerPlayer() { },
         createGame() { },
         deleteGame() { },
+        chat() { },
         updateActiveGame(state, value: Game | null) {
             state.activeGame = value;
         },
         addToErrorLog(state, value: string) {
             state.errorLog.unshift(value);
-        }
+        },
+        addChatMessage(state, value: ChatResponse) {
+            state.activeGame?.chat.push(value);
+        },
     },
     plugins: [WebSocketPlugin(socket)]
 })

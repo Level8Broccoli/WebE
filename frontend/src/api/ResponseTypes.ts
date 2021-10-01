@@ -1,4 +1,4 @@
-import moment from "moment";
+import { DateTime } from "luxon";
 
 export enum StatusCode {
     OK = "OK",
@@ -30,27 +30,27 @@ export type SimpleGame = {
 
 export type CreateGameResponse = {
     status: StatusCode;
-    timestamp: moment.Moment;
+    timestamp: DateTime;
     player: PublicPlayer;
     game: Game;
 };
 
 export type DeleteGameResponse = {
     status: StatusCode;
-    timestamp: moment.Moment;
+    timestamp: DateTime;
     game: SimpleGame;
 };
 
 export type JoinGameResponse = {
     status: StatusCode;
-    timestamp: moment.Moment;
+    timestamp: DateTime;
     player: PublicPlayer;
     game: SimpleGame;
 };
 
 export type LeaveGameResponse = {
     status: StatusCode;
-    timestamp: moment.Moment;
+    timestamp: DateTime;
     player: PublicPlayer;
     game: SimpleGame;
 };
@@ -74,7 +74,13 @@ export type Game = {
 
 export type RegisterPlayerResponse = {
     status: StatusCode;
-    timestamp: moment.Moment;
+    timestamp: DateTime;
     player: PrivatePlayer;
     games: Game[];
+};
+
+export type ChatResponse = {
+    timestamp: DateTime;
+    player: PublicPlayer;
+    message: string;
 };
