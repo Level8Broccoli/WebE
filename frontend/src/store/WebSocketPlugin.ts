@@ -1,6 +1,6 @@
 import { Socket } from "socket.io-client";
 import { Store } from "vuex";
-import { ChatRequest, CreateGameRequest, DeleteGameRequest, EditPlayerNameRequest, JoinGameRequest, LeaveGameRequest, PrivatePlayer, RegisterPlayerRequest } from "../api/RequestTypes";
+import { ChatRequest, CreateGameRequest, DeleteGameRequest, EditPlayerNameRequest, JoinGameRequest, LeaveGameRequest, RegisterPlayerRequest } from "../api/RequestTypes";
 import { ChatResponse, CreateGameResponse, DeleteGameResponse, ErrorResponse, JoinGameResponse, LeaveGameResponse, RegisterPlayerResponse } from "../api/ResponseTypes";
 import { State } from "./store";
 
@@ -27,7 +27,9 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
 
     socket.on("createGame", (res: CreateGameResponse | ErrorResponse) => {
         if ("game" in res) {
-            store.commit("updateActiveGame", res.game);
+            if (res.game.creatorId === store.state.player.id) {
+                store.commit("updateActiveGame", res.game);
+            }
         } else {
             console.error(res.status);
             store.commit("addToErrorLog", res.status);
@@ -36,7 +38,9 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
 
     socket.on("deleteGame", (res: DeleteGameResponse | ErrorResponse) => {
         if ("game" in res) {
-            store.commit("updateActiveGame", null);
+            if (res.game.id === store.state.activeGame?.id) {
+                store.commit("updateActiveGame", null);
+            }
         } else {
             console.error(res.status);
             store.commit("addToErrorLog", res.status);
@@ -54,7 +58,9 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
 
     socket.on("joinGame", (res: JoinGameResponse | ErrorResponse) => {
         if ("game" in res) {
-            store.commit("updateActiveGame", res.game);
+            if (res.player.id === store.state.player.id) {
+                store.commit("updateActiveGame", { ...res.game, chat: [] });
+            }
         } else {
             console.error(res.status);
             store.commit("addToErrorLog", res.status);
