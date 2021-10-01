@@ -17,6 +17,31 @@ Folgende Anforderungen sind an das Projekttagebuch gestellt:
 > - Auch zum Projekttagebuch werden keine Vorgaben zur Umsetzung gemacht. Dies kann
 >   ebenfalls innerhalb der Gruppe festgelegt werden.
 
+## Sitzung 01.10.2021
+
+- Aktueller Projektstand besprochen in Hinsicht auf Abgabe Meilenstein #2
+  - Erledigt:
+    - Erster Entwurf GUI
+    - Erster Entwurf Server
+    - Spiel erstellen
+    - Spiel beitreten
+    - Anmeldung Spieler
+    - Client-Anmeldung bei Server
+  - Zu Erledigen bis 2.10.:
+    - Chat GUI
+    - Abmelden von Spieler (vorerst nur im Browser, später auch Server-seitig)
+    - Namensänderung von Spieler
+- Aufgaben, die voraussichtlich nicht abgeschlossen werden für Meilenstein #2
+  - Spielregeln einsehbar (noch nicht begonnen)
+  - Internationalization (noch nicht begonnen)
+  - Erstellen eines "Shared" Subprojekt, in dem alle gemeinsam genutzten Codesnippets (Frontend & Backend) abgelegt werden (begonnen)
+- Nächste Schritte:
+  - Oliver: Abarbeiten der offnen Aufgaben (Chat GUI, Abmelden von Spieler, Namensänderung von Spieler)
+  - Thierry: keine
+  - Beide: Abgabe Meilenstein #2 am Samstagmorgen, 2.10.
+- Bisherige Probleme / Verzögerungen:
+  - da Aufgaben, die nicht rechtzeitig abgeschlossen werden, nicht zur Mindestanforderungen an Meilenstein #2 gehören, besteht aktuell kein Handlungsbedarf
+
 ## Sitzung 28.09.2021
 
 - Aktueller Projektstand besprochen
