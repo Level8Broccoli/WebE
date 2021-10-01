@@ -7,9 +7,10 @@
         :value="playerName"
         @input="updatePlayerName"
         name="playerName"
+        id="playerName"
       />
     </label>
-    <button @click="submit">Register</button>
+    <button type="submit" @click="submit">Register</button>
   </form>
 </template>
 
@@ -22,7 +23,7 @@ export default defineComponent({
   name: "PlayerName",
   setup() {
     const store = useStore(key);
-    const playerName = store.state.playerName;
+    const playerName = store.state.player.name;
     const updatePlayerName = (e: any) => {
       store.commit("updatePlayerName", e.target.value);
     };

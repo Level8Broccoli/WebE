@@ -3,6 +3,8 @@
     <h1>Level 8 Game</h1>
     <PlayerName />
     <hr />
+    <CreateGame />
+    <hr />
     <StoreOutput />
     <small>by Thierry and Oliver</small>
   </div>
@@ -11,6 +13,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import PlayerName from "./components/PlayerName.vue";
+import CreateGame from "./components/CreateGame.vue";
 import StoreOutput from "./components/StoreOutput.vue";
 
 export default defineComponent({
@@ -18,6 +21,7 @@ export default defineComponent({
   components: {
     StoreOutput,
     PlayerName,
+    CreateGame,
   },
 });
 </script>

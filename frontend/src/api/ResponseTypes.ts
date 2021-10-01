@@ -49,15 +49,21 @@ export type LeaveGameResponse = {
     game: SimpleGame;
 };
 
-export type GameConfig = {
+export type Config = {
     maxPlayerCountForGame: number;
+};
+
+export type ChatMessage = {
+    player: PublicPlayer;
+    message: string;
 };
 
 export type Game = {
     id: string;
     creatorId: string;
     players: string[];
-    gameConfig: GameConfig;
+    config: Config;
+    chat: ChatMessage[];
 };
 
 export type RegisterPlayerResponse = {

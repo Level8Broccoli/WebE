@@ -9,23 +9,6 @@ const game: SimpleGame = { id: "" };
 export function initApi() {
     socket = io(import.meta.env.VITE_WS_SERVER || "localhost:3000");
 
-    socket.on("connect", () => {
-        console.log("connected", socket?.id);
-    });
-
-    socket.on("disconnect", (reason) => {
-        console.log("disconnected", reason);
-    });
-
-    socket.on("createGame", (res: CreateGameResponse | ErrorResponse) => {
-        if ("message" in res) {
-            console.error(res.message);
-        } else {
-            console.log("createGame", res);
-            game.id = res.game.id;
-        }
-    });
-
     socket.on("deleteGame", (res: DeleteGameResponse | ErrorResponse) => {
         if ("message" in res) {
             console.error(res.message);
@@ -49,19 +32,6 @@ export function initApi() {
             console.log("leaveGame", res);
         }
     });
-}
-
-export function registerPlayer(playerName: string) {
-    const request: RegisterPlayerRequest = { playerName };
-    socket?.emit("registerPlayer", request);
-}
-
-export function createGame(maxPlayerCountForGame: number) {
-    const request: CreateGameRequest = {
-        player,
-        gameConfig: { maxPlayerCountForGame }
-    };
-    socket?.emit("createGame", request);
 }
 
 export function deleteGame() {

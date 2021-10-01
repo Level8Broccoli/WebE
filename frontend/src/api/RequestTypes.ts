@@ -11,13 +11,13 @@ export interface PrivatePlayer extends PublicPlayer {
     secret: string;
 }
 
-export type GameConfig = {
+export type Config = {
     maxPlayerCountForGame: number;
 };
 
 export type CreateGameRequest = {
     player: PrivatePlayer;
-    gameConfig: GameConfig;
+    config: Config;
 };
 
 export type SimpleGame = {
