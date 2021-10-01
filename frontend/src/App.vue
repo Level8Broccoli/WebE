@@ -3,13 +3,13 @@
     <h1>Level 8 Game</h1>
     <PlayerName />
     <hr />
+    <Chat />
+    <hr />
     <CreateGame />
     <hr />
     <GameOverview />
     <hr />
     <GameList />
-    <hr />
-    <Chat />
     <hr />
     <StoreOutput />
     <hr />

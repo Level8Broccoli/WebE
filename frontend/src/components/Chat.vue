@@ -2,7 +2,10 @@
   <div>
     <h2>Chat</h2>
     <ul>
-      <li v-for="(msg, i) in chat" :key="i">{{ msg }}</li>
+      <li v-for="(msg, i) in chat" :key="i">
+        <p><strong>{{ msg.message }}</strong></p>
+        <small>From: {{ msg.player.name }} | At: {{ msg.timestamp }}</small>
+      </li>
     </ul>
     <form>
       <label for="chatMsg">

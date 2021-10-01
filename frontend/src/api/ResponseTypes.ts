@@ -69,7 +69,7 @@ export type Game = {
     creatorId: string;
     players: string[];
     config: Config;
-    chat: ChatMessage[];
+    chat: ChatResponse[];
 };
 
 export type RegisterPlayerResponse = {
