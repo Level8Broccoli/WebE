@@ -17,6 +17,17 @@ Folgende Anforderungen sind an das Projekttagebuch gestellt:
 > - Auch zum Projekttagebuch werden keine Vorgaben zur Umsetzung gemacht. Dies kann
 >   ebenfalls innerhalb der Gruppe festgelegt werden.
 
+## Sitzung 02.10.2021
+
+- Abgaben werden via Github Releases durchgeführt.
+
+- Nächste Schritte:
+
+  - Oliver: Screencapture einer Demo, Abgabe durchführen
+  - Thierry: keine
+
+- Bisherige Probleme / Verzögerungen: _Keine_
+
 ## Sitzung 01.10.2021
 
 - Aktueller Projektstand besprochen in Hinsicht auf Abgabe Meilenstein #2
