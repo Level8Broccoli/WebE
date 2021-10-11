@@ -17,6 +17,17 @@ Folgende Anforderungen sind an das Projekttagebuch gestellt:
 > - Auch zum Projekttagebuch werden keine Vorgaben zur Umsetzung gemacht. Dies kann
 >   ebenfalls innerhalb der Gruppe festgelegt werden.
 
+## Sitzung 11.10.2021
+
+- Neue Iteration geplant und Tasks zugewiesen
+
+- Nächste Schritte:
+
+  - Oliver: Frontend verbessern, i18n einbauen, Spiel mit Kollege spielen
+  - Thierry: Fragen im Moodle stellen, Game Loop Diagramm erstellen und Server implementation anpassen.
+
+- Bisherige Probleme / Verzögerungen: _Keine_
+
 ## Sitzung 02.10.2021
 
 - Abgaben werden via Github Releases durchgeführt.
