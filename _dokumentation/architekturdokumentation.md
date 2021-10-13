@@ -354,6 +354,19 @@ _Voraussetzung: Player muss in einem (von sich selbst) erstellten Spiel sein._
 
 #### Ablauf
 
+##### Initialisierung
+
+- [Client] Player Ersteller klickt auf Button "Starten"
+- [Client] Client Ersteller Abgleich Spielerzahl im Raum mit Spielerzahl im Regelset
+- [Client] Nachricht (event: startGame) an Server
+- [Server] Validation (playerId + Secret, gameId nicht leer, Spielersteller = playerId, Spieleranzahl = Spieleranzahl im Regelset)
+- [Server] Initialer Spielstand herstellen
+- [Server] Nachricht (event: startGame) an Clients mit initalem Spielstand
+- [Server] 3 Sekunden warten
+- [Server] Nachricht (event: startRound) an Clients
+
+##### Runde
+
 - `TBD`
 
 8. Nach Spielende soll das System Daten speichern.
