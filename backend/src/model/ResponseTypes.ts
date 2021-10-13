@@ -52,3 +52,5 @@ export type ChatResponse = {
 export type ErrorResponse = {
   status: StatusCode;
 };
+
+export type StartGameResponse = {};

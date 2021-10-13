@@ -6,8 +6,8 @@ export type RegisterPlayerRequest = {
 };
 
 export type EditPlayerNameRequest = {
-  player: PrivatePlayer
-}
+  player: PrivatePlayer;
+};
 
 export type CreateGameRequest = {
   player: PrivatePlayer;
@@ -33,4 +33,9 @@ export type ChatRequest = {
   player: PrivatePlayer;
   game: SimpleGame;
   message: string;
+};
+
+export type StartGameRequest = {
+  player: PrivatePlayer;
+  game: SimpleGame;
 };

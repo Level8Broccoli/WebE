@@ -11,6 +11,7 @@ import {
   JoinGameRequest,
   LeaveGameRequest,
   RegisterPlayerRequest,
+  StartGameRequest,
 } from "../model/RequestTypes";
 import {
   ChatResponse,
@@ -20,12 +21,12 @@ import {
   JoinGameResponse,
   LeaveGameResponse,
   RegisterPlayerResponse,
+  StartGameResponse,
 } from "../model/ResponseTypes";
 import {
   registerPlayer,
   playerExists,
   createGame,
-  deletableGame,
   deleteGame,
   gameExists,
   freeSpaceInGame,
@@ -34,7 +35,10 @@ import {
   playerInGame,
   addChatMessage,
   editPlayerName,
+  isCreator,
+  checkPlayerCount,
 } from "../services/ServerStateService";
+import { initGameState } from "../services/GameService";
 
 export class Api {
   private _serverState: ServerState;
@@ -74,7 +78,9 @@ export class Api {
     });
   }
 
-  editPlayerName(request: EditPlayerNameRequest): Promise<EditPlayerNameResponse> {
+  editPlayerName(
+    request: EditPlayerNameRequest
+  ): Promise<EditPlayerNameResponse> {
     return new Promise((resolve, reject) => {
       // [Server] Validation (not empty, valid UTF-8 Symbols) -> Errorfeedback
       if (request.player.name.trim().length === 0) {
@@ -146,7 +152,7 @@ export class Api {
         reject(new Error(StatusCode.PLAYER_INVALID));
       }
 
-      if (!deletableGame(this._serverState, request.game, request.player)) {
+      if (!isCreator(this._serverState, request.game, request.player)) {
         reject(new Error(StatusCode.GAME_CREATOR_INVALID));
       }
 
@@ -261,6 +267,34 @@ export class Api {
       };
 
       resolve(response);
+    });
+  }
+
+  startGame(request: StartGameRequest): Promise<StartGameResponse[]> {
+    return new Promise((resolve, reject) => {
+      // [Server] Validation (playerId + Secret, game exists? playerId equals creatorId,
+      // playerCount in room == playerCount in ruleset) -> Errorfeedback
+      if (!playerExists(this._serverState, request.player)) {
+        reject(new Error(StatusCode.PLAYER_INVALID));
+      }
+
+      if (!gameExists(this._serverState, request.game)) {
+        reject(new Error(StatusCode.GAME_NOT_EXISTS));
+      }
+
+      if (!isCreator(this._serverState, request.game, request.player)) {
+        reject(new Error(StatusCode.GAME_CREATOR_INVALID));
+      }
+
+      if (!checkPlayerCount(this._serverState, request.game)) {
+        reject(new Error(StatusCode.PLAYER_COUNT_MATCH_INVALID));
+      }
+
+      // [Server] Initialer Spielstand herstellen
+      initGameState(this._serverState, request.game);
+      // [Server] Nachricht (event: startGame) an Clients mit initalem Spielstand
+      // [Server] 3 Sekunden warten
+      //[Server] Nachricht (event: startRound) an Clients
     });
   }
 }

@@ -9,6 +9,7 @@ import {
   JoinGameRequest,
   LeaveGameRequest,
   RegisterPlayerRequest,
+  StartGameRequest,
 } from "./model/RequestTypes";
 import { ErrorResponse } from "./model/ResponseTypes";
 
@@ -128,6 +129,18 @@ io.on("connection", (socket) => {
           status: error.message,
         };
         socket.emit("chat", response);
+      });
+  });
+
+  socket.on("startGame", (request: StartGameRequest) => {
+    api
+      .startGame(request)
+      .then()
+      .catch((error) => {
+        const response: ErrorResponse = {
+          status: error.message,
+        };
+        socket.emit("startGame", response);
       });
   });
 

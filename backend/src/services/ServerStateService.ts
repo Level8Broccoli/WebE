@@ -14,7 +14,11 @@ export function editPlayerName(
   serverState: ServerState,
   player: PrivatePlayer
 ) {
-  serverState.players = serverState.players.map(p => (p.id === player.id && p.secret === player.secret) ? { ...p, name: player.name } : p);
+  serverState.players = serverState.players.map((p) =>
+    p.id === player.id && p.secret === player.secret
+      ? { ...p, name: player.name }
+      : p
+  );
 }
 
 export function createGame(serverState: ServerState, game: Game) {
@@ -33,7 +37,7 @@ export function playerExists(
   return found !== undefined;
 }
 
-export function deletableGame(
+export function isCreator(
   serverState: ServerState,
   game: SimpleGame,
   player: PrivatePlayer
@@ -93,16 +97,13 @@ export function playerInGame(
   serverState: ServerState,
   player: PrivatePlayer,
   game: SimpleGame
-) {
+): boolean {
   // To be simplified
   const g = serverState.games.find((g) => g.id === game.id);
   if (g !== undefined) {
     const p = g.players.find((id) => id === player.id);
-    if (p !== undefined) {
-      return true;
-    } else {
-      return false;
-    }
+
+    return p !== undefined ? true : false;
   } else {
     return false;
   }
@@ -114,4 +115,17 @@ export function addChatMessage(
   chatMessage: ChatMessage
 ) {
   serverState.games.find((g) => g.id === game.id)?.chat.push(chatMessage);
+}
+
+export function checkPlayerCount(
+  serverState: ServerState,
+  game: SimpleGame
+): boolean {
+  const g = serverState.games.find((g) => g.id === game.id);
+
+  return g !== undefined
+    ? g.players.length === g.config.maxPlayerCount
+      ? true
+      : false
+    : false;
 }
