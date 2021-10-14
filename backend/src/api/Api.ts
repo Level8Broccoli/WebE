@@ -296,8 +296,9 @@ export class Api {
       // [Server] Create initial game state
       const state = initGameState(this._serverState, request.game);
       const topCard = state.drawPile.pop();
+
+      // Create response messages for all players
       const responseArray = [];
-      // Create response messages for all
       for (const hand of state.hands) {
         const response = {
           timestamp: DateTime.now(),
