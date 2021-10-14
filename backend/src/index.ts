@@ -31,7 +31,7 @@ io.on("connection", (socket) => {
 
   socket.on("registerPlayer", (request: RegisterPlayerRequest) => {
     api
-      .registerPlayer(request)
+      .registerPlayer(request, socket.id)
       .then((response) => {
         socket.emit("registerPlayer", response);
       })

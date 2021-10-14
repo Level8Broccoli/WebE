@@ -1,4 +1,4 @@
-import { PrivatePlayer } from "../model/Player";
+import { FullPlayer, PrivatePlayer } from "../model/Player";
 import { ServerState } from "../model/ServerState";
 import { DateTime } from "luxon";
 import { StatusCode } from "./StatusCode";
@@ -48,7 +48,8 @@ export class Api {
   }
 
   registerPlayer(
-    request: RegisterPlayerRequest
+    request: RegisterPlayerRequest,
+    socketId: string
   ): Promise<RegisterPlayerResponse> {
     return new Promise((resolve, reject) => {
       // [Server] Validation (not empty, valid UTF-8 Symbols) -> Errorfeedback
@@ -58,10 +59,11 @@ export class Api {
 
       // [Server] PlayerId and secret generation
       // [Server] Player add to server state
-      const player: PrivatePlayer = {
+      const player: FullPlayer = {
         id: getUUID(),
         name: request.playerName,
         secret: getSecret(),
+        socketId: socketId,
       };
       registerPlayer(this._serverState, player);
 
@@ -293,6 +295,7 @@ export class Api {
       // [Server] Initialer Spielstand herstellen
       initGameState(this._serverState, request.game);
       // [Server] Nachricht (event: startGame) an Clients mit initalem Spielstand
+      // TBD einbauen -> get State for Player (playerId) -> gibt oberste Karte von allen Stapeln zurück und die Hand des jeweiligen Spielers
       // [Server] 3 Sekunden warten
       //[Server] Nachricht (event: startRound) an Clients
     });

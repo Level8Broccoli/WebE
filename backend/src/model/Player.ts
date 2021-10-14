@@ -6,3 +6,7 @@ export interface PublicPlayer {
 export interface PrivatePlayer extends PublicPlayer {
   secret: string;
 }
+
+export interface FullPlayer extends PrivatePlayer {
+  socketId: string;
+}

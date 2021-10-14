@@ -1,12 +1,9 @@
-import { PrivatePlayer } from "../model/Player";
+import { FullPlayer, PrivatePlayer } from "../model/Player";
 import { Game, SimpleGame } from "../model/Game";
 import { ServerState } from "../model/ServerState";
 import { ChatMessage } from "../model/Chat";
 
-export function registerPlayer(
-  serverState: ServerState,
-  player: PrivatePlayer
-) {
+export function registerPlayer(serverState: ServerState, player: FullPlayer) {
   serverState.players.push(player);
 }
 
@@ -114,7 +111,7 @@ export function addChatMessage(
   game: SimpleGame,
   chatMessage: ChatMessage
 ) {
-  serverState.games.find((g) => g.id === game.id)?.chat.push(chatMessage);
+  serverState.games.find((g) => g.id === game.id)?.chat?.push(chatMessage);
 }
 
 export function checkPlayerCount(
