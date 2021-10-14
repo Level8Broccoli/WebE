@@ -41,7 +41,7 @@ export enum CardType {
 export type State = {
   hands: Hand[];
   drawPile: Card[];
-  discardPile?: Array<Card[]>;
+  discardPile?: Map<string, Card[]>;
 };
 
 export type Hand = {

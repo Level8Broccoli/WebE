@@ -1,7 +1,7 @@
-import { PrivatePlayer } from "./Player";
+import { FullPlayer } from "./Player";
 import { Game } from "./Game";
 
 export type ServerState = {
-  players: PrivatePlayer[];
+  players: FullPlayer[];
   games: Game[];
 };

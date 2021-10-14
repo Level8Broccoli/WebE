@@ -1,25 +1,6 @@
 import { Card, CardType, Color, Hand, SimpleGame, State } from "../model/Game";
 import { ServerState } from "../model/ServerState";
 
-export function initGameState(serverState: ServerState, game: SimpleGame) {
-  let g = serverState.games.find((g) => g.id === game.id);
-
-  if (g !== undefined) {
-    // Init state with a full randomly sorted draw pile
-    g.state = {
-      hands: [],
-      drawPile: initialCardSet().sort((a, b) => 0.5 - Math.random()),
-    };
-
-    // Create for every player a hand with 10 cards from the draw pile
-    let hands: Hand[] = [];
-
-    for (const player of g.players) {
-      hands.push(createHand(player, g.state.drawPile));
-    }
-  }
-}
-
 function initialCardSet(): Card[] {
   let cardset: Card[] = [];
   // 1 - 15 for all colors
@@ -69,4 +50,27 @@ function createHand(playerId: string, cardset: Card[]): Hand {
   }
 
   return hand;
+}
+
+export function initGameState(
+  serverState: ServerState,
+  game: SimpleGame
+): State {
+  let g = serverState.games.find((g) => g.id === game.id);
+
+  if (g !== undefined) {
+    // Init state with a full randomly sorted draw pile
+    g.state = {
+      hands: [],
+      drawPile: initialCardSet().sort((a, b) => 0.5 - Math.random()),
+      discardPile: new Map(),
+    };
+
+    // Create for every player a hand with 10 cards from the draw pile
+    for (const player of g.players) {
+      g.state.hands.push(createHand(player, g.state.drawPile));
+    }
+  }
+
+  return g!.state!;
 }

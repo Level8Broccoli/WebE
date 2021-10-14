@@ -126,3 +126,11 @@ export function checkPlayerCount(
       : false
     : false;
 }
+
+export function playerToSocketId(
+  serverState: ServerState,
+  playerId: string
+): string {
+  const player = serverState.players.find((p) => p.id === playerId);
+  return player!.socketId;
+}

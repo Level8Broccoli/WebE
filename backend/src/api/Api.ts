@@ -37,6 +37,7 @@ import {
   editPlayerName,
   isCreator,
   checkPlayerCount,
+  playerToSocketId,
 } from "../services/ServerStateService";
 import { initGameState } from "../services/GameService";
 
@@ -292,12 +293,25 @@ export class Api {
         reject(new Error(StatusCode.PLAYER_COUNT_MATCH_INVALID));
       }
 
-      // [Server] Initialer Spielstand herstellen
-      initGameState(this._serverState, request.game);
-      // [Server] Nachricht (event: startGame) an Clients mit initalem Spielstand
-      // TBD einbauen -> get State for Player (playerId) -> gibt oberste Karte von allen Stapeln zurück und die Hand des jeweiligen Spielers
-      // [Server] 3 Sekunden warten
-      //[Server] Nachricht (event: startRound) an Clients
+      // [Server] Create initial game state
+      const state = initGameState(this._serverState, request.game);
+      const topCard = state.drawPile.pop();
+      const responseArray = [];
+      // Create response messages for all
+      for (const hand of state.hands) {
+        const response = {
+          timestamp: DateTime.now(),
+          drawPileTop: topCard!,
+          hand: hand,
+        };
+
+        responseArray.push(response);
+      }
+      resolve(responseArray);
     });
+  }
+
+  getSocketId(playerId: string): string {
+    return playerToSocketId(this._serverState, playerId);
   }
 }

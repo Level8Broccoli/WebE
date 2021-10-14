@@ -135,7 +135,17 @@ io.on("connection", (socket) => {
   socket.on("startGame", (request: StartGameRequest) => {
     api
       .startGame(request)
-      .then()
+      .then((response) => {
+        // Send message to the corresponding player
+        for (const r of response) {
+          io.to(api.getSocketId(r.hand.owner)).emit("startGame", r);
+        }
+
+        // then wait 3 seconds and broadcast the startRound signal event to the room
+        setTimeout(() => {
+          io.in(request.game.id).emit("startRound");
+        }, 3000);
+      })
       .catch((error) => {
         const response: ErrorResponse = {
           status: error.message,

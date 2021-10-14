@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
 import { StatusCode } from "../api/StatusCode";
 import { PublicPlayer, PrivatePlayer } from "./Player";
-import { Game, SimpleGame } from "./Game";
+import { Card, Game, Hand, SimpleGame } from "./Game";
 
 export type RegisterPlayerResponse = {
   status: StatusCode;
@@ -53,4 +53,8 @@ export type ErrorResponse = {
   status: StatusCode;
 };
 
-export type StartGameResponse = {};
+export type StartGameResponse = {
+  timestamp: DateTime;
+  drawPileTop: Card;
+  hand: Hand;
+};
