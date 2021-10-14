@@ -58,3 +58,8 @@ export type StartGameResponse = {
   drawPileTop: Card;
   hand: Hand;
 };
+
+export type StartRoundResponse = {
+  timestamp: DateTime;
+  playerOnMove: string;
+};

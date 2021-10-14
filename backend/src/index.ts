@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import { Server } from "socket.io";
 import { Api } from "./api/Api";
 import { StatusCode } from "./api/StatusCode";
@@ -11,7 +12,7 @@ import {
   RegisterPlayerRequest,
   StartGameRequest,
 } from "./model/RequestTypes";
-import { ErrorResponse } from "./model/ResponseTypes";
+import { ErrorResponse, StartRoundResponse } from "./model/ResponseTypes";
 
 const PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
 const serverState = {
@@ -142,8 +143,13 @@ io.on("connection", (socket) => {
         }
 
         // then wait 3 seconds and broadcast the startRound signal event to the room
+        // select the last person that joined the room as beginner
         setTimeout(() => {
-          io.in(request.game.id).emit("startRound");
+          const r: StartRoundResponse = {
+            timestamp: DateTime.now(),
+            playerOnMove: response.pop()!.hand.owner,
+          };
+          io.in(request.game.id).emit("startRound", r);
         }, 3000);
       })
       .catch((error) => {
