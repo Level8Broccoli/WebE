@@ -6,7 +6,8 @@
     "start-frontend": "vite",
     "build-frontend": "vue-tsc --noEmit && vite build",
     "start-backend": "tsc-watch --project tsconfig.backend.json --onSuccess \"node ./dist/index.js\"",
-    "build-backend": "tsc --project tsconfig.backend.json"
+    "build-backend": "tsc --project tsconfig.backend.json",
+    "heroku-postbuild": "yarn build-backend"
   },
   "devDependencies": {
     "@rollup/plugin-inject": "^4.0.2",
