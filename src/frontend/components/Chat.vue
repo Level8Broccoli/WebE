@@ -4,7 +4,7 @@
     <ul>
       <li v-for="(msg, i) in chat" :key="i">
         <p><strong>{{ msg.message }}</strong></p>
-        <small>From: {{ msg.player.name }} | At: {{ msg.timestamp }}</small>
+        <small>From: {{ msg.player.name }}</small>
       </li>
     </ul>
     <form>

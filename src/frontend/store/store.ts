@@ -1,8 +1,9 @@
 import { io } from 'socket.io-client';
 import { InjectionKey } from 'vue';
 import { createStore, Store } from 'vuex';
-import { PrivatePlayer } from '../api/RequestTypes';
-import { ChatResponse, Game } from '../api/ResponseTypes';
+import { PrivatePlayer } from 'shared/model/Player';
+import { ChatResponse } from 'shared/model/ResponseTypes';
+import { Game } from 'shared/model/Game';
 import { WebSocketPlugin } from './WebSocketPlugin';
 
 export interface State {
@@ -60,7 +61,7 @@ export const store = createStore<State>({
             state.errorLog.unshift(value);
         },
         addChatMessage(state, value: ChatResponse) {
-            state.activeGame?.chat.push(value);
+            state.activeGame?.chat?.push(value);
         },
     },
     plugins: [WebSocketPlugin(socket)]
