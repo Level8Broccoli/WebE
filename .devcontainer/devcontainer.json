@@ -11,6 +11,7 @@
         }
 	},
 	"extensions": [
-		"octref.vetur"
+		"octref.vetur",
+		"ritwickdey.liveserver"
 	],
 }
