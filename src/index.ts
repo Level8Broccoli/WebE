@@ -1,7 +1,6 @@
 import { DateTime } from "luxon";
 import { Server } from "socket.io";
-import { Api } from "./api/Api";
-import { StatusCode } from "./api/StatusCode";
+import { Api } from "./backend/api/Api";
 import {
   ChatRequest,
   CreateGameRequest,
@@ -11,8 +10,8 @@ import {
   LeaveGameRequest,
   RegisterPlayerRequest,
   StartGameRequest,
-} from "./model/RequestTypes";
-import { ErrorResponse, StartRoundResponse } from "./model/ResponseTypes";
+} from "./backend/model/RequestTypes";
+import { ErrorResponse, StartRoundResponse } from "./backend/model/ResponseTypes";
 
 const PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
 const serverState = {
