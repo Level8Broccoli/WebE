@@ -9,6 +9,7 @@
     "build-backend": "tsc --project tsconfig.backend.json"
   },
   "devDependencies": {
+    "@rollup/plugin-inject": "^4.0.2",
     "@types/node": "^16.7.0",
     "luxon": "^2.0.2",
     "socket.io-client": "^4.2.0",
