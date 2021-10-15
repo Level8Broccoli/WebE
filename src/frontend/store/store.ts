@@ -15,7 +15,7 @@ export interface State {
 
 export const key: InjectionKey<Store<State>> = Symbol()
 
-const socket = io(import.meta.env.VITE_WS_SERVER || "localhost:3000");
+const socket = io(import.meta.env.VITE_WS_SERVER || "localhost:3030");
 
 export const store = createStore<State>({
     state: {

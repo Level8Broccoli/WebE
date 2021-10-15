@@ -4,7 +4,7 @@
       "module": "CommonJS",
       "moduleResolution": "Node",
       "rootDir": "./",
-      "outDir": "./dist",
+      "outDir": "./dist-backend",
       "esModuleInterop": true,
       "strict": true,
     },

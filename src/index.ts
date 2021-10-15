@@ -13,7 +13,7 @@ import {
 } from "./backend/model/RequestTypes";
 import { ErrorResponse, StartRoundResponse } from "./backend/model/ResponseTypes";
 
-const PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
+const PORT = process.env.PORT ? Number(process.env.PORT) : 3030;
 const serverState = {
   players: [],
   games: [],
