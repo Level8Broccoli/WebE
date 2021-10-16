@@ -141,7 +141,7 @@ io.on("connection", (socket) => {
       .then((responses) => {
         // Send message to the corresponding player
         for (const response of responses) {
-          io.to(api.getSocketId(response.hand.owner)).emit(
+          io.to(api.getSocketId(response.player.id)).emit(
             "startGame",
             response
           );
@@ -152,7 +152,7 @@ io.on("connection", (socket) => {
 
         const r: StartRoundResponse = {
           timestamp: DateTime.now(),
-          playerOnMove: responses.pop()!.hand.owner,
+          playerOnMove: responses.pop()!.player.id,
         };
         io.in(request.game.id).emit("startRound", r);
       })

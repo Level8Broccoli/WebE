@@ -1,4 +1,10 @@
-import { Card, CardType, Color, Hand, SimpleGame, State } from "../../shared/model/Game";
+import {
+  Card,
+  CardType,
+  Color,
+  SimpleGame,
+  State,
+} from "../../shared/model/Game";
 import { ServerState } from "../../shared/model/ServerState";
 
 function initialCardSet(): Card[] {
@@ -36,20 +42,17 @@ function initialCardSet(): Card[] {
   return cardset;
 }
 
-function createHand(playerId: string, cardset: Card[]): Hand {
-  let hand: Hand = {
-    owner: playerId,
-    cards: [],
-  };
+function createHand(cardset: Card[]): Card[] {
+  let cards = [];
 
   for (let index = 0; index < 10; index++) {
     let card = cardset.pop();
     if (card !== undefined) {
-      hand.cards.push(card);
+      cards.push(card);
     }
   }
 
-  return hand;
+  return cards;
 }
 
 export function initGameState(
@@ -61,14 +64,14 @@ export function initGameState(
   if (g !== undefined) {
     // Init state with a full randomly sorted draw pile
     g.state = {
-      hands: [],
+      hands: new Map(),
       drawPile: initialCardSet().sort((a, b) => 0.5 - Math.random()),
       discardPile: new Map(),
     };
 
     // Create for every player a hand with 10 cards from the draw pile
-    for (const player of g.players) {
-      g.state.hands.push(createHand(player, g.state.drawPile));
+    for (const playerId of g.players) {
+      g.state.hands.set(playerId, createHand(g.state.drawPile));
     }
   }
 

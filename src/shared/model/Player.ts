@@ -1,5 +1,8 @@
-export interface PublicPlayer {
+export interface SimplePlayer {
   id: string;
+}
+
+export interface PublicPlayer extends SimplePlayer {
   name: string;
 }
 
