@@ -17,6 +17,30 @@ Folgende Anforderungen sind an das Projekttagebuch gestellt:
 > - Auch zum Projekttagebuch werden keine Vorgaben zur Umsetzung gemacht. Dies kann
 >   ebenfalls innerhalb der Gruppe festgelegt werden.
 
+## Sitzung 16.10.2021
+
+- Oliver hat Spiel mit Kollegen gespielt
+- Game Loop Diagramm rudimentär erstellt und besprochen
+  - Komplexität mit Timern und Zügen besprochen
+- Wie können Models in Front- und Backend synchron gehalten werden? -> Shared Folder.
+- Fragen leider noch ausstehend im Moodle.
+- Refactorings besprochen von Gameinitialisierung:
+- Hand ebenfalls als Map implementieren, so wie discardPile
+- discardPile nicht nullable und direkt instanzieren
+- CardTypes aufteilen in NumberCards und SpecialCards -> als Uniontype unter Card speichern
+- Server.ts response in startGame umbenennen in responses
+- Timeout von 3 Sekunden rausnehmen.
+- Aktiver Spieler in State integrieren.
+
+- Nächste Schritte:
+
+  - Oliver: Frontend verbessern, i18n einbauen,
+  - Thierry: Im Moodle nachhacken, Game Loop Diagramm finalisieren und Server implementation weiter anpassen.
+
+- Bisherige Probleme / Verzögerungen:
+- Feature Timer pro Runde aktuell nach hinten geschoben. Fokus zuerst auf funtionalem Spiel.
+- Models in Front- und Backend synchron halten -> Dev funktioniert, Prod noch nicht.
+
 ## Sitzung 11.10.2021
 
 - Neue Iteration geplant und Tasks zugewiesen
