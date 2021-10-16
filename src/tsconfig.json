@@ -11,5 +11,5 @@
     "lib": ["esnext", "dom"]
   },
   "include": ["frontend/**/*.ts", "frontend/**/*.d.ts", "frontend/**/*.tsx", "frontend/**/*.vue", "shared/**/*.ts"],
-  "exclude": ["index.ts", "backend"]
+  "exclude": ["server.ts", "backend"]
 }

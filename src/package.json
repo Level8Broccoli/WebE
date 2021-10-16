@@ -5,7 +5,7 @@
   "scripts": {
     "start-frontend": "vite",
     "build-frontend": "vue-tsc --noEmit && vite build",
-    "start-backend": "tsc-watch --project tsconfig.backend.json --onSuccess \"node ./dist-backend/index.js\"",
+    "start-backend": "tsc-watch --project tsconfig.backend.json --onSuccess \"node ./dist-backend/server.js\"",
     "build-backend": "tsc --project tsconfig.backend.json",
     "heroku-postbuild": "yarn build-backend"
   },
