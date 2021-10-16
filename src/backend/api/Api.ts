@@ -1,7 +1,7 @@
-import { FullPlayer, PrivatePlayer } from "../model/Player";
-import { ServerState } from "../model/ServerState";
+import { FullPlayer, PrivatePlayer } from "../../shared/model/Player";
+import { ServerState } from "../../shared/model/ServerState";
 import { DateTime } from "luxon";
-import { StatusCode } from "./StatusCode";
+import { StatusCode } from "../../shared/api/StatusCode";
 import { getSecret, getUUID } from "../services/TokenGeneratorService";
 import {
   ChatRequest,
@@ -12,7 +12,7 @@ import {
   LeaveGameRequest,
   RegisterPlayerRequest,
   StartGameRequest,
-} from "../model/RequestTypes";
+} from "../../shared/model/RequestTypes";
 import {
   ChatResponse,
   CreateGameResponse,
@@ -22,7 +22,7 @@ import {
   LeaveGameResponse,
   RegisterPlayerResponse,
   StartGameResponse,
-} from "../model/ResponseTypes";
+} from "../../shared/model/ResponseTypes";
 import {
   registerPlayer,
   playerExists,

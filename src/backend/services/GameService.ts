@@ -1,5 +1,5 @@
-import { Card, CardType, Color, Hand, SimpleGame, State } from "../model/Game";
-import { ServerState } from "../model/ServerState";
+import { Card, CardType, Color, Hand, SimpleGame, State } from "../../shared/model/Game";
+import { ServerState } from "../../shared/model/ServerState";
 
 function initialCardSet(): Card[] {
   let cardset: Card[] = [];

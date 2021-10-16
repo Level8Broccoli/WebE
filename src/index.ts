@@ -10,8 +10,8 @@ import {
   LeaveGameRequest,
   RegisterPlayerRequest,
   StartGameRequest,
-} from "./backend/model/RequestTypes";
-import { ErrorResponse, StartRoundResponse } from "./backend/model/ResponseTypes";
+} from "./shared/model/RequestTypes";
+import { ErrorResponse, StartRoundResponse } from "./shared/model/ResponseTypes";
 
 const PORT = process.env.PORT ? Number(process.env.PORT) : 3030;
 const serverState = {

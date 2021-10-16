@@ -1,7 +1,7 @@
-import { FullPlayer, PrivatePlayer } from "../model/Player";
-import { Game, SimpleGame } from "../model/Game";
-import { ServerState } from "../model/ServerState";
-import { ChatMessage } from "../model/Chat";
+import { FullPlayer, PrivatePlayer } from "../../shared/model/Player";
+import { Game, SimpleGame } from "../../shared/model/Game";
+import { ServerState } from "../../shared/model/ServerState";
+import { ChatMessage } from "../../shared/model/Chat";
 
 export function registerPlayer(serverState: ServerState, player: FullPlayer) {
   serverState.players.push(player);
