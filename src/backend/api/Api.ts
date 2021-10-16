@@ -40,6 +40,7 @@ import {
   playerToSocketId,
 } from "../services/ServerStateService";
 import { initGameState } from "../services/GameService";
+import { Card } from "../../shared/model/Game";
 
 export class Api {
   private _serverState: ServerState;
@@ -295,8 +296,13 @@ export class Api {
 
       // [Server] Create initial game state
       const state = initGameState(this._serverState, request.game);
-      const drawPileTop = state.drawPile.pop();
-      const discardPileTops = null;
+      const drawPileTop = state.drawPile!.pop()!;
+      const discardPileTops = new Map<string, Card>();
+
+      // Get all discardPile tops
+      state.discardPile.forEach((value, key) =>
+        discardPileTops.set(key, value.slice(-1)[0])
+      );
 
       // Create response messages for all players
       const responseArray = [];

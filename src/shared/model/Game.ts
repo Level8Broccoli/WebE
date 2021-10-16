@@ -17,10 +17,17 @@ export type Config = {
   maxPlayerCount: number;
 };
 
-export type Card = {
+export type Card = NumberCard | SpecialCard;
+
+export type NumberCard = {
   value: number;
-  color?: string;
-  type: CardType;
+  color: string;
+  type: CardType.NUMBER;
+};
+
+export type SpecialCard = {
+  value: 0;
+  type: CardType.JOKER | CardType.SKIP;
 };
 
 export enum Color {

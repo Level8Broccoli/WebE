@@ -57,7 +57,7 @@ export type StartGameResponse = {
   timestamp: DateTime;
   player: SimplePlayer;
   drawPileTop: Card;
-  discradPileTops: Map<string, Card>;
+  discardPileTops: Map<string, Card>;
   hand: Card[];
 };
 

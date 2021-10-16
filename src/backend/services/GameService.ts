@@ -2,7 +2,9 @@ import {
   Card,
   CardType,
   Color,
+  NumberCard,
   SimpleGame,
+  SpecialCard,
   State,
 } from "../../shared/model/Game";
 import { ServerState } from "../../shared/model/ServerState";
@@ -12,7 +14,7 @@ function initialCardSet(): Card[] {
   // 1 - 15 for all colors
   for (const key in Color) {
     for (let index = 1; index <= 15; index++) {
-      const card = {
+      const card: NumberCard = {
         value: index,
         color: key,
         type: CardType.NUMBER,
@@ -23,7 +25,7 @@ function initialCardSet(): Card[] {
 
   // 5 times joker
   for (let index = 0; index < 5; index++) {
-    const card = {
+    const card: SpecialCard = {
       value: 0,
       type: CardType.JOKER,
     };
@@ -32,7 +34,7 @@ function initialCardSet(): Card[] {
 
   // 3 times skip
   for (let index = 0; index < 3; index++) {
-    const card = {
+    const card: SpecialCard = {
       value: 0,
       type: CardType.SKIP,
     };
