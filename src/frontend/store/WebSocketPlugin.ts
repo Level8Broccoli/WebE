@@ -90,7 +90,7 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
                 player: state.player,
                 config: {
                     maxPlayerCount: mutation.payload,
-                    levelCount: 1,
+                    levelCount: 2,
                     levelSystem: LevelSystem.NORMAL
                 }
             };
