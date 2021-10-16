@@ -1,5 +1,6 @@
 import { Socket } from "socket.io-client";
 import { Store } from "vuex";
+import { LevelSystem } from "../../shared/model/Game";
 import { ChatRequest, CreateGameRequest, DeleteGameRequest, EditPlayerNameRequest, JoinGameRequest, LeaveGameRequest, RegisterPlayerRequest } from "../../shared/model/RequestTypes";
 import { ChatResponse, CreateGameResponse, DeleteGameResponse, ErrorResponse, JoinGameResponse, LeaveGameResponse, RegisterPlayerResponse } from "../../shared/model/ResponseTypes";
 import { State } from "./store";
@@ -88,7 +89,9 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
             const payload: CreateGameRequest = {
                 player: state.player,
                 config: {
-                    maxPlayerCount: mutation.payload
+                    maxPlayerCount: mutation.payload,
+                    levelCount: 1,
+                    levelSystem: LevelSystem.NORMAL
                 }
             };
             socket.emit("createGame", payload);
