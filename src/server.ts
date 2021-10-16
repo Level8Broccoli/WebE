@@ -11,7 +11,10 @@ import {
   RegisterPlayerRequest,
   StartGameRequest,
 } from "./shared/model/RequestTypes";
-import { ErrorResponse, StartRoundResponse } from "./shared/model/ResponseTypes";
+import {
+  ErrorResponse,
+  StartRoundResponse,
+} from "./shared/model/ResponseTypes";
 
 const PORT = process.env.PORT ? Number(process.env.PORT) : 3030;
 const serverState = {
@@ -135,21 +138,23 @@ io.on("connection", (socket) => {
   socket.on("startGame", (request: StartGameRequest) => {
     api
       .startGame(request)
-      .then((response) => {
+      .then((responses) => {
         // Send message to the corresponding player
-        for (const r of response) {
-          io.to(api.getSocketId(r.hand.owner)).emit("startGame", r);
+        for (const response of responses) {
+          io.to(api.getSocketId(response.hand.owner)).emit(
+            "startGame",
+            response
+          );
         }
 
         // then wait 3 seconds and broadcast the startRound signal event to the room
         // select the last person that joined the room as beginner
-        setTimeout(() => {
-          const r: StartRoundResponse = {
-            timestamp: DateTime.now(),
-            playerOnMove: response.pop()!.hand.owner,
-          };
-          io.in(request.game.id).emit("startRound", r);
-        }, 3000);
+
+        const r: StartRoundResponse = {
+          timestamp: DateTime.now(),
+          playerOnMove: responses.pop()!.hand.owner,
+        };
+        io.in(request.game.id).emit("startRound", r);
       })
       .catch((error) => {
         const response: ErrorResponse = {
