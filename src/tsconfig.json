@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "baseUrl": ".",
     "module": "esnext",
     "moduleResolution": "node",
     "strict": true,
@@ -11,5 +10,6 @@
     "esModuleInterop": true,
     "lib": ["esnext", "dom"]
   },
-  "include": ["frontend/**/*.ts", "frontend/**/*.d.ts", "frontend/**/*.tsx", "frontend/**/*.vue", "shared/**/*.ts"]
+  "include": ["frontend/**/*.ts", "frontend/**/*.d.ts", "frontend/**/*.tsx", "frontend/**/*.vue", "shared/**/*.ts"],
+  "exclude": ["index.ts", "backend"]
 }

@@ -1,9 +1,9 @@
 import { io } from 'socket.io-client';
 import { InjectionKey } from 'vue';
 import { createStore, Store } from 'vuex';
-import { PrivatePlayer } from 'shared/model/Player';
-import { ChatResponse } from 'shared/model/ResponseTypes';
-import { Game } from 'shared/model/Game';
+import { PrivatePlayer } from '../../shared/model/Player';
+import { ChatResponse } from '../../shared/model/ResponseTypes';
+import { Game } from '../../shared/model/Game';
 import { WebSocketPlugin } from './WebSocketPlugin';
 
 export interface State {
