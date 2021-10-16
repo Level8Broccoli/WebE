@@ -1,8 +1,8 @@
 import { Socket } from "socket.io-client";
 import { Store } from "vuex";
 import { LevelSystem } from "../../shared/model/Game";
-import { ChatRequest, CreateGameRequest, DeleteGameRequest, EditPlayerNameRequest, JoinGameRequest, LeaveGameRequest, RegisterPlayerRequest } from "../../shared/model/RequestTypes";
-import { ChatResponse, CreateGameResponse, DeleteGameResponse, ErrorResponse, JoinGameResponse, LeaveGameResponse, RegisterPlayerResponse } from "../../shared/model/ResponseTypes";
+import { ChatRequest, CreateGameRequest, DeleteGameRequest, EditPlayerNameRequest, JoinGameRequest, LeaveGameRequest, RegisterPlayerRequest, StartGameRequest } from "../../shared/model/RequestTypes";
+import { ChatResponse, CreateGameResponse, DeleteGameResponse, ErrorResponse, JoinGameResponse, LeaveGameResponse, RegisterPlayerResponse, StartGameResponse, StartMoveResponse } from "../../shared/model/ResponseTypes";
 import { State } from "./store";
 
 export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
@@ -73,6 +73,24 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
             if (res.player.id === store.state.player.id) {
                 store.commit("updateActiveGame", null);
             }
+        } else {
+            console.error(res.status);
+            store.commit("addToErrorLog", res.status);
+        }
+    });
+
+    socket.on("startGame", (res: StartGameResponse | ErrorResponse) => {
+        if ("hand" in res) {
+            console.log("incoming: startGame", res);
+        } else {
+            console.error(res.status);
+            store.commit("addToErrorLog", res.status);
+        }
+    });
+
+    socket.on("startMove", (res: StartMoveResponse | ErrorResponse) => {
+        if ("playerOnMove" in res) {
+            console.log("incoming: startMove", res);
         } else {
             console.error(res.status);
             store.commit("addToErrorLog", res.status);
@@ -154,6 +172,19 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
                 player: state.player
             };
             socket.emit("editPlayerName", payload);
+        }
+
+        if (mutation.type === "startGame") {
+            if (state.activeGame === null) {
+                console.error("can't start an empty game");
+                store.commit("addToErrorLog", "can't start an empty game");
+                return;
+            }
+            const payload: StartGameRequest = {
+                player: state.player,
+                game: state.activeGame
+            };
+            socket.emit("startGame", payload);
         }
     });
 }
