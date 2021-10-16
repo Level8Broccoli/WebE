@@ -41,7 +41,7 @@ import {
   activePlayerInGame,
 } from "../services/ServerStateService";
 import { initGameState } from "../services/GameService";
-import { Card } from "../../shared/model/Game";
+import { Card, LevelSystem } from "../../shared/model/Game";
 
 export class Api {
   private _serverState: ServerState;
@@ -118,9 +118,27 @@ export class Api {
         reject(new Error(StatusCode.PLAYER_INVALID));
       }
 
-      // TBD: Check rules
+      // Check rules
       if (request.config === undefined) {
         reject(new Error(StatusCode.GAME_CONFIG_INVALID));
+      }
+
+      if (
+        request.config.maxPlayerCount < 2 ||
+        request.config.maxPlayerCount > 6
+      ) {
+        reject(new Error(StatusCode.INVALID_MAX_PLAYER_COUNT));
+      }
+
+      if (request.config.levelCount < 2 || request.config.levelCount > 8) {
+        reject(new Error(StatusCode.INVALID_LEVEL_COUNT));
+      }
+
+      if (
+        request.config.levelSystem !== LevelSystem.NORMAL &&
+        request.config.levelSystem !== LevelSystem.RANDOM
+      ) {
+        reject(new Error(StatusCode.INVALID_LEVEL_SYSTEM));
       }
 
       // [Server] Generate gameId

@@ -15,7 +15,14 @@ export type SimpleGame = {
 
 export type Config = {
   maxPlayerCount: number;
+  levelCount: number;
+  levelSystem: LevelSystem;
 };
+
+export enum LevelSystem {
+  NORMAL = "NORMAL",
+  RANDOM = "RANDOM",
+}
 
 export type Card = NumberCard | SpecialCard;
 
