@@ -38,6 +38,7 @@ import {
   isCreator,
   checkPlayerCount,
   playerToSocketId,
+  activePlayerInGame,
 } from "../services/ServerStateService";
 import { initGameState } from "../services/GameService";
 import { Card } from "../../shared/model/Game";
@@ -325,5 +326,9 @@ export class Api {
 
   getSocketId(playerId: string): string {
     return playerToSocketId(this._serverState, playerId);
+  }
+
+  getActivePlayer(gameId: string): string {
+    return activePlayerInGame(this._serverState, gameId);
   }
 }

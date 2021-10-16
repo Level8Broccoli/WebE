@@ -46,6 +46,7 @@ export enum CardType {
 }
 
 export type State = {
+  activePlayerId: string;
   hands: Map<string, Card[]>;
   drawPile: Card[];
   discardPile: Map<string, Card[]>;

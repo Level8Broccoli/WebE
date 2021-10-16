@@ -134,3 +134,10 @@ export function playerToSocketId(
   const player = serverState.players.find((p) => p.id === playerId);
   return player!.socketId;
 }
+
+export function activePlayerInGame(
+  serverState: ServerState,
+  gameId: string
+): string {
+  return serverState.games.find((g) => g.id === gameId)!.state!.activePlayerId;
+}

@@ -64,8 +64,9 @@ export function initGameState(
   let g = serverState.games.find((g) => g.id === game.id);
 
   if (g !== undefined) {
-    // Init state with a full randomly sorted draw pile
+    // Init state with a full randomly sorted draw pile and the last joined person as beginner
     g.state = {
+      activePlayerId: g.players[g.players.length - 1],
       hands: new Map(),
       drawPile: initialCardSet().sort((a, b) => 0.5 - Math.random()),
       discardPile: new Map(),

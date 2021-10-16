@@ -61,7 +61,7 @@ export type StartGameResponse = {
   hand: Card[];
 };
 
-export type StartRoundResponse = {
+export type StartMoveResponse = {
   timestamp: DateTime;
   playerOnMove: string;
 };
