@@ -7,6 +7,7 @@ import {
   ChatRequest,
   CreateGameRequest,
   DeleteGameRequest,
+  DrawCardRequest,
   EditPlayerNameRequest,
   JoinGameRequest,
   LeaveGameRequest,
@@ -17,11 +18,13 @@ import {
   ChatResponse,
   CreateGameResponse,
   DeleteGameResponse,
+  DrawCardResponse,
   EditPlayerNameResponse,
   JoinGameResponse,
   LeaveGameResponse,
   RegisterPlayerResponse,
   StartGameResponse,
+  UpdateGameBoardResponse,
 } from "../../shared/model/ResponseTypes";
 import {
   registerPlayer,
@@ -40,7 +43,12 @@ import {
   playerToSocketId,
   activePlayerInGame,
 } from "../services/ServerStateService";
-import { initGameState } from "../services/GameService";
+import {
+  drawCard,
+  getGameState,
+  initGameState,
+  pileExists,
+} from "../services/GameService";
 import { Card, LevelSystem } from "../../shared/model/Game";
 import { toKeyValueArray } from "../../shared/helper/HelperService";
 
@@ -334,6 +342,44 @@ export class Api {
         responseArray.push(response);
       }
       resolve(responseArray);
+    });
+  }
+
+  drawCard(
+    request: DrawCardRequest
+  ): Promise<[DrawCardResponse, UpdateGameBoardResponse]> {
+    return new Promise((resolve, reject) => {
+      // [Server] Validation (playerId + Secret, player is on move? -> Errorfeedback
+      if (!playerExists(this._serverState, request.player)) {
+        reject(new Error(StatusCode.PLAYER_INVALID));
+      }
+
+      if (!gameExists(this._serverState, request.game)) {
+        reject(new Error(StatusCode.GAME_NOT_EXISTS));
+      }
+
+      if (!pileExists(this._serverState, request.game, request.pileId)) {
+        reject(new Error(StatusCode.PILE_NOT_EXISTS));
+      }
+
+      if (!(this.getActivePlayer(request.game.id) === request.player.id)) {
+        reject(new Error(StatusCode.NOT_ACTIVE_PLAYER));
+      }
+
+      const card = drawCard(this._serverState, request.game, request.pileId);
+      const piles = getGameState(this._serverState, request.game).piles;
+
+      const drawCardResponse = {
+        timestamp: DateTime.now(),
+        card: card,
+      };
+
+      const updateGameBoardResponse = {
+        timestamp: DateTime.now(),
+        piles: toKeyValueArray(piles),
+      };
+
+      resolve([drawCardResponse, updateGameBoardResponse]);
     });
   }
 

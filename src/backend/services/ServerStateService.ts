@@ -55,9 +55,7 @@ export function gameExists(
   serverState: ServerState,
   game: SimpleGame
 ): boolean {
-  const found = serverState.games.find((g) => g.id === game.id);
-
-  return found !== undefined;
+  return serverState.games.find((g) => g.id === game.id) !== undefined;
 }
 
 export function freeSpaceInGame(

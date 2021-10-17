@@ -5,6 +5,7 @@ import {
   ChatRequest,
   CreateGameRequest,
   DeleteGameRequest,
+  DrawCardRequest,
   EditPlayerNameRequest,
   JoinGameRequest,
   LeaveGameRequest,
@@ -152,6 +153,21 @@ io.on("connection", (socket) => {
           },
         };
         io.in(request.game.id).emit("startMove", r);
+      })
+      .catch((error) => {
+        const response: ErrorResponse = {
+          status: error.message,
+        };
+        socket.emit("startGame", response);
+      });
+  });
+
+  socket.on("drawCard", (request: DrawCardRequest) => {
+    api
+      .drawCard(request)
+      .then((responses) => {
+        socket.emit("drawCard", responses[0]);
+        io.in(request.game.id).emit("updateGameBoard", responses[1]);
       })
       .catch((error) => {
         const response: ErrorResponse = {

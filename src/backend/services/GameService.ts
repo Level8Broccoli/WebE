@@ -7,6 +7,7 @@ import {
   SpecialCard,
   State,
 } from "../../shared/model/Game";
+import { PrivatePlayer } from "../../shared/model/Player";
 import { ServerState } from "../../shared/model/ServerState";
 
 function initialCardSet(): Card[] {
@@ -81,4 +82,53 @@ export function initGameState(
   }
 
   return g!.state!;
+}
+
+export function drawCard(
+  serverState: ServerState,
+  game: SimpleGame,
+  pileId: string
+): Card {
+  if (pileId === "drawPile") {
+    // if length from drawPile is 0 take all discardPiles,
+    let state = serverState.games.find((g) => g.id === game.id)!.state!;
+    if (state.piles.get(pileId)!.length === 0) {
+      let tempCards: Card[] = [];
+      state.piles.forEach((cards, key) => {
+        if (!(key === pileId)) {
+          tempCards.concat(cards!);
+          state.piles.delete(key);
+        }
+      });
+      // shuffle the array again and place all cards in the drawPile
+      state.piles.set(
+        pileId,
+        tempCards.sort((a, b) => 0.5 - Math.random())
+      );
+    }
+  }
+
+  return serverState.games
+    .find((g) => g.id === game.id)!
+    .state!.piles.get(pileId)!
+    .pop()!;
+}
+
+export function getGameState(
+  serverState: ServerState,
+  game: SimpleGame
+): State {
+  return serverState.games.find((g) => g.id === game.id)!.state!;
+}
+
+export function pileExists(
+  serverState: ServerState,
+  game: SimpleGame,
+  pileId: string
+): boolean {
+  return (
+    serverState.games
+      .find((g) => g.id === game.id)!
+      .state!.piles.get(pileId) !== undefined
+  );
 }

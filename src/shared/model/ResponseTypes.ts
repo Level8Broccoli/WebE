@@ -56,7 +56,7 @@ export type ErrorResponse = {
 export type StartGameResponse = {
   timestamp: DateTime;
   player: SimplePlayer;
-  piles: Array<[string, Array<Card>]>; // Map<string, Card>;
+  piles: Array<[string, Card]>; // Map<string, Card> as array;
   hand: Card[];
 };
 
@@ -65,4 +65,14 @@ export type StartMoveResponse = {
   player: {
     id: string;
   };
+};
+
+export type DrawCardResponse = {
+  timestamp: DateTime;
+  card: Card;
+};
+
+export type UpdateGameBoardResponse = {
+  timestamp: DateTime;
+  piles: Array<[string, Card]>; // Map<string, Card> as array;
 };
