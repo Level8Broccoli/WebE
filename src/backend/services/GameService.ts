@@ -114,6 +114,16 @@ export function drawCard(
     .pop()!;
 }
 
+export function addCardToHand(
+  serverState: ServerState,
+  game: SimpleGame,
+  player: PrivatePlayer,
+  card: Card
+) {
+  const state = serverState.games.find((g) => g.id === game.id)!.state!;
+  state.hands.set(player.id, state.hands.get(player.id)!.concat(card));
+}
+
 export function getGameState(
   serverState: ServerState,
   game: SimpleGame

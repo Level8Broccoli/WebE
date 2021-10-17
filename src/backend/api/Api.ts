@@ -1,4 +1,4 @@
-import { FullPlayer, PrivatePlayer } from "../../shared/model/Player";
+import { FullPlayer } from "../../shared/model/Player";
 import { ServerState } from "../../shared/model/ServerState";
 import { DateTime } from "luxon";
 import { StatusCode } from "../../shared/api/StatusCode";
@@ -44,6 +44,7 @@ import {
   activePlayerInGame,
 } from "../services/ServerStateService";
 import {
+  addCardToHand,
   drawCard,
   getGameState,
   initGameState,
@@ -368,6 +369,8 @@ export class Api {
 
       const card = drawCard(this._serverState, request.game, request.pileId);
       const piles = getGameState(this._serverState, request.game).piles;
+
+      addCardToHand(this._serverState, request.game, request.player, card);
 
       const drawCardResponse = {
         timestamp: DateTime.now(),
