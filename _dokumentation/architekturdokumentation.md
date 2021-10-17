@@ -364,16 +364,16 @@ _Voraussetzung: Player muss in einem (von sich selbst) erstellten Spiel sein._
 - [Server] Nachricht (event: startGame) an Clients mit initalem Spielstand
 - [Server] Nachricht (event: startMove) an Clients
 
-##### Zug
+##### Spielzug
 
 - [Client] Player klickt auf den jeweiligen Stapel, bei welchem er die Karte aufnehmen möchte.
 - [Client] Nachricht (event: drawCard) an Server
 - [Server] Validation (playerId + Secret, ist Spieler überhaupt am Zug?)
 - [Server] Nachricht (event: drawCard) an Client mit der gezogenen Karte.
 - [Server] Nachricht (event: updateGameBoard) an alle Clients im Spiel mit dem aktualisierten Spielbrett
-- [Client] Zug vorbereiten (Level auslegen oder nur eine Karte abwerfen)
+- [Client] Spielzug vorbereiten (Level auslegen oder nur eine Karte abwerfen)
 - [Client] Nachricht (event: makeMove) an Server
-- [Server] Validation (playerId + Secret, ist Spieler überhaupt am Zug?, ist der Zug gültig?, hat jemand gewonnen?)
+- [Server] Validation (playerId + Secret, ist Spieler überhaupt am Zug?, ist der Spielzug gültig?, hat jemand gewonnen?)
 
 ##### Fall 1: Niemand hat gewonnen
 
