@@ -366,7 +366,7 @@ _Voraussetzung: Player muss in einem (von sich selbst) erstellten Spiel sein._
 
 ##### Zug
 
-- [Client] Player klickt auf den jeweiligen Stepel, bei welchem er die Karte aufnehmen möchte.
+- [Client] Player klickt auf den jeweiligen Stapel, bei welchem er die Karte aufnehmen möchte.
 - [Client] Nachricht (event: drawCard) an Server
 - [Server] Validation (playerId + Secret, ist Spieler überhaupt am Zug?)
 - [Server] Nachricht (event: drawCard) an Client mit der gezogenen Karte.
