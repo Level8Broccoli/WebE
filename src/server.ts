@@ -147,7 +147,9 @@ io.on("connection", (socket) => {
         // Then broadcast the active player that has to make his move (the last one joined)
         const r: StartMoveResponse = {
           timestamp: DateTime.now(),
-          playerOnMove: api.getActivePlayer(request.game.id),
+          player: {
+            id: api.getActivePlayer(request.game.id),
+          },
         };
         io.in(request.game.id).emit("startMove", r);
       })
