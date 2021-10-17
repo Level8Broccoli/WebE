@@ -56,12 +56,13 @@ export type ErrorResponse = {
 export type StartGameResponse = {
   timestamp: DateTime;
   player: SimplePlayer;
-  drawPileTop: Card;
-  discardPileTops: Map<string, Card>;
+  piles: Array<[string, Array<Card>]>; // Map<string, Card>;
   hand: Card[];
 };
 
 export type StartMoveResponse = {
   timestamp: DateTime;
-  playerOnMove: string;
+  player: {
+    id: string;
+  };
 };

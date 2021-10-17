@@ -39,3 +39,9 @@ export type StartGameRequest = {
   player: PrivatePlayer;
   game: SimpleGame;
 };
+
+export type DrawCardRequest = {
+  player: PrivatePlayer;
+  game: SimpleGame;
+  pileId: string;
+};

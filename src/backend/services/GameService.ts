@@ -68,13 +68,15 @@ export function initGameState(
     g.state = {
       activePlayerId: g.players[g.players.length - 1],
       hands: new Map(),
-      drawPile: initialCardSet().sort((a, b) => 0.5 - Math.random()),
-      discardPile: new Map(),
+      piles: new Map().set(
+        "drawPile",
+        initialCardSet().sort((a, b) => 0.5 - Math.random())
+      ),
     };
 
     // Create for every player a hand with 10 cards from the draw pile
     for (const playerId of g.players) {
-      g.state.hands.set(playerId, createHand(g.state.drawPile));
+      g.state.hands.set(playerId, createHand(g.state.piles.get("drawPile")!));
     }
   }
 

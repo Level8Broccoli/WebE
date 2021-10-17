@@ -42,6 +42,7 @@ import {
 } from "../services/ServerStateService";
 import { initGameState } from "../services/GameService";
 import { Card, LevelSystem } from "../../shared/model/Game";
+import { toKeyValueArray } from "../../shared/helper/HelperService";
 
 export class Api {
   private _serverState: ServerState;
@@ -124,7 +125,7 @@ export class Api {
       }
 
       if (
-        request.config.maxPlayerCount < 2 ||
+        request.config.maxPlayerCount < 1 ||
         request.config.maxPlayerCount > 6
       ) {
         reject(new Error(StatusCode.INVALID_MAX_PLAYER_COUNT));
@@ -315,13 +316,8 @@ export class Api {
 
       // [Server] Create initial game state
       const state = initGameState(this._serverState, request.game);
-      const drawPileTop = state.drawPile!.pop()!;
-      const discardPileTops = new Map<string, Card>();
 
-      // Get all discardPile tops
-      state.discardPile.forEach((value, key) =>
-        discardPileTops.set(key, value.slice(-1)[0])
-      );
+      let piles = new Map<string, Card>(); // Empty because no discardPile is set
 
       // Create response messages for all players
       const responseArray = [];
@@ -331,8 +327,7 @@ export class Api {
           player: {
             id: playerId,
           },
-          drawPileTop: drawPileTop,
-          discardPileTops: discardPileTops,
+          piles: toKeyValueArray(piles),
           hand: hand,
         };
 
