@@ -4,6 +4,7 @@
     <pre>{{ game }}</pre>
     <button @click="deleteGame">Delete Game</button>
     <button @click="leaveGame">Leave Game</button>
+    <button @click="startGame">Start Game</button>
   </div>
 </template>
 
@@ -19,7 +20,8 @@ export default defineComponent({
     const game = computed(() => store.state.activeGame);
     const deleteGame = () => store.commit("deleteGame");
     const leaveGame = () => store.commit("leaveGame");
-    return { game, deleteGame, leaveGame };
+    const startGame = () => store.commit("startGame");
+    return { game, deleteGame, leaveGame, startGame };
   },
 });
 </script>
