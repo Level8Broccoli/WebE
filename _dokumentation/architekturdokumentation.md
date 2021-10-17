@@ -362,12 +362,30 @@ _Voraussetzung: Player muss in einem (von sich selbst) erstellten Spiel sein._
 - [Server] Validation (playerId + Secret, gameId nicht leer, Spielersteller = playerId, Spieleranzahl = Spieleranzahl im Regelset)
 - [Server] Initialer Spielstand herstellen
 - [Server] Nachricht (event: startGame) an Clients mit initalem Spielstand
-- [Server] 3 Sekunden warten
-- [Server] Nachricht (event: startRound) an Clients
+- [Server] Nachricht (event: startMove) an Clients
 
-##### Runde
+##### Zug
 
-- `TBD`
+- [Client] Player klickt auf den jeweiligen Stepel, bei welchem er die Karte aufnehmen möchte.
+- [Client] Nachricht (event: drawCard) an Server
+- [Server] Validation (playerId + Secret, ist Spieler überhaupt am Zug?)
+- [Server] Nachricht (event: drawCard) an Client mit der gezogenen Karte.
+- [Server] Nachricht (event: updateGameBoard) an alle Clients im Spiel mit dem aktualisierten Spielbrett
+- [Client] Zug vorbereiten (Level auslegen oder nur eine Karte abwerfen)
+- [Client] Nachricht (event: makeMove) an Server
+- [Server] Validation (playerId + Secret, ist Spieler überhaupt am Zug?, ist der Zug gültig?, hat jemand gewonnen?)
+
+##### Fall 1: Niemand hat gewonnen
+
+- [Server] Aktiven Spieler setzen
+- [Server] Nachricht (event: startMove) an Clients
+
+##### Fall 2: Spieler hat gewonnen
+
+- [Server] Nachricht (event: endGame) an alle Clients mit Gewinner
+- [Server] Spielteilnehmer und Gewinner in Datenbank (Siehe Punkt 8) persistieren.
+- [Server] Spiel löschen
+- [Server] Nachricht (event: deleteGame) an alle Clients
 
 8. Nach Spielende soll das System Daten speichern.
 
@@ -797,17 +815,18 @@ Der Ersteller des Spiels kann das Spiel starten, sobald die minimale Spieleranza
 
 ```json
 {
-  "event": "gameStart",
-  "data": {
-    "playerName": "[playerName]",
-    "playerId": "[playerId]",
-    "secret": "[secret]",
-    "gameId": "[gameId]"
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
+    "secret": "[secret]"
+  },
+  "game": {
+    "id": "[gameId]"
   }
 }
 ```
 
-### 5.8.2 Server broadcastet initialen Spielstand an alle Spieler im Spiel
+### 5.8.2 Server broadcastet initialen Spielstand und die jeweilig private Hand an alle Spieler im Spiel
 
 | Sender | Empfänger  | Event       |
 | ------ | ---------- | ----------- |
@@ -817,12 +836,17 @@ Der Ersteller des Spiels kann das Spiel starten, sobald die minimale Spieleranza
 
 ```json
 {
-  "event": "gameStart",
-  "data": {
-    "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
-    "gameState": {
-      /* initialer Spielstand */
-    }
+  "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+  "player": {
+    "id": "[playerId]"
+  },
+  "drawPileTop": {
+    "value": "[cardValue]",
+    "color": "[cardColor]",
+    "type": "[cardType]"
+  },
+  "discardPileTops": {/* Empty map */},
+  "hand": [/* Array aus Karten analog des drawPileTop (privat für jeden Spieler) */]
   }
 }
 ```
