@@ -13,15 +13,19 @@ header {
   align-items: center;
   text-align: center;
 }
+small {
+  font-weight: 300;
+  color: #ff6464;
+  text-align: center;
+}
 @media (min-width: 800px) {
   header {
     grid-template-columns: max-content 1fr;
     gap: 2.5rem;
   }
-}
-small {
-  font-weight: 300;
-  color: #ff6464;
-  text-align: center;
+
+  small {
+    text-align: left;
+  }
 }
 </style>
