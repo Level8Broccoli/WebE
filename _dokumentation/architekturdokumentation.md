@@ -371,9 +371,26 @@ _Voraussetzung: Player muss in einem (von sich selbst) erstellten Spiel sein._
 - [Server] Validation (playerId + Secret, ist Spieler überhaupt am Zug?)
 - [Server] Nachricht (event: drawCard) an Client mit der gezogenen Karte.
 - [Server] Nachricht (event: updateGameBoard) an alle Clients im Spiel mit dem aktualisierten Spielbrett
+
+---
+
+Optional (TB)
+
 - [Client] Spielzug vorbereiten (Level auslegen oder nur eine Karte abwerfen)
-- [Client] Nachricht (event: makeMove) an Server
-- [Server] Validation (playerId + Secret, ist Spieler überhaupt am Zug?, ist der Spielzug gültig?, hat jemand gewonnen?)
+
+---
+
+- [Client] Nachricht (event: discardCard) an Server
+- [Server] Validation (playerId + Secret, ist Spieler überhaupt am Zug?, gehört die abgelegte Karte überhaupt dem Spieler?)
+- [Server] Rundengewinn ermitteln
+
+---
+
+##### Gewinner ermitteln
+
+TBD hat jemand gewonnen?
+
+---
 
 ##### Fall 1: Niemand hat gewonnen
 
