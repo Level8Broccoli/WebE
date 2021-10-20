@@ -1,9 +1,25 @@
 <template>
   <header>
     <h1>Level <span>8</span> Game</h1>
-    <small>by Thierry and Oliver</small>
+    <small>{{authors}}</small>
   </header>
 </template>
+
+<script>
+import { computed, defineComponent } from "vue";
+import { useStore } from "vuex";
+import { key } from "../store/store";
+
+export default defineComponent({
+  name: "Title",
+  setup() {
+    const store = useStore(key);
+    const authors = computed(()=> store.getters.i18n.authors);
+    return { authors };
+  },
+});
+</script>
+
 
 <style scoped>
 header {
