@@ -12,6 +12,7 @@
 	},
 	"extensions": [
 		"octref.vetur",
-		"ritwickdey.liveserver"
+		"ritwickdey.liveserver",
+		"esbenp.prettier-vscode"
 	],
 }
