@@ -1,44 +1,37 @@
 <template>
-  <div>
-    <h1>Level 8 Game</h1>
-    <PlayerName />
-    <hr />
-    <Chat />
-    <hr />
-    <CreateGame />
-    <hr />
-    <GameOverview />
-    <hr />
-    <GameList />
-    <hr />
-    <StoreOutput />
-    <hr />
-    <ErrorOutput />
-    <hr />
-    <small>by Thierry and Oliver</small>
+  <div :class="layout">
+    <Title />
+    <RegisterPlayerName />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import PlayerName from "./components/PlayerName.vue";
-import CreateGame from "./components/CreateGame.vue";
-import GameOverview from "./components/GameOverview.vue";
-import GameList from "./components/GameList.vue";
-import Chat from "./components/Chat.vue";
-import StoreOutput from "./components/StoreOutput.vue";
-import ErrorOutput from "./components/ErrorOutput.vue";
+import Title from "./components/Title.vue";
+import RegisterPlayerName from "./components/RegisterPlayerName.vue";
 
 export default defineComponent({
   name: "App",
+  data() {
+    return {
+      layout: "simple",
+    };
+  },
   components: {
-    PlayerName,
-    CreateGame,
-    GameOverview,
-    GameList,
-    Chat,
-    StoreOutput,
-    ErrorOutput,
+    Title,
+    RegisterPlayerName,
   },
 });
 </script>
+
+<style scoped>
+.simple {
+  display: grid;
+  place-content: center;
+  gap: 5rem;
+  min-height: 100vh;
+}
+.simple header {
+  font-size: 2em;
+}
+</style>

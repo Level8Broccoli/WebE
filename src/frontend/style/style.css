@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bungee&family=Roboto+Condensed:wght@300;400;700&display=swap");
 
 /*
  * CSS RESET
@@ -114,4 +114,48 @@ body {
       #ff6464 100%
     );
   background-blend-mode: overlay, hard-light, overlay, normal;
+  padding: 1rem 2rem;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+h1 {
+  font-family: "Bungee", cursive;
+  color: #543864;
+  text-shadow: -0.05em -0.05em 0em white, 0.05em 0.05em 0em white,
+    0.1em 0.1em 0em white;
+}
+
+h1 span {
+  color: #ff6464;
+}
+
+button {
+  background-color: #fff;
+  border-color: #dbdbdb;
+  border-width: 1px;
+  cursor: pointer;
+  justify-content: center;
+  padding-bottom: calc(0.5em - 1px);
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-top: calc(0.5em - 1px);
+  text-align: center;
+  white-space: nowrap;
+  background-color: #5432d3;
+  border-color: transparent;
+  color: #fff;
+  border-radius: .375em;
+}
+
+input,
+select,
+textarea {
+  background-color: #fff;
+  border-color: #dbdbdb;
+  border-radius: 0.375em;
+  color: #363636;
+  padding: 0 1rem;
 }
