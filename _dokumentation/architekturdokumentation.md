@@ -382,6 +382,8 @@ Optional (TB)
 
 - [Client] Nachricht (event: discardCard) an Server
 - [Server] Validation (playerId + Secret, ist Spieler überhaupt am Zug?, gehört die abgelegte Karte überhaupt dem Spieler?)
+- [Server] Karte ablegen
+- [Server] Nachricht (event: updateGameBoard) an alle Clients mit dem aktualisierten Board.
 - [Server] Rundengewinn ermitteln
 
 ---
@@ -857,12 +859,7 @@ Der Ersteller des Spiels kann das Spiel starten, sobald die minimale Spieleranza
   "player": {
     "id": "[playerId]"
   },
-  "drawPileTop": {
-    "value": "[cardValue]",
-    "color": "[cardColor]",
-    "type": "[cardType]"
-  },
-  "discardPileTops": {/* Empty map */},
+  "piles": [/* Array, das nur den Nachziehstapel enthält. */],
   "hand": [/* Array aus Karten analog des drawPileTop (privat für jeden Spieler) */]
   }
 }
@@ -916,7 +913,63 @@ Gibt dem Client die Möglichkeit den aktuellen Spielstand abzufragen, um das kor
 
 Der aktive Spieler kann einen Spielzug durchführen. Falls dieser valide ist, erhalten alle Spieler im Spiel einen aktualisierten Spielstand.
 
-### 5.10.1 Spieler sendet einen Spielzug
+### 5.10.1 Spieler nimmt eine Karte auf.
+
+| Sender     | Empfänger | Event      |
+| ---------- | --------- | ---------- |
+| Client [1] | Server    | `drawCard` |
+
+### Body
+
+```json
+{
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
+    "secret": "[secret]"
+  },
+  "game": {
+    "id": "[gameId]"
+  },
+  "pileId": "[pileId]"
+}
+```
+
+### 5.10.2 Spieler erhält eine Karte.
+
+| Sender | Empfänger  | Event      |
+| ------ | ---------- | ---------- |
+| Server | Client [1] | `drawCard` |
+
+### Body
+
+```json
+{
+  "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+  "card": {
+    /* Kartenobjekt */
+  }
+}
+```
+
+### 5.10.3 Alle Spieler erhalten eine aktualisierte Spielübersicht
+
+| Sender | Empfänger  | Event             |
+| ------ | ---------- | ----------------- |
+| Server | Client [n] | `updateGameBoard` |
+
+### Body
+
+```json
+{
+  "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+  "piles": [
+    /* Array, das alle Stapel in der Form [key, value] enthält. */
+  ]
+}
+```
+
+### 5.10.4 Spieler sendet einen Spielzug
 
 | Sender     | Empfänger | Event      |
 | ---------- | --------- | ---------- |
@@ -937,7 +990,7 @@ Der aktive Spieler kann einen Spielzug durchführen. Falls dieser valide ist, er
 }
 ```
 
-### 5.10.2 Server broadcastet aktuellen Spielstand an alle Spieler im Spiel
+### 5.10.5 Server broadcastet aktuellen Spielstand an alle Spieler im Spiel
 
 | Sender | Empfänger  | Event      |
 | ------ | ---------- | ---------- |
@@ -953,6 +1006,30 @@ Der aktive Spieler kann einen Spielzug durchführen. Falls dieser valide ist, er
     "gameState": {
       /* aktueller Spielstand */
     }
+  }
+}
+```
+
+### 5.10.6 Spieler legt Karte ab.
+
+| Sender     | Empfänger | Event         |
+| ---------- | --------- | ------------- |
+| Client [1] | Server    | `discardCard` |
+
+### Body
+
+```json
+{
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
+    "secret": "[secret]"
+  },
+  "game": {
+    "id": "[gameId]"
+  },
+  "card": {
+    /* Kartenobjekt */
   }
 }
 ```
