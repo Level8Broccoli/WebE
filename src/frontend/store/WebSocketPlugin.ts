@@ -89,7 +89,7 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
     });
 
     socket.on("startMove", (res: StartMoveResponse | ErrorResponse) => {
-        if ("playerOnMove" in res) {
+        if ("timestamp" in res) {
             console.log("incoming: startMove", res);
         } else {
             console.error(res.status);

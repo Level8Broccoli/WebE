@@ -1,0 +1,161 @@
+@import url("https://fonts.googleapis.com/css2?family=Bungee&family=Roboto+Condensed:wght@300;400;700&display=swap");
+
+/*
+ * CSS RESET
+ */
+
+/* Box sizing rules */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Remove default margin */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
+ul[role="list"],
+ol[role="list"] {
+  list-style: none;
+}
+
+/* Set core root defaults */
+html:focus-within {
+  scroll-behavior: smooth;
+}
+
+/* Set core body defaults */
+body {
+  min-height: 100vh;
+  text-rendering: optimizeSpeed;
+  line-height: 1.5;
+}
+
+/* A elements that don't have a class get default styles */
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+}
+
+/* Make images easier to work with */
+img,
+picture {
+  max-width: 100%;
+  display: block;
+}
+
+/* Inherit fonts for inputs and buttons */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Remove all animations and transitions for people that prefer not to see them */
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/*
+ * CUSTOM STYLES
+ */
+
+:root {
+  font-size: clamp(0.9rem, 0.5rem + 0.5vw, 1.5rem);
+}
+
+body {
+  font-family: "Roboto Condensed", sans-serif;
+  color: hsl(0, 0%, 95%);
+  background: radial-gradient(100% 225% at 100% 0%, #faff00 0%, #000000 100%),
+    linear-gradient(235deg, #db00ff 0%, #000000 100%),
+    linear-gradient(
+      45deg,
+      #241e92 0%,
+      #241e92 40%,
+      #5432d3 40%,
+      #5432d3 50%,
+      #7b6cf6 50%,
+      #7b6cf6 70%,
+      #e5a5ff 70%,
+      #e5a5ff 100%
+    ),
+    linear-gradient(
+      180deg,
+      #01024e 0%,
+      #01024e 43%,
+      #543864 43%,
+      #543864 62%,
+      #8b4367 62%,
+      #8b4367 80%,
+      #ff6464 80%,
+      #ff6464 100%
+    );
+  background-blend-mode: overlay, hard-light, overlay, normal;
+  padding: 1rem 2rem;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+h1 {
+  font-family: "Bungee", cursive;
+  color: #543864;
+  text-shadow: -0.05em -0.05em 0em white, 0.05em 0.05em 0em white,
+    0.1em 0.1em 0em white;
+}
+
+h1 span {
+  color: #ff6464;
+}
+
+button {
+  background-color: #fff;
+  border-color: #dbdbdb;
+  border-width: 1px;
+  cursor: pointer;
+  justify-content: center;
+  padding-bottom: calc(0.5em - 1px);
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-top: calc(0.5em - 1px);
+  text-align: center;
+  white-space: nowrap;
+  background-color: #5432d3;
+  border-color: transparent;
+  color: #fff;
+  border-radius: .375em;
+}
+
+input,
+select,
+textarea {
+  background-color: #fff;
+  border-color: #dbdbdb;
+  border-radius: 0.375em;
+  color: #363636;
+  padding: 0 1rem;
+}

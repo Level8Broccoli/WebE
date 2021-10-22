@@ -1,44 +1,49 @@
 <template>
-  <div>
-    <h1>Level 8 Game</h1>
-    <PlayerName />
-    <hr />
-    <Chat />
-    <hr />
-    <CreateGame />
-    <hr />
-    <GameOverview />
-    <hr />
-    <GameList />
-    <hr />
-    <StoreOutput />
-    <hr />
-    <ErrorOutput />
-    <hr />
-    <small>by Thierry and Oliver</small>
+  <div :class="mode">
+    <LanguageSwitcher />
+    <Title />
+    <RegisterPlayerName v-if="mode === 'simple'" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import PlayerName from "./components/PlayerName.vue";
-import CreateGame from "./components/CreateGame.vue";
-import GameOverview from "./components/GameOverview.vue";
-import GameList from "./components/GameList.vue";
-import Chat from "./components/Chat.vue";
-import StoreOutput from "./components/StoreOutput.vue";
-import ErrorOutput from "./components/ErrorOutput.vue";
+import { computed, defineComponent } from "vue";
+import { useStore } from "vuex";
+import { key } from "./store/store";
+import LanguageSwitcher from "./components/LanguageSwitcher.vue";
+import Title from "./components/Title.vue";
+import RegisterPlayerName from "./components/RegisterPlayerName.vue";
 
 export default defineComponent({
   name: "App",
   components: {
-    PlayerName,
-    CreateGame,
-    GameOverview,
-    GameList,
-    Chat,
-    StoreOutput,
-    ErrorOutput,
+    LanguageSwitcher,
+    Title,
+    RegisterPlayerName,
+  },
+  setup() {
+    const store = useStore(key);
+    const secret = computed(() => store.state.player.secret);
+    const mode = computed(() =>
+      secret.value.length === 0 ? "simple" : "none"
+    );
+
+    return {
+      mode,
+      secret,
+    };
   },
 });
 </script>
+
+<style scoped>
+.simple {
+  display: grid;
+  place-content: center;
+  gap: 5rem;
+  min-height: 100vh;
+}
+.simple header {
+  font-size: 2em;
+}
+</style>
