@@ -1,5 +1,5 @@
 import { PrivatePlayer } from "./Player";
-import { Config, SimpleGame } from "./Game";
+import { Card, Config, SimpleGame } from "./Game";
 
 export type RegisterPlayerRequest = {
   playerName: string;
@@ -44,4 +44,10 @@ export type DrawCardRequest = {
   player: PrivatePlayer;
   game: SimpleGame;
   pileId: string;
+};
+
+export type DiscardCardRequest = {
+  player: PrivatePlayer;
+  game: SimpleGame;
+  card: Card;
 };

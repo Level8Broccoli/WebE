@@ -142,3 +142,39 @@ export function pileExists(
       .state!.piles.get(pileId) !== undefined
   );
 }
+
+export function isCardOwner(
+  serverState: ServerState,
+  game: SimpleGame,
+  player: PrivatePlayer,
+  card: Card
+): boolean {
+  return (
+    serverState.games
+      .find((g) => g.id === game.id)!
+      .state!.hands.get(player.id)!
+      .find((c) => c === card) !== undefined
+  );
+}
+
+export function discardCard(
+  serverState: ServerState,
+  game: SimpleGame,
+  player: PrivatePlayer,
+  card: Card
+) {
+  // remove the card from the hand
+  let hands = serverState.games.find((g) => g.id === game.id)!.state!.hands;
+  hands.set(
+    player.id,
+    hands.get(player.id).filter((c) => c === card)
+  );
+  // then add it to the players discard pile
+  let pile = serverState.games
+    .find((g) => g.id === game.id)!
+    .state!.piles!.get(player.id);
+  pile.push(card);
+  serverState.games
+    .find((g) => g.id === game.id)!
+    .state!.piles!.set(player.id, pile);
+}

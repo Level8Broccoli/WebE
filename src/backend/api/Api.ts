@@ -7,6 +7,7 @@ import {
   ChatRequest,
   CreateGameRequest,
   DeleteGameRequest,
+  DiscardCardRequest,
   DrawCardRequest,
   EditPlayerNameRequest,
   JoinGameRequest,
@@ -45,9 +46,11 @@ import {
 } from "../services/ServerStateService";
 import {
   addCardToHand,
+  discardCard,
   drawCard,
   getGameState,
   initGameState,
+  isCardOwner,
   pileExists,
 } from "../services/GameService";
 import { Card, LevelSystem } from "../../shared/model/Game";
@@ -383,6 +386,50 @@ export class Api {
       };
 
       resolve([drawCardResponse, updateGameBoardResponse]);
+    });
+  }
+
+  discardCard(request: DiscardCardRequest): Promise<UpdateGameBoardResponse> {
+    return new Promise((resolve, reject) => {
+      // [Server] Validation (playerId + Secret, player is on move? -> Errorfeedback
+      if (!playerExists(this._serverState, request.player)) {
+        reject(new Error(StatusCode.PLAYER_INVALID));
+      }
+
+      if (!gameExists(this._serverState, request.game)) {
+        reject(new Error(StatusCode.GAME_NOT_EXISTS));
+      }
+
+      if (!(this.getActivePlayer(request.game.id) === request.player.id)) {
+        reject(new Error(StatusCode.NOT_ACTIVE_PLAYER));
+      }
+
+      if (
+        !isCardOwner(
+          this._serverState,
+          request.game,
+          request.player,
+          request.card
+        )
+      ) {
+        reject(new Error(StatusCode.PLAYER_NOT_CARD_OWNER));
+      }
+
+      discardCard(
+        this._serverState,
+        request.game,
+        request.player,
+        request.card
+      );
+
+      const piles = getGameState(this._serverState, request.game).piles;
+
+      const response = {
+        timestamp: DateTime.now(),
+        piles: toKeyValueArray(piles),
+      };
+
+      resolve(response);
     });
   }
 
