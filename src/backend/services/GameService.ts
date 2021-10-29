@@ -167,14 +167,14 @@ export function discardCard(
   const hands = serverState.games.find((g) => g.id === game.id)!.state!.hands;
   hands.set(
     player.id,
-    hands.get(player.id).filter((c) => c === card)
+    hands.get(player.id)!.filter((c) => c === card)
   );
   // then add it to the players discard pile
   const pile = serverState.games
     .find((g) => g.id === game.id)!
     .state!.piles!.get(player.id);
-  pile.push(card);
+  pile!.push(card);
   serverState.games
     .find((g) => g.id === game.id)!
-    .state!.piles!.set(player.id, pile);
+    .state!.piles!.set(player.id, pile!);
 }
