@@ -6,5 +6,6 @@
     "showRulesLabel": "Spielregeln",
     "closeRulesLabel": "Spielregeln schliessen",
     "createNewGameButtonLabel": "Erstelle neues Spiel",
-    "noGames": "Keine Spiele verfügbar. Erstelle dein eigenes Spiel."
+    "noGames": "Keine Spiele verfügbar. Erstelle dein eigenes Spiel.",
+    "abortButton": "Abbrechen"
 }

@@ -6,5 +6,6 @@
     "showRulesLabel": "Game Rules",
     "closeRulesLabel": "Close Game Rules",
     "createNewGameButtonLabel": "Create New Game",
-    "noGames": "No games available. Create one yourself."
+    "noGames": "No games available. Create one yourself.",
+    "abortButton": "Cancel"
 }
