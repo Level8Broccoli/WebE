@@ -10,6 +10,7 @@ import { WebSocketPlugin } from './WebSocketPlugin';
 export interface State {
     language: Language,
     connection: Boolean,
+    showRules: Boolean,
     player: PrivatePlayer,
     games: Game[],
     activeGame: null | Game,
@@ -24,6 +25,7 @@ export const store = createStore<State>({
     state: {
         language: Language.ENGLISH,
         connection: false,
+        showRules: false,
         player: {
             name: "",
             id: "",
@@ -38,6 +40,9 @@ export const store = createStore<State>({
             return i18n(state.language);
         },
         view: (state) => {
+            if (state.showRules) {
+                return "rules";
+            }
             if (!(state.player.secret.length > 0)) {
                 return "start";
             }
@@ -64,6 +69,9 @@ export const store = createStore<State>({
             } else {
                 state.language = Language.ENGLISH;
             }
+        },
+        switchRules(state) {
+            state.showRules = !state.showRules;
         },
         registerPlayer() { /* handled by WebSocketPlugin */ },
         createGame() { /* handled by WebSocketPlugin */ },

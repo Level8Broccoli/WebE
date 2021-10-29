@@ -2,5 +2,7 @@
     "authors": "von Thierry und Oliver",
     "labelChoosePlayerName": "Wähle deinen Spielernamen",
     "buttonRegisterPlayerName": "Registrieren",
-    "buttonUpdatePlayerName":"Update"
+    "buttonUpdatePlayerName": "Update",
+    "showRulesLabel": "Spielregeln",
+    "closeRulesLabel": "Spielregeln schliessen"
 }

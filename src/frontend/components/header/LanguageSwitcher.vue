@@ -1,13 +1,13 @@
 <template>
-  <a v-if="isEnglish" href="#" @click="switchLanguage">Deutsch</a>
-  <a v-else href="#" @click="switchLanguage">English</a>
+  <a v-if="isEnglish" href="#" @click.prevent="switchLanguage">Deutsch</a>
+  <a v-else href="#" @click.prevent="switchLanguage">English</a>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent } from "vue";
 import { useStore } from "vuex";
-import { Language } from "../i18n/i18n";
-import { key } from "../store/store";
+import { Language } from "../../i18n/i18n";
+import { key } from "../../store/store";
 
 export default defineComponent({
   name: "LanguageSwitcher",
@@ -16,7 +16,6 @@ export default defineComponent({
     const language = computed(() => store.state.language);
     const isEnglish = computed(() => language.value == Language.ENGLISH);
     const switchLanguage = (e: Event) => {
-      e.preventDefault();
       store.commit("switchLanguage");
     };
 
