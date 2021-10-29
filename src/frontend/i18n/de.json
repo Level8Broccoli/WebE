@@ -4,5 +4,6 @@
     "buttonRegisterPlayerName": "Registrieren",
     "buttonUpdatePlayerName": "Update",
     "showRulesLabel": "Spielregeln",
-    "closeRulesLabel": "Spielregeln schliessen"
+    "closeRulesLabel": "Spielregeln schliessen",
+    "createNewGameButtonLabel": "Erstelle neues Spiel"
 }

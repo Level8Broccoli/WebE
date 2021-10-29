@@ -47,5 +47,6 @@ export default defineComponent({
     "header" max-content
     "body" 1fr;
   padding: 1rem 2rem;
+  gap: 2rem;
 }
 </style>
