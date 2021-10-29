@@ -11,14 +11,10 @@
 <script lang="ts">
 import { computed, defineComponent } from "vue";
 import { useStore } from "vuex";
-import CreateGame from "../../components/games/CreateGame.vue";
 import { key } from "../../store/store";
 
 export default defineComponent({
   name: "GameList",
-  components: {
-    CreateGame,
-  },
   setup() {
     const store = useStore(key);
     const i18n = computed(() => store.getters.i18n);

@@ -11,7 +11,7 @@ import { useStore } from "vuex";
 import { key } from "../../store/store";
 
 export default defineComponent({
-  name: "CreateGame",
+  name: "CreateGameButton",
   setup() {
     const store = useStore(key);
     const createNewGame = (e: Event) => {

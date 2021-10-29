@@ -1,20 +1,20 @@
 
 <template>
   <section>
-    <CreateGame />
+    <CreateGameButton />
     <GameList />
   </section>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import CreateGame from "../components/games/CreateGame.vue";
+import CreateGameButton from "../components/games/CreateGameButton.vue";
 import GameList from "../components/games/GameList.vue";
 
 export default defineComponent({
   name: "GameSearchView",
   components: {
-    CreateGame,
+    CreateGameButton,
     GameList,
   },
 });
