@@ -9,6 +9,7 @@ import { WebSocketPlugin } from './WebSocketPlugin';
 
 export interface State {
     language: Language,
+    connection: Boolean,
     player: PrivatePlayer,
     games: Game[],
     activeGame: null | Game,
@@ -22,6 +23,7 @@ const socket = io(import.meta.env.VITE_WS_SERVER || "localhost:3030");
 export const store = createStore<State>({
     state: {
         language: Language.ENGLISH,
+        connection: false,
         player: {
             name: "",
             id: "",
@@ -73,6 +75,9 @@ export const store = createStore<State>({
         },
         updateActiveGame(state, value: Game | null) {
             state.activeGame = value;
+        },
+        updateConnection(state, value: Boolean) {
+            state.connection = value;
         },
         addToErrorLog(state, value: string) {
             state.errorLog.unshift(value);

@@ -8,10 +8,12 @@ import { State } from "./store";
 export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
 
     socket.on("connect", () => {
+        store.commit("updateConnection", true);
         console.log("connected", socket.id);
     });
 
     socket.on("disconnect", (reason) => {
+        store.commit("updateConnection", false);
         console.log("disconnected", reason);
         store.commit("addToErrorLog", reason);
     });

@@ -1,7 +1,9 @@
 <template>
   <div :class="mode">
-    <LanguageSwitcher />
-    <Title />
+    <Toolbar>
+      <Title v-if="mode !== 'simple'" />
+    </Toolbar>
+    <Title v-if="mode === 'simple'" />
     <RegisterPlayerName v-if="mode === 'simple'" />
   </div>
 </template>
@@ -9,17 +11,17 @@
 <script lang="ts">
 import { computed, defineComponent } from "vue";
 import { useStore } from "vuex";
-import { key } from "./store/store";
-import LanguageSwitcher from "./components/LanguageSwitcher.vue";
-import Title from "./components/Title.vue";
 import RegisterPlayerName from "./components/RegisterPlayerName.vue";
+import Title from "./components/Title.vue";
+import Toolbar from "./components/Toolbar.vue";
+import { key } from "./store/store";
 
 export default defineComponent({
   name: "App",
   components: {
-    LanguageSwitcher,
     Title,
     RegisterPlayerName,
+    Toolbar,
   },
   setup() {
     const store = useStore(key);

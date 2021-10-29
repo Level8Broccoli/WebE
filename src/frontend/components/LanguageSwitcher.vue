@@ -31,9 +31,6 @@ export default defineComponent({
 <style scoped>
 a {
   color: black;
-  position: absolute;
-  top: 2rem;
-  right: 2rem;
 }
 
 a:hover,
