@@ -36,6 +36,15 @@ export const store = createStore<State>({
     getters: {
         i18n: (state) => {
             return i18n(state.language);
+        },
+        view: (state) => {
+            if (!(state.player.secret.length > 0)) {
+                return "start";
+            }
+            if (state.activeGame === null) {
+                return "game-search";
+            }
+            return "unknown"
         }
     },
     mutations: {

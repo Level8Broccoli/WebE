@@ -28,7 +28,9 @@ header {
   gap: 0.5rem;
   align-items: center;
   text-align: center;
+  font-size: 2em;
 }
+
 small {
   font-weight: 300;
   color: #ff6464;

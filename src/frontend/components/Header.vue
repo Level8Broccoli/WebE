@@ -1,6 +1,6 @@
 <template>
-  <aside>
-    <section class="left">
+  <header>
+    <section>
       <slot></slot>
     </section>
     <section class="right">
@@ -8,7 +8,7 @@
       <LanguageSwitcher />
       <ConnectionDisplay />
     </section>
-  </aside>
+  </header>
 </template>
 
 <script lang="ts">
@@ -20,7 +20,7 @@ import LanguageSwitcher from "./LanguageSwitcher.vue";
 import PlayerName from "./PlayerName.vue";
 
 export default defineComponent({
-  name: "Toolbar",
+  name: "Header",
   components: {
     ConnectionDisplay,
     LanguageSwitcher,
@@ -37,11 +37,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-aside {
-  position: absolute;
-  top: 2rem;
-  right: 2rem;
-  left: 2rem;
+header {
   display: grid;
   grid-template-columns: 1fr max-content;
   align-items: center;
