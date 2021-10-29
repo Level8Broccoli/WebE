@@ -21,5 +21,6 @@ section {
   display: grid;
   place-content: center;
   gap: 5rem;
+  padding-bottom: 15vh;
 }
 </style>

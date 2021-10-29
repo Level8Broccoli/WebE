@@ -11,6 +11,7 @@ export interface State {
     language: Language,
     connection: Boolean,
     showRules: Boolean,
+    createGameMode: Boolean,
     player: PrivatePlayer,
     games: Game[],
     activeGame: null | Game,
@@ -26,6 +27,7 @@ export const store = createStore<State>({
         language: Language.ENGLISH,
         connection: false,
         showRules: false,
+        createGameMode: false,
         player: {
             name: "",
             id: "",
@@ -45,6 +47,9 @@ export const store = createStore<State>({
             }
             if (!(state.player.secret.length > 0)) {
                 return "start";
+            }
+            if (state.createGameMode) {
+                return "create-game";
             }
             if (state.activeGame === null) {
                 return "game-search";
@@ -72,6 +77,9 @@ export const store = createStore<State>({
         },
         switchRules(state) {
             state.showRules = !state.showRules;
+        },
+        switchCreateGameMode(state) {
+            state.createGameMode = !state.createGameMode;
         },
         registerPlayer() { /* handled by WebSocketPlugin */ },
         createGame() { /* handled by WebSocketPlugin */ },

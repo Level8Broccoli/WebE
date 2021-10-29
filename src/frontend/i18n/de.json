@@ -5,5 +5,6 @@
     "buttonUpdatePlayerName": "Update",
     "showRulesLabel": "Spielregeln",
     "closeRulesLabel": "Spielregeln schliessen",
-    "createNewGameButtonLabel": "Erstelle neues Spiel"
+    "createNewGameButtonLabel": "Erstelle neues Spiel",
+    "noGames": "Keine Spiele verfügbar. Erstelle dein eigenes Spiel."
 }

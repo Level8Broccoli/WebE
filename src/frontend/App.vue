@@ -5,6 +5,7 @@
     </Header>
     <RulesView v-if="view === 'rules'" />
     <StartView v-if="view === 'start'" />
+    <GameCreateView v-if="view === 'create-game'" />
     <GameSearchView v-if="view === 'game-search'" />
   </main>
 </template>
@@ -15,9 +16,10 @@ import { useStore } from "vuex";
 import Header from "./components/header/Header.vue";
 import Title from "./components/Title.vue";
 import { key } from "./store/store";
+import GameCreateView from "./views/GameCreateView.vue";
 import GameSearchView from "./views/GameSearchView.vue";
-import StartView from "./views/StartView.vue";
 import RulesView from "./views/RulesView.vue";
+import StartView from "./views/StartView.vue";
 
 export default defineComponent({
   name: "App",
@@ -27,6 +29,7 @@ export default defineComponent({
     Header,
     Title,
     RulesView,
+    GameCreateView,
   },
   setup() {
     const store = useStore(key);

@@ -1,9 +1,6 @@
 
 <template>
-  <section>
-    <CreateGame />
-    <GameList />
-  </section>
+  <section>Create your game here</section>
 </template>
 
 <script lang="ts">
@@ -12,7 +9,7 @@ import CreateGame from "../components/games/CreateGame.vue";
 import GameList from "../components/games/GameList.vue";
 
 export default defineComponent({
-  name: "GameSearchView",
+  name: "GameCreateView",
   components: {
     CreateGame,
     GameList,
