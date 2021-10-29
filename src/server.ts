@@ -139,7 +139,7 @@ io.on("connection", (socket) => {
       .startGame(request)
       .then((responses) => {
         // Send startGame message with intial gameState and the privat hand to the corresponding player
-        for (let response of responses) {
+        for (const response of responses) {
           io.to(api.getSocketId(response.player.id)).emit(
             "startGame",
             response

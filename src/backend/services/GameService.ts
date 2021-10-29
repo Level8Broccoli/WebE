@@ -11,7 +11,7 @@ import { PrivatePlayer } from "../../shared/model/Player";
 import { ServerState } from "../../shared/model/ServerState";
 
 function initialCardSet(): Card[] {
-  let cardset: Card[] = [];
+  const cardset: Card[] = [];
   // 1 - 15 for all colors
   for (const key in Color) {
     for (let index = 1; index <= 15; index++) {
@@ -46,10 +46,10 @@ function initialCardSet(): Card[] {
 }
 
 function createHand(cardset: Card[]): Card[] {
-  let cards = [];
+  const cards = [];
 
   for (let index = 0; index < 10; index++) {
-    let card = cardset.pop();
+    const card = cardset.pop();
     if (card !== undefined) {
       cards.push(card);
     }
@@ -62,7 +62,7 @@ export function initGameState(
   serverState: ServerState,
   game: SimpleGame
 ): State {
-  let g = serverState.games.find((g) => g.id === game.id);
+  const g = serverState.games.find((g) => g.id === game.id);
 
   if (g !== undefined) {
     // Init state with a full randomly sorted draw pile and the last joined person as beginner
@@ -91,9 +91,9 @@ export function drawCard(
 ): Card {
   if (pileId === "drawPile") {
     // if length from drawPile is 0 take all discardPiles,
-    let state = serverState.games.find((g) => g.id === game.id)!.state!;
+    const state = serverState.games.find((g) => g.id === game.id)!.state!;
     if (state.piles.get(pileId)!.length === 0) {
-      let tempCards: Card[] = [];
+      const tempCards: Card[] = [];
       state.piles.forEach((cards, key) => {
         if (!(key === pileId)) {
           tempCards.concat(cards!);
@@ -164,13 +164,13 @@ export function discardCard(
   card: Card
 ) {
   // remove the card from the hand
-  let hands = serverState.games.find((g) => g.id === game.id)!.state!.hands;
+  const hands = serverState.games.find((g) => g.id === game.id)!.state!.hands;
   hands.set(
     player.id,
     hands.get(player.id).filter((c) => c === card)
   );
   // then add it to the players discard pile
-  let pile = serverState.games
+  const pile = serverState.games
     .find((g) => g.id === game.id)!
     .state!.piles!.get(player.id);
   pile.push(card);

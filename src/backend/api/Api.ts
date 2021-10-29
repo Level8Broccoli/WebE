@@ -329,7 +329,7 @@ export class Api {
       // [Server] Create initial game state
       const state = initGameState(this._serverState, request.game);
 
-      let piles = new Map<string, Card>(); // Empty because no discardPile is set
+      const piles = new Map<string, Card>(); // Empty because no discardPile is set
 
       // Create response messages for all players
       const responseArray = [];
