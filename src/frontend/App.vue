@@ -45,7 +45,7 @@ export default defineComponent({
   gap: 5rem;
   min-height: 100vh;
 }
-.simple header {
+header {
   font-size: 2em;
 }
 </style>

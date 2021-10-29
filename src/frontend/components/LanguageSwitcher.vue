@@ -27,15 +27,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style scoped>
-a {
-  color: black;
-}
-
-a:hover,
-a:target {
-  color: white;
-  text-decoration: none;
-}
-</style>

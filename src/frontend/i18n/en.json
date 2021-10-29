@@ -1,5 +1,6 @@
 {
     "authors": "by Thierry and Oliver",
     "labelChoosePlayerName": "Choose your player name",
-    "buttonRegisterPlayerName": "Register"
+    "buttonRegisterPlayerName": "Register",
+    "buttonUpdatePlayerName": "Update"
 }

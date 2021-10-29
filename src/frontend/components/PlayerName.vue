@@ -1,19 +1,13 @@
 <template>
-  <form>
-    <label for="playerName">{{ label }}:</label>
-    <input
-      type="text"
-      :value="playerName"
-      @input="updatePlayerName"
-      name="playerName"
-      id="playerName"
-    />
-    <button @click.prevent="register">{{ button }}</button>
+  <a v-if="!isEdit" href="#" @click.prevent="switchToEdit">{{ playerName }}</a>
+  <form v-else>
+    <input @input="updatePlayerName" type="text" :value="playerName" />
+    <button @click.prevent="sendUpdate">{{ button }}</button>
   </form>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import { useStore } from "vuex";
 import { key } from "../store/store";
 
@@ -22,21 +16,26 @@ export default defineComponent({
   setup() {
     const store = useStore(key);
     const playerName = computed(() => store.state.player.name);
+    const isEdit = ref(false);
+    const switchToEdit = (e: Event) => {
+      isEdit.value = true;
+    };
+    const sendUpdate = (e: Event) => {
+      isEdit.value = false;
+      store.commit("editPlayerName");
+    };
     const updatePlayerName = (e: any) => {
       store.commit("updatePlayerName", e.target.value);
     };
-    const register = (e: Event) => {
-      store.commit("registerPlayer");
-    };
     const i18n = computed(() => store.getters.i18n);
-    const label = computed(() => i18n.value.labelChoosePlayerName);
-    const button = computed(() => i18n.value.buttonRegisterPlayerName);
+    const button = computed(() => i18n.value.buttonUpdatePlayerName);
     return {
+      isEdit,
       playerName,
       updatePlayerName,
-      register,
-      label,
+      switchToEdit,
       button,
+      sendUpdate,
     };
   },
 });
@@ -46,13 +45,6 @@ export default defineComponent({
 form {
   display: grid;
   grid-template-columns: 1fr max-content;
-}
-label {
-  grid-column: 1 / -1;
-  text-align: center;
-  margin-bottom: 1rem;
-  font-size: 2em;
-  font-weight: 900;
 }
 input {
   border-bottom-right-radius: 0;
