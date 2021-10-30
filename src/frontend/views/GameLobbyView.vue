@@ -40,7 +40,7 @@ export default defineComponent({
 section {
   display: grid;
   grid-template-columns: 4fr 2fr;
-  gap: 1rem;
+  gap: 2rem;
 }
 
 .left {

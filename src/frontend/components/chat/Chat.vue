@@ -3,26 +3,35 @@
     <ChatInput />
     <ul role="list">
       <li v-for="message in messageList" :key="message.id">
-        {{ message }}
+        <ChatMessage :message="message" />
       </li>
     </ul>
   </aside>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "vue";
+import { DateTime } from "luxon";
+import { computed, ComputedRef, defineComponent } from "vue";
 import { useStore } from "vuex";
+import { Game } from "../../../shared/model/Game";
 import { key } from "../../store/store";
 import ChatInput from "./ChatInput.vue";
+import ChatMessage from "./ChatMessage.vue";
 
 export default defineComponent({
   name: "Chat",
-  components: { ChatInput },
+  components: { ChatInput, ChatMessage },
   setup() {
     const store = useStore(key);
     const i18n = computed(() => store.getters.i18n);
-    const game = computed(() => store.getters.getActiveGame);
-    const messageList = computed(() => game.value.chat.reverse());
+    const game: ComputedRef<Game> = computed(() => store.getters.getActiveGame);
+    const messageList = computed(() =>
+      [...game.value.chat].sort((a, b) => {
+        const aa = DateTime.fromISO(a.timestamp.toString());
+        const bb = DateTime.fromISO(b.timestamp.toString());
+        return bb.toMillis() - aa.toMillis();
+      })
+    );
     return {
       i18n,
       messageList,
@@ -30,3 +39,24 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+aside {
+  height: 100%;
+}
+
+ul {
+  padding: 1rem;
+  margin: 0;
+  margin-top: 1rem;
+  border-radius: 0.375em;
+  border: 1px solid #dbdbdb;
+  background-color: rgb(219, 219, 219, 0.3);
+  height: 75vh;
+  overflow-y: scroll;
+}
+
+li + li {
+  margin-top: 1rem;
+}
+</style>

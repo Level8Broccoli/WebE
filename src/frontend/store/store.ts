@@ -46,9 +46,6 @@ export const store = createStore<State>({
         getActiveGame: (state) => {
             const activeGame = state.games.find(g => g.id === state.activeGameId);
             if (typeof activeGame === "undefined") {
-                console.log(state.games.length);
-                console.log(JSON.parse(JSON.stringify(state.games)));
-                console.log(state.activeGameId);
                 throw new Error("Active Game ID is wrong!");
             }
             return activeGame;
@@ -174,6 +171,7 @@ export const store = createStore<State>({
         addChatMessage(state, value: ChatResponse) {
             const activeGame = state.games.find(g => g.id === state.activeGameId);
             activeGame?.chat.push(value);
+
         }
     },
     plugins: [WebSocketPlugin(socket)]
