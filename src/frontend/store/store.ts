@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client';
 import { InjectionKey } from 'vue';
 import { createStore, Store } from 'vuex';
-import { Config, Game, GameStatus, LevelSystem } from '../../shared/model/Game';
+import { Config, Game, GameStatus, LevelSystem, PublicGame } from '../../shared/model/Game';
 import { PrivatePlayer, PublicPlayer } from '../../shared/model/Player';
 import { ChatResponse } from '../../shared/model/ResponseTypes';
 import { i18n, Language } from '../i18n/i18n';
@@ -13,7 +13,7 @@ export interface State {
     showRules: Boolean,
     player: PrivatePlayer,
     playerList: PublicPlayer[],
-    games: Game[],
+    games: PublicGame[],
     gameInCreation?: Config,
     activeGameId: string,
     errorLog: String[]
@@ -124,6 +124,7 @@ export const store = createStore<State>({
         editPlayerName() { /* handled by WebSocketPlugin */ },
         registerExistingPlayer() { /* handled by WebSocketPlugin */ },
         logout() { /* handled by WebSocketPlugin */ },
+        startGame() { /* handled by WebSocketPlugin */ },
         resetState(state) {
             state.player = {
                 name: "",

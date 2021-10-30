@@ -72,10 +72,9 @@ export type ErrorResponse = {
 };
 
 export type StartGameResponse = {
+  status: StatusCode;
   timestamp: DateTime;
-  player: SimplePlayer;
-  piles: Array<[string, Card]>; // Map<string, Card> as array;
-  hand: Card[];
+  gameId: string;
 };
 
 export type StartMoveResponse = {

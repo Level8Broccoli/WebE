@@ -2,10 +2,14 @@ import {
   Card,
   CardType,
   Color, Game, GameState, NumberCard,
+  PublicGame,
   SpecialCard
 } from "../../shared/model/Game";
 import { PrivatePlayer } from "../../shared/model/Player";
 import { ServerState } from "../../shared/model/ServerState";
+
+const HAND_SIZE_START = 10;
+const DRAW_PILE = "drawPile";
 
 function initialCardSet(): Card[] {
   const cardset: Card[] = [];
@@ -61,41 +65,58 @@ export function initGameState(): GameState {
     activePlayerId: "",
     hands: new Map(),
     piles: new Map().set(
-      "drawPile",
+      DRAW_PILE,
       initialCardSet().sort((a, b) => 0.5 - Math.random())
     ),
   };
 }
 
-export function drawCard(
+export function startGameState(
   serverState: ServerState,
-  gameId: string,
-  pileId: string
-): Card {
-  if (pileId === "drawPile") {
-    // if length from drawPile is 0 take all discardPiles,
-    const state = serverState.games.find((g) => g.id === gameId)!.state!;
-    if (state.piles.get(pileId)!.length === 0) {
-      const tempCards: Card[] = [];
-      state.piles.forEach((cards, key) => {
-        if (!(key === pileId)) {
-          tempCards.concat(cards!);
-          state.piles.delete(key);
-        }
-      });
-      // shuffle the array again and place all cards in the drawPile
-      state.piles.set(
-        pileId,
-        tempCards.sort((a, b) => 0.5 - Math.random())
-      );
-    }
+  gameId: string
+): void {
+  const game = serverState.games.find(g => g.id === gameId)!;
+
+  const playerIdList = game.players;
+
+  for (const playerId in playerIdList) {
+    createPlayerStartHand(game, playerId, HAND_SIZE_START);
   }
 
-  return serverState.games
-    .find((g) => g.id === gameId)!
-    .state!.piles.get(pileId)!
-    .pop()!;
+  for (const playerId in playerIdList) {
+    createEmptyDiscardPile(game, playerId);
+  }
 }
+
+// export function drawCard(
+//   serverState: ServerState,
+//   gameId: string,
+//   pileId: string
+// ): Card {
+//   if (pileId === "drawPile") {
+//     // if length from drawPile is 0 take all discardPiles,
+//     const state = serverState.games.find((g) => g.id === gameId)!.state!;
+//     if (state.piles.get(pileId)!.length === 0) {
+//       const tempCards: Card[] = [];
+//       state.piles.forEach((cards, key) => {
+//         if (!(key === pileId)) {
+//           tempCards.concat(cards!);
+//           state.piles.delete(key);
+//         }
+//       });
+//       // shuffle the array again and place all cards in the drawPile
+//       state.piles.set(
+//         pileId,
+//         tempCards.sort((a, b) => 0.5 - Math.random())
+//       );
+//     }
+//   }
+
+//   return serverState.games
+//     .find((g) => g.id === gameId)!
+//     .state!.piles.get(pileId)!
+//     .pop()!;
+// }
 
 export function addCardToHand(
   serverState: ServerState,
@@ -167,4 +188,50 @@ export function discardCard(
   serverState.games
     .find((g) => g.id === gameId)!
     .state!.piles!.set(player.id, pile!);
+}
+
+function createPlayerStartHand(game: Game, playerId: string, numberOfCards: number) {
+  for (let i = 0; i < numberOfCards; i++) {
+    drawCard(game, DRAW_PILE, playerId);
+  }
+}
+
+function createEmptyDiscardPile(game: Game, playerId: string) {
+  game.state.piles.set(playerId, []);
+}
+
+function drawCard(game: Game, from: string, to: string) {
+  const fromPile = game.state.piles.get(from);
+  if (typeof fromPile === "undefined") {
+    throw new Error("This pile does not exist.");
+  }
+  const nextCard = fromPile.shift();
+  if (typeof nextCard === "undefined") {
+    throw new Error("This pile is empty.");
+  }
+  if (typeof game.state.hands.get(to) === "undefined") {
+    game.state.hands.set(to, []);
+  }
+  const toHand = game.state.hands.get(to)!;
+  toHand.push(nextCard);
+}
+
+export function getAllGames(
+  serverState: ServerState,
+  playerId?: string
+): PublicGame[] {
+  return serverState.games.map((g) => {
+    const handKeys = Array.from(g.state.hands.keys());
+    const newHands = new Map<string, Card[] | number>();
+    handKeys.forEach(key => {
+      if (key === playerId) {
+        newHands.set(key, g.state.hands.get(key)!);
+      } else {
+        newHands.set(key, g.state.hands.get(key)!.length);
+      }
+    });
+    const newPublicGame: PublicGame = { ...g };
+    newPublicGame.state.hands = newHands;
+    return newPublicGame;
+  });
 }

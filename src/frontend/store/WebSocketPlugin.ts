@@ -1,7 +1,7 @@
 import { Socket } from "socket.io-client";
 import { Store } from "vuex";
-import { ChatRequest, CreateGameRequest, DeleteGameRequest, EditPlayerNameRequest, JoinGameRequest, LeaveGameRequest, LogoutRequest, RegisterExistingPlayerRequest, RegisterPlayerRequest } from "../../shared/model/RequestTypes";
-import { ChatResponse, CreateGameResponse, DeleteGameResponse, EditPlayerNameResponse, ErrorResponse, JoinGameResponse, LeaveGameResponse, LogoutResponse, RegisterExistingPlayerResponse, RegisterPlayerResponse, UpdateGameListResponse, UpdatePlayerListResponse } from "../../shared/model/ResponseTypes";
+import { ChatRequest, CreateGameRequest, DeleteGameRequest, EditPlayerNameRequest, JoinGameRequest, LeaveGameRequest, LogoutRequest, RegisterExistingPlayerRequest, RegisterPlayerRequest, StartGameRequest } from "../../shared/model/RequestTypes";
+import { ChatResponse, CreateGameResponse, DeleteGameResponse, EditPlayerNameResponse, ErrorResponse, JoinGameResponse, LeaveGameResponse, LogoutResponse, RegisterExistingPlayerResponse, RegisterPlayerResponse, StartGameResponse, UpdateGameListResponse, UpdatePlayerListResponse } from "../../shared/model/ResponseTypes";
 import { State } from "./store";
 
 export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
@@ -132,6 +132,15 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
         }
     });
 
+    socket.on("startGame", (res: StartGameResponse | ErrorResponse) => {
+        console.log(res);
+
+        if (!("gameId" in res)) {
+            console.error(res.status);
+            store.commit("addToErrorLog", res.status);
+        }
+    });
+
     store.subscribe((mutation, state) => {
         if (mutation.type === "registerPlayer") {
             const payload: RegisterPlayerRequest = { playerName: state.player.name };
@@ -199,6 +208,14 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
                 player: state.player
             };
             socket.emit("logout", payload);
+        }
+
+        if (mutation.type === "startGame") {
+            const payload: StartGameRequest = {
+                gameId: store.state.activeGameId,
+                player: store.state.player
+            }
+            socket.emit("startGame", payload);
         }
     });
 }

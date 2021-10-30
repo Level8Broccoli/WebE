@@ -44,7 +44,7 @@ export default defineComponent({
     };
 
     const startGame = (e: Event) => {
-      console.error("To implemented");
+      store.commit("startGame");
     };
 
     return {

@@ -1,7 +1,8 @@
 import { DateTime } from "luxon";
 import { Server } from "socket.io";
 import { Api } from "./backend/api/Api";
-import { getAllGames, getAllRegisteredPlayers } from "./backend/services/ServerStateService";
+import { getAllGames } from "./backend/services/GameService";
+import { getAllRegisteredPlayers } from "./backend/services/ServerStateService";
 import {
   ChatRequest,
   CreateGameRequest,
@@ -14,7 +15,7 @@ import {
   LogoutRequest,
   RegisterExistingPlayerRequest,
   RegisterPlayerRequest,
-  StartGameRequest,
+  StartGameRequest
 } from "./shared/model/RequestTypes";
 import { ErrorResponse, StartMoveResponse } from "./shared/model/ResponseTypes";
 
@@ -182,23 +183,8 @@ io.on("connection", (socket) => {
   socket.on("startGame", (request: StartGameRequest) => {
     api
       .startGame(request)
-      .then((responses) => {
-        // Send startGame message with intial gameState and the privat hand to the corresponding player
-        for (const response of responses) {
-          io.to(api.getSocketId(response.player.id)).emit(
-            "startGame",
-            response
-          );
-        }
-
-        // Then broadcast the active player that has to make his move (the last one joined)
-        const r: StartMoveResponse = {
-          timestamp: DateTime.now(),
-          player: {
-            id: api.getActivePlayer(request.gameId),
-          },
-        };
-        io.in(request.gameId).emit("startMove", r);
+      .then((response) => {
+        socket.emit("startGame", response);
       })
       .catch((error) => {
         const response: ErrorResponse = {

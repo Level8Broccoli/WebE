@@ -132,17 +132,15 @@ export function addChatMessage(
   serverState.games.find((g) => g.id === gameId)?.chat?.push(chatMessage);
 }
 
-export function checkPlayerCount(
+export function isPlayerCountValid(
   serverState: ServerState,
   gameId: string
 ): boolean {
-  const g = serverState.games.find((g) => g.id === gameId);
-
-  return g !== undefined
-    ? g.players.length === g.config.maxPlayerCount
-      ? true
-      : false
-    : false;
+  const game = serverState.games.find((g) => g.id === gameId);
+  if (typeof game === "undefined") {
+    return false;
+  }
+  return game.players.length <= game.config.maxPlayerCount;
 }
 
 export function playerToSocketId(
@@ -170,10 +168,4 @@ export function getAllRegisteredPlayers(
   return serverState.players.map(({ id, name }) => {
     return { id, name }
   });
-}
-
-export function getAllGames(
-  serverState: ServerState
-): Game[] {
-  return serverState.games;
 }

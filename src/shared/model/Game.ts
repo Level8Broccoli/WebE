@@ -12,6 +12,16 @@ export type Game = {
   state: GameState;
 };
 
+export type PublicGame = {
+  id: string;
+  creatorId: string;
+  players: string[];
+  config: Config;
+  status: GameStatus;
+  chat: ChatMessage[];
+  state: PublicGameState;
+};
+
 export type Config = {
   maxPlayerCount: number;
   levelCount: number;
@@ -54,5 +64,11 @@ export enum CardType {
 export type GameState = {
   activePlayerId: string;
   hands: Map<string, Card[]>;
+  piles: Map<string, Card[]>; // Includes the drawPile and the player's discardPile
+};
+
+export type PublicGameState = {
+  activePlayerId: string;
+  hands: Map<string, Card[] | number>;
   piles: Map<string, Card[]>; // Includes the drawPile and the player's discardPile
 };

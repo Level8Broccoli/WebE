@@ -33,17 +33,16 @@ import {
 } from "../../shared/model/ResponseTypes";
 import { ServerState } from "../../shared/model/ServerState";
 import {
-  addCardToHand,
   discardCard,
-  drawCard,
   getGame,
   getGameState,
   initGameState,
   isCardOwner,
-  pileExists
+  pileExists,
+  startGameState
 } from "../services/GameService";
 import {
-  activePlayerInGame, addChatMessage, checkPlayerCount, createGame,
+  activePlayerInGame, addChatMessage, isPlayerCountValid, createGame,
   deleteGame, deleteOwnGame, editPlayerName, freeSpaceInGame, gameExists, getActiveGame, isCreator, joinGame,
   leaveGame, playerExists, playerInGame, playerToSocketId, registerExistingPlayer, registerPlayer, removePlayerFromJoinedGame, removePlayerFromPlayerList
 } from "../services/ServerStateService";
@@ -78,7 +77,7 @@ export class Api {
 
       // [Server] Get all games
       // [Server] and send response of type: registerPlayer
-      const response = {
+      const response: RegisterPlayerResponse = {
         status: StatusCode.OK,
         timestamp: DateTime.now(),
         player: player,
@@ -89,7 +88,7 @@ export class Api {
     });
   }
 
-  logoutPlayer(request: LogoutRequest) : Promise<LogoutResponse> {
+  logoutPlayer(request: LogoutRequest): Promise<LogoutResponse> {
     return new Promise((resolve, reject) => {
       // [Server] Validation (not empty, valid UTF-8 Symbols) -> Errorfeedback
       if (request.player.name.trim().length === 0) {
@@ -110,7 +109,7 @@ export class Api {
       // [Server] Remove player from global player list
       removePlayerFromPlayerList(this._serverState, request.player.id);
 
-      const response = {
+      const response: LogoutResponse = {
         status: StatusCode.OK,
         timestamp: DateTime.now(),
         playerId: request.player.id,
@@ -140,7 +139,7 @@ export class Api {
 
       // [Server] Get all games
       // [Server] and send response of type: registerPlayer
-      const response = {
+      const response: RegisterExistingPlayerResponse = {
         status: StatusCode.OK,
         timestamp: DateTime.now(),
         player: request.player,
@@ -171,7 +170,7 @@ export class Api {
 
 
       // [Server] send response of type: registerPlayer
-      const response = {
+      const response: EditPlayerNameResponse = {
         status: StatusCode.OK,
         timestamp: DateTime.now(),
         player: request.player,
@@ -226,7 +225,7 @@ export class Api {
       createGame(this._serverState, game);
 
       // [Server] Send response of type: createGame to all clients
-      const response = {
+      const response: CreateGameResponse = {
         status: StatusCode.OK,
         timestamp: DateTime.now(),
         player: {
@@ -255,7 +254,7 @@ export class Api {
       deleteGame(this._serverState, request.gameId);
 
       // [Server] Send response of type: deleteGame to all clients
-      const response = {
+      const response: DeleteGameResponse = {
         status: StatusCode.OK,
         timestamp: DateTime.now(),
         gameId: request.gameId,
@@ -284,7 +283,7 @@ export class Api {
       joinGame(this._serverState, request.player, request.gameId);
 
       // [Server] Send response of type: joinGame to all clients
-      const response = {
+      const response: JoinGameResponse = {
         status: StatusCode.OK,
         timestamp: DateTime.now(),
         player: {
@@ -309,7 +308,7 @@ export class Api {
       leaveGame(this._serverState, request.player, request.gameId);
 
       // [Server] Send response of type: leaveGame to all clients
-      const response = {
+      const response: LeaveGameResponse = {
         status: StatusCode.OK,
         timestamp: DateTime.now(),
         player: {
@@ -336,7 +335,7 @@ export class Api {
       }
 
       // [Server] Add chat message to the corresponding game
-      const message = {
+      const message: ChatResponse = {
         timestamp: DateTime.now(),
         playerId: request.player.id,
         message: request.message,
@@ -348,7 +347,7 @@ export class Api {
     });
   }
 
-  startGame(request: StartGameRequest): Promise<StartGameResponse[]> {
+  startGame(request: StartGameRequest): Promise<StartGameResponse> {
     return new Promise((resolve, reject) => {
       // [Server] Validation (playerId + Secret, game exists? playerId equals creatorId,
       // playerCount in room == playerCount in ruleset) -> Errorfeedback
@@ -364,30 +363,20 @@ export class Api {
         reject(new Error(StatusCode.GAME_CREATOR_INVALID));
       }
 
-      if (!checkPlayerCount(this._serverState, request.gameId)) {
+      if (!isPlayerCountValid(this._serverState, request.gameId)) {
         reject(new Error(StatusCode.PLAYER_COUNT_MATCH_INVALID));
       }
 
       // [Server] Create initial game state
-      // const state = initGameState(this._serverState, request.gameId);
+      startGameState(this._serverState, request.gameId);
 
-      // const piles = new Map<string, Card>(); // Empty because no discardPile is set
+      const response: StartGameResponse = {
+        status: StatusCode.OK,
+        timestamp: DateTime.now(),
+        gameId: request.gameId,
+      }
 
-      // // Create response messages for all players
-      // const responseArray = [];
-      // for (const [playerId, hand] of state.hands) {
-      //   const response = {
-      //     timestamp: DateTime.now(),
-      //     player: {
-      //       id: playerId,
-      //     },
-      //     piles: toKeyValueArray(piles),
-      //     hand: hand,
-      //   };
-
-      //   responseArray.push(response);
-      // }
-      // resolve(responseArray);
+      resolve(response);
     });
   }
 
@@ -412,22 +401,22 @@ export class Api {
         reject(new Error(StatusCode.NOT_ACTIVE_PLAYER));
       }
 
-      const card = drawCard(this._serverState, request.gameId, request.pileId);
-      const piles = getGameState(this._serverState, request.gameId).piles;
+      // const card = drawCard(this._serverState, request.gameId, request.pileId);
+      // const piles = getGameState(this._serverState, request.gameId).piles;
 
-      addCardToHand(this._serverState, request.gameId, request.player, card);
+      // addCardToHand(this._serverState, request.gameId, request.player, card);
 
-      const drawCardResponse = {
-        timestamp: DateTime.now(),
-        card: card,
-      };
+      // const drawCardResponse = {
+      //   timestamp: DateTime.now(),
+      //   card: card,
+      // };
 
-      const updateGameBoardResponse = {
-        timestamp: DateTime.now(),
-        piles: toKeyValueArray(piles),
-      };
+      // const updateGameBoardResponse = {
+      //   timestamp: DateTime.now(),
+      //   piles: toKeyValueArray(piles),
+      // };
 
-      resolve([drawCardResponse, updateGameBoardResponse]);
+      // resolve([drawCardResponse, updateGameBoardResponse]);
     });
   }
 
@@ -466,7 +455,7 @@ export class Api {
 
       const piles = getGameState(this._serverState, request.gameId).piles;
 
-      const response = {
+      const response: UpdateGameBoardResponse = {
         timestamp: DateTime.now(),
         piles: toKeyValueArray(piles),
       };
