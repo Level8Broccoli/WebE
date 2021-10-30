@@ -7,6 +7,18 @@ export function registerPlayer(serverState: ServerState, player: FullPlayer) {
   serverState.players.push(player);
 }
 
+export function deleteOwnGame(serverState: ServerState, playerId: string) {
+  serverState.games = serverState.games.filter(g => g.creatorId !== playerId);
+}
+
+export function removePlayerFromJoinedGame(serverState: ServerState, playerId: string) {
+  serverState.games.map(g => g.players = g.players.filter(p => p !== playerId));
+}
+
+export function removePlayerFromPlayerList(serverState: ServerState, playerId: string) {
+  serverState.players = serverState.players.filter(p => p.id !== playerId);
+}
+
 export function registerExistingPlayer(serverState: ServerState, player: PrivatePlayer, socketId: string) {
   serverState.players = serverState.players.map((p) =>
     p.id === player.id && p.secret === player.secret

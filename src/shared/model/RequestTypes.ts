@@ -13,6 +13,10 @@ export type RegisterExistingPlayerRequest = {
   player: PrivatePlayer;
 };
 
+export type LogoutRequest = {
+  player: PrivatePlayer;
+};
+
 export type CreateGameRequest = {
   player: PrivatePlayer;
   config: Config;

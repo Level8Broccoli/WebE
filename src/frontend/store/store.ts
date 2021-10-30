@@ -119,15 +119,12 @@ export const store = createStore<State>({
         finalizeGameCreation() { /* handled by WebSocketPlugin */ },
         joinGame() { /* handled by WebSocketPlugin */ },
         sendChatMessage() { /* handled by WebSocketPlugin */ },
-        // createGame() { /* handled by WebSocketPlugin */ },
         deleteGame() { /* handled by WebSocketPlugin */ },
-        // chat() { /* handled by WebSocketPlugin */ },
-        // joinGame() { /* handled by WebSocketPlugin */ },
         leaveGame() { /* handled by WebSocketPlugin */ },
-        // startGame() { /* handled by WebSocketPlugin */ },
         editPlayerName() { /* handled by WebSocketPlugin */ },
         registerExistingPlayer() { /* handled by WebSocketPlugin */ },
-        logout(state) {
+        logout() { /* handled by WebSocketPlugin */ },
+        resetState(state) {
             state.player = {
                 name: "",
                 secret: "",

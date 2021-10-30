@@ -11,6 +11,7 @@ import {
   EditPlayerNameRequest,
   JoinGameRequest,
   LeaveGameRequest,
+  LogoutRequest,
   RegisterExistingPlayerRequest,
   RegisterPlayerRequest,
   StartGameRequest,
@@ -46,6 +47,22 @@ io.on("connection", (socket) => {
           status: error.message,
         };
         socket.emit("registerPlayer", response);
+      });
+  });
+
+  socket.on("logout", (request: LogoutRequest) => {
+    api
+      .logoutPlayer(request)
+      .then((response) => {
+        socket.emit("logout", response);
+        io.emit("updatePlayerList", { playerList: getAllRegisteredPlayers(serverState) });
+        io.emit("updateGameList", { gameList: getAllGames(serverState) });
+      })
+      .catch((error) => {
+        const response: ErrorResponse = {
+          status: error.message,
+        };
+        socket.emit("logout", response);
       });
   });
 

@@ -22,10 +22,11 @@ export default defineComponent({
   },
   setup(props) {
     const store = useStore(key);
+    const i18n = computed(() => store.getters.i18n);
     const authorName = computed(
       () =>
         store.getters.getPlayerName(props.message.playerId) ||
-        props.message.playerId
+        i18n.value.playerUnknown
     );
     const isMyMessage = computed(
       () => props.message.playerId === store.state.player.id

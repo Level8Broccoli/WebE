@@ -10,6 +10,12 @@ export type RegisterPlayerResponse = {
   games: Game[];
 };
 
+export type LogoutResponse = {
+  status: StatusCode;
+  timestamp: DateTime;
+  playerId: string;
+};
+
 export type RegisterExistingPlayerResponse = {
   status: StatusCode;
   timestamp: DateTime;

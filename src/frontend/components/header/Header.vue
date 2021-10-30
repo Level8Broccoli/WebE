@@ -5,6 +5,7 @@
     </section>
     <section class="right">
       <PlayerName v-if="playerIsRegistered" />
+      <Logout v-if="playerIsRegistered" />
       <RulesSwitcher />
       <LanguageSwitcher />
       <ConnectionDisplay />
@@ -20,6 +21,7 @@ import ConnectionDisplay from "../header/ConnectionDisplay.vue";
 import LanguageSwitcher from "../header/LanguageSwitcher.vue";
 import RulesSwitcher from "../header/RulesSwitcher.vue";
 import PlayerName from "../header/PlayerName.vue";
+import Logout from "../header/Logout.vue";
 
 export default defineComponent({
   name: "Header",
@@ -28,6 +30,7 @@ export default defineComponent({
     LanguageSwitcher,
     PlayerName,
     RulesSwitcher,
+    Logout,
   },
   setup() {
     const store = useStore(key);
@@ -49,7 +52,7 @@ header {
 
 .right {
   display: grid;
-  grid-template-columns: repeat(4, max-content);
+  grid-template-columns: repeat(5, max-content);
   gap: 1rem;
   align-content: flex-start;
   align-items: center;

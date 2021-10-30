@@ -20,5 +20,7 @@
     "playerPlaceholder": "empty player slot - invite your friends to play with you",
     "deleteGameButton": "Delete Game",
     "startGameButton": "Start Game",
-    "gameNeedsAtLeastTwoPlayers": "game needs at least 2 player"
+    "gameNeedsAtLeastTwoPlayers": "game needs at least 2 player",
+    "logout": "Logout",
+    "playerUnknown": "Player unknown"
 }

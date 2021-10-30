@@ -1,8 +1,8 @@
-import { FullPlayer } from "../../shared/model/Player";
-import { ServerState } from "../../shared/model/ServerState";
 import { DateTime } from "luxon";
 import { StatusCode } from "../../shared/api/StatusCode";
-import { getSecret, getUUID } from "../services/TokenGeneratorService";
+import { toKeyValueArray } from "../../shared/helper/HelperService";
+import { GameStatus, LevelSystem } from "../../shared/model/Game";
+import { FullPlayer } from "../../shared/model/Player";
 import {
   ChatRequest,
   CreateGameRequest,
@@ -12,9 +12,10 @@ import {
   EditPlayerNameRequest,
   JoinGameRequest,
   LeaveGameRequest,
+  LogoutRequest,
   RegisterExistingPlayerRequest,
   RegisterPlayerRequest,
-  StartGameRequest,
+  StartGameRequest
 } from "../../shared/model/RequestTypes";
 import {
   ChatResponse,
@@ -24,30 +25,13 @@ import {
   EditPlayerNameResponse,
   JoinGameResponse,
   LeaveGameResponse,
+  LogoutResponse,
   RegisterExistingPlayerResponse,
   RegisterPlayerResponse,
   StartGameResponse,
-  UpdateGameBoardResponse,
+  UpdateGameBoardResponse
 } from "../../shared/model/ResponseTypes";
-import {
-  registerPlayer,
-  playerExists,
-  createGame,
-  deleteGame,
-  gameExists,
-  freeSpaceInGame,
-  joinGame,
-  leaveGame,
-  playerInGame,
-  addChatMessage,
-  editPlayerName,
-  isCreator,
-  checkPlayerCount,
-  playerToSocketId,
-  activePlayerInGame,
-  registerExistingPlayer,
-  getActiveGame,
-} from "../services/ServerStateService";
+import { ServerState } from "../../shared/model/ServerState";
 import {
   addCardToHand,
   discardCard,
@@ -56,10 +40,14 @@ import {
   getGameState,
   initGameState,
   isCardOwner,
-  pileExists,
+  pileExists
 } from "../services/GameService";
-import { Card, GameStatus, LevelSystem } from "../../shared/model/Game";
-import { toKeyValueArray } from "../../shared/helper/HelperService";
+import {
+  activePlayerInGame, addChatMessage, checkPlayerCount, createGame,
+  deleteGame, deleteOwnGame, editPlayerName, freeSpaceInGame, gameExists, getActiveGame, isCreator, joinGame,
+  leaveGame, playerExists, playerInGame, playerToSocketId, registerExistingPlayer, registerPlayer, removePlayerFromJoinedGame, removePlayerFromPlayerList
+} from "../services/ServerStateService";
+import { getSecret, getUUID } from "../services/TokenGeneratorService";
 
 export class Api {
   private _serverState: ServerState;
@@ -95,6 +83,37 @@ export class Api {
         timestamp: DateTime.now(),
         player: player,
         games: this._serverState.games,
+      };
+
+      resolve(response);
+    });
+  }
+
+  logoutPlayer(request: LogoutRequest) : Promise<LogoutResponse> {
+    return new Promise((resolve, reject) => {
+      // [Server] Validation (not empty, valid UTF-8 Symbols) -> Errorfeedback
+      if (request.player.name.trim().length === 0) {
+        reject(new Error(StatusCode.PLAYER_INVALID));
+      }
+
+      // [Server] Validation (playerId + secret, no invalid rules) -> Errorfeedback
+      if (!playerExists(this._serverState, request.player)) {
+        reject(new Error(StatusCode.PLAYER_INVALID));
+      }
+
+      // [Server] Delete games, if player is creator
+      deleteOwnGame(this._serverState, request.player.id);
+
+      // [Server] Remove player from joined game
+      removePlayerFromJoinedGame(this._serverState, request.player.id);
+
+      // [Server] Remove player from global player list
+      removePlayerFromPlayerList(this._serverState, request.player.id);
+
+      const response = {
+        status: StatusCode.OK,
+        timestamp: DateTime.now(),
+        playerId: request.player.id,
       };
 
       resolve(response);
