@@ -133,8 +133,6 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
     });
 
     socket.on("startGame", (res: StartGameResponse | ErrorResponse) => {
-        console.log(res);
-
         if (!("gameId" in res)) {
             console.error(res.status);
             store.commit("addToErrorLog", res.status);

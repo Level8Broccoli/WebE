@@ -35,15 +35,13 @@ import { ServerState } from "../../shared/model/ServerState";
 import {
   discardCard,
   getGame,
-  getGameState,
-  initGameState,
-  isCardOwner,
+  getGameState, getPlayerIdList, initGameState, isCardOwner,
   pileExists,
   startGameState
 } from "../services/GameService";
 import {
-  activePlayerInGame, addChatMessage, isPlayerCountValid, createGame,
-  deleteGame, deleteOwnGame, editPlayerName, freeSpaceInGame, gameExists, getActiveGame, isCreator, joinGame,
+  activePlayerInGame, addChatMessage, createGame,
+  deleteGame, deleteOwnGame, editPlayerName, freeSpaceInGame, gameExists, getActiveGame, isCreator, isPlayerCountValid, joinGame,
   leaveGame, playerExists, playerInGame, playerToSocketId, registerExistingPlayer, registerPlayer, removePlayerFromJoinedGame, removePlayerFromPlayerList
 } from "../services/ServerStateService";
 import { getSecret, getUUID } from "../services/TokenGeneratorService";
@@ -470,5 +468,9 @@ export class Api {
 
   getActivePlayer(gameId: string): string {
     return activePlayerInGame(this._serverState, gameId);
+  }
+
+  getPlayerIdListFromGame(gameId: string): string[] {
+    return getPlayerIdList(this._serverState, gameId);
   }
 }

@@ -1,7 +1,7 @@
 import {
   Card,
   CardType,
-  Color, Game, GameState, NumberCard,
+  Color, Game, GameState, GameStatus, NumberCard,
   PublicGame,
   SpecialCard
 } from "../../shared/model/Game";
@@ -77,13 +77,15 @@ export function startGameState(
 ): void {
   const game = serverState.games.find(g => g.id === gameId)!;
 
+  game.status = GameStatus.IN_PROGRESS;
+
   const playerIdList = game.players;
 
-  for (const playerId in playerIdList) {
+  for (const playerId of playerIdList) {
     createPlayerStartHand(game, playerId, HAND_SIZE_START);
   }
 
-  for (const playerId in playerIdList) {
+  for (const playerId of playerIdList) {
     createEmptyDiscardPile(game, playerId);
   }
 }
@@ -234,4 +236,8 @@ export function getAllGames(
     newPublicGame.state.hands = newHands;
     return newPublicGame;
   });
+}
+
+export function getPlayerIdList(serverState: ServerState, gameId: string): string[] {
+  return serverState.games.find(g => g.id === gameId)!.players;
 }

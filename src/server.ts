@@ -1,4 +1,3 @@
-import { DateTime } from "luxon";
 import { Server } from "socket.io";
 import { Api } from "./backend/api/Api";
 import { getAllGames } from "./backend/services/GameService";
@@ -17,7 +16,7 @@ import {
   RegisterPlayerRequest,
   StartGameRequest
 } from "./shared/model/RequestTypes";
-import { ErrorResponse, StartMoveResponse } from "./shared/model/ResponseTypes";
+import { ErrorResponse } from "./shared/model/ResponseTypes";
 
 const PORT = process.env.PORT ? Number(process.env.PORT) : 3030;
 const serverState = {
@@ -185,6 +184,11 @@ io.on("connection", (socket) => {
       .startGame(request)
       .then((response) => {
         socket.emit("startGame", response);
+        const playerIdList = api.getPlayerIdListFromGame(response.gameId);
+        for (const playerId of playerIdList) {
+          const socketId = api.getSocketId(playerId);
+          io.to(socketId).emit("updateGameList", { gameList: getAllGames(serverState, playerId) });
+        }
       })
       .catch((error) => {
         const response: ErrorResponse = {
