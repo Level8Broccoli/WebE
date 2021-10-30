@@ -118,6 +118,9 @@ export const store = createStore<State>({
         updateGameInCreation(state, payload) {
             state.activeGame.data = payload.config;
         },
+        abortGameInCreation(state) {
+            state.activeGame = { type: GameViewType.NONE, data: null };
+        },
         updateGameInProgress(state, value: Game | null) {
             state.activeGame.data = value;
         },

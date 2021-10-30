@@ -1,48 +1,54 @@
 <template>
   <form>
     <div>
-      <label for="maxPlayerCount">{{ maxPlayerCountLabel }}:</label>
-      <input
-        type="number"
-        :value="maxPlayerCount"
-        @input="updateMaxPlayerCount"
-        min="1"
-        max="6"
-        name="maxPlayerCount"
-        id="maxPlayerCount"
-      />
+      <div class="form-entry">
+        <label for="maxPlayerCount">{{ maxPlayerCountLabel }}:</label>
+        <input
+          type="number"
+          :value="maxPlayerCount"
+          @input="updateMaxPlayerCount"
+          min="1"
+          max="6"
+          name="maxPlayerCount"
+          id="maxPlayerCount"
+        />
+      </div>
+      <div class="form-entry">
+        <label for="levelCount">{{ levelCountLabel }}:</label>
+        <input
+          type="number"
+          :value="levelCount"
+          @input="updateLevelCount"
+          min="2"
+          max="8"
+          name="levelCount"
+          id="levelCount"
+        />
+      </div>
+      <div class="form-entry">
+        <button
+          @click.prevent="changeToLevelSystemNormal"
+          :class="levelSystem === 'NORMAL' ? 'active' : 'not-active'"
+        >
+          {{ levelSystemNormalLabel }}
+        </button>
+        <button
+          @click.prevent="changeToLevelSystemRandom"
+          :class="levelSystem === 'RANDOM' ? 'active' : 'not-active'"
+        >
+          {{ levelSystemRandomLabel }}
+        </button>
+      </div>
     </div>
-    <div>
-      <label for="levelCount">{{ levelCountLabel }}:</label>
-      <input
-        type="number"
-        :value="levelCount"
-        @input="updateLevelCount"
-        min="2"
-        max="8"
-        name="levelCount"
-        id="levelCount"
-      />
-    </div>
-    <div>
-      <button
-        @click.prevent="changeToLevelSystemNormal"
-        :class="levelSystem === 'NORMAL' ? 'active' : 'not-active'"
-      >
-        {{ levelSystemNormalLabel }}
-      </button>
-      <button
-        @click.prevent="changeToLevelSystemRandom"
-        :class="levelSystem === 'RANDOM' ? 'active' : 'not-active'"
-      >
-        {{ levelSystemRandomLabel }}
-      </button>
-    </div>
-    <div class="buttons">
+    <div class="buttons bottom">
       <button @click.prevent="abort" class="secondary">
+        <i class="far fa-long-arrow-left"></i>
         {{ abortButton }}
       </button>
-      <button @click.prevent="createGame">{{ createGameButton }}</button>
+      <button @click.prevent="createGame">
+        {{ createGameButton }}
+        <i class="far fa-long-arrow-right"></i>
+      </button>
     </div>
   </form>
 </template>
@@ -64,9 +70,9 @@ export default defineComponent({
         return store.state.activeGame.data;
       }
     });
-    const maxPlayerCount = computed(() => currentConfig.value.maxPlayerCount);
-    const levelCount = computed(() => currentConfig.value.levelCount);
-    const levelSystem = computed(() => currentConfig.value.levelSystem);
+    const maxPlayerCount = computed(() => currentConfig.value?.maxPlayerCount);
+    const levelCount = computed(() => currentConfig.value?.levelCount);
+    const levelSystem = computed(() => currentConfig.value?.levelSystem);
 
     const createGame = (e: Event) => {
       store.commit("createGame", {
@@ -81,7 +87,7 @@ export default defineComponent({
       () => i18n.value.createNewGameButtonLabel
     );
     const abort = (e: Event) => {
-      store.commit("updateGameInCreation", { config: null });
+      store.commit("abortGameInCreation");
     };
     const abortButton = computed(() => i18n.value.abortButton);
 
@@ -157,10 +163,17 @@ export default defineComponent({
   border-color: #ff6464;
   background-color: transparent;
 }
-div {
+.form-entry {
   margin-bottom: 2rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
 }
 </style>
