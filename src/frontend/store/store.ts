@@ -49,6 +49,9 @@ export const store = createStore<State>({
             if (state.activeGame.type === GameViewType.IN_CREATION) {
                 return "game-in-creation";
             }
+            if (state.activeGame.type === GameViewType.IN_LOBBY) {
+                return "game-in-lobby"
+            }
             if (state.activeGame.type === GameViewType.IN_PROGRESS) {
                 return "game-in-progress"
             }
@@ -120,6 +123,9 @@ export const store = createStore<State>({
         },
         abortGameInCreation(state) {
             state.activeGame = { type: GameViewType.NONE, data: null };
+        },
+        createGameInLobby(state, payload) {
+            state.activeGame = { type: GameViewType.IN_LOBBY, data: payload }
         },
         updateGameInProgress(state, value: Game | null) {
             state.activeGame.data = value;

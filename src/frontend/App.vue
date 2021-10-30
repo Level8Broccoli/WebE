@@ -5,8 +5,9 @@
     </Header>
     <RulesView v-if="view === 'rules'" />
     <StartView v-if="view === 'start'" />
-    <GameCreateView v-if="view === 'game-in-creation'" />
     <GameSearchView v-if="view === 'game-search'" />
+    <GameCreateView v-if="view === 'game-in-creation'" />
+    <GameLobbyView v-if="view === 'game-in-lobby'" />
     {{ view }}
   </main>
 </template>
@@ -22,6 +23,7 @@ import GameCreateView from "./views/GameCreateView.vue";
 import GameSearchView from "./views/GameSearchView.vue";
 import RulesView from "./views/RulesView.vue";
 import StartView from "./views/StartView.vue";
+import GameLobbyView from "./views/GameLobbyView.vue";
 
 export default defineComponent({
   name: "App",
@@ -32,6 +34,7 @@ export default defineComponent({
     Title,
     RulesView,
     GameCreateView,
+    GameLobbyView,
   },
   mounted() {
     const store = useStore(key);

@@ -50,9 +50,10 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
 
     socket.on("createGame", (res: CreateGameResponse | ErrorResponse) => {
         if ("game" in res) {
+            console.log("createGame", res);
+
             if (res.game.creatorId === store.state.player.id) {
-                store.commit("updateGameInProgress", res.game);
-                store.commit("updateGameInCreation", { config: null });
+                store.commit("createGameInLobby", res.game);
             }
         } else {
             console.error(res.status);
@@ -83,7 +84,7 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
     socket.on("joinGame", (res: JoinGameResponse | ErrorResponse) => {
         if ("game" in res) {
             if (res.player.id === store.state.player.id) {
-                store.commit("updateGameInProgress", { ...res.game, chat: [] });
+                store.commit("createGameInLobby", res.game);
             }
         } else {
             console.error(res.status);
