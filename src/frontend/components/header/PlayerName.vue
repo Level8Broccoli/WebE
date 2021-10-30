@@ -2,7 +2,9 @@
   <a v-if="!isEdit" href="#" @click.prevent="switchToEdit">{{ playerName }}</a>
   <form v-else>
     <input @input="updatePlayerName" type="text" :value="playerName" />
-    <button @click.prevent="sendUpdate">{{ button }}</button>
+    <button @click.prevent="sendUpdate">
+      {{ i18n.buttonUpdatePlayerName }}
+    </button>
   </form>
 </template>
 
@@ -28,13 +30,12 @@ export default defineComponent({
       store.commit("updatePlayerName", e.target.value);
     };
     const i18n = computed(() => store.getters.i18n);
-    const button = computed(() => i18n.value.buttonUpdatePlayerName);
     return {
       isEdit,
       playerName,
       updatePlayerName,
       switchToEdit,
-      button,
+      i18n,
       sendUpdate,
     };
   },

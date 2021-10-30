@@ -3,9 +3,9 @@
     <div class="left">
       <GameMeta />
       <hr />
-      Player
+      <PlayerList />
       <hr />
-       Buttons
+      Buttons
     </div>
     <div class="right">Chat</div>
   </section>
@@ -16,16 +16,13 @@ import { computed, defineComponent } from "vue";
 import { useStore } from "vuex";
 import { key } from "../store/store";
 import GameMeta from "../components/games/GameMeta.vue";
+import PlayerList from "../components/games/PlayerList.vue";
 
 export default defineComponent({
   name: "GameLobbyView",
   components: {
     GameMeta,
-  },
-  setup() {
-    const store = useStore(key);
-    const i18n = computed(() => store.getters.i18n);
-    return {};
+    PlayerList,
   },
 });
 </script>

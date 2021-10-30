@@ -5,7 +5,7 @@
       <GameListEntry :game="game" />
     </li>
   </ul>
-  <div v-else class="no-games">{{ noGames }}</div>
+  <div v-else class="no-games">{{ i18n.noGames }}</div>
 </template>
 
 <script lang="ts">
@@ -20,11 +20,10 @@ export default defineComponent({
   setup() {
     const store = useStore(key);
     const i18n = computed(() => store.getters.i18n);
-    const noGames = computed(() => i18n.value.noGames);
     const games = computed(() => store.state.games);
     return {
       games,
-      noGames,
+      i18n,
     };
   },
 });

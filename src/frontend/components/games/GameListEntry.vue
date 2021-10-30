@@ -2,20 +2,20 @@
 <template>
   <div class="entry">
     <div>
-      {{ creatorNameLabel }}: <span>{{ creatorName }}</span>
+      {{ i18n.creatorNameLabel }}: <span>{{ creatorName }}</span>
     </div>
     <div>
-      {{ levelSystemLabel }}: <span>{{ game.config.levelSystem }}</span>
+      {{ i18n.levelSystemLabel }}: <span>{{ game.config.levelSystem }}</span>
     </div>
     <div>
-      {{ levelCountLabel }}: <span>{{ game.config.levelCount }}</span>
+      {{ i18n.levelCountLabel }}: <span>{{ game.config.levelCount }}</span>
     </div>
     <div>
-      {{ playerCountLabel }}:
+      {{ i18n.playerCountLabel }}:
       <span>{{ game.players.length }} / {{ game.config.maxPlayerCount }}</span>
     </div>
     <button>
-      {{ joinGameButtonLabel }}
+      {{ i18n.joinGameButtonLabel }}
       <i class="far fa-long-arrow-right icon-right"></i>
     </button>
   </div>
@@ -35,22 +35,13 @@ export default defineComponent({
   setup(props) {
     const store = useStore(key);
     const i18n = computed(() => store.getters.i18n);
-    const playerCountLabel = computed(() => i18n.value.playerCountLabel);
-    const levelCountLabel = computed(() => i18n.value.levelCountLabel);
-    const levelSystemLabel = computed(() => i18n.value.levelSystemLabel);
-    const joinGameButtonLabel = computed(() => i18n.value.joinGameButtonLabel);
-    const creatorNameLabel = computed(() => i18n.value.creatorNameLabel);
     const creatorName = computed(
       () =>
         store.getters.getPlayerName(props.game.creatorId) ||
         props.game.creatorId
     );
     return {
-      playerCountLabel,
-      levelCountLabel,
-      levelSystemLabel,
-      joinGameButtonLabel,
-      creatorNameLabel,
+      i18n,
       creatorName,
     };
   },

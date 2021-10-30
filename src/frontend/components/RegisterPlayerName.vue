@@ -1,6 +1,6 @@
 <template>
   <form>
-    <label for="playerName">{{ label }}:</label>
+    <label for="playerName">{{ i18n.labelChoosePlayerName }}:</label>
     <input
       type="text"
       :value="playerName"
@@ -8,7 +8,9 @@
       name="playerName"
       id="playerName"
     />
-    <button @click.prevent="register">{{ button }}</button>
+    <button @click.prevent="register">
+      {{ i18n.buttonRegisterPlayerName }}
+    </button>
   </form>
 </template>
 
@@ -29,14 +31,11 @@ export default defineComponent({
       store.commit("registerPlayer");
     };
     const i18n = computed(() => store.getters.i18n);
-    const label = computed(() => i18n.value.labelChoosePlayerName);
-    const button = computed(() => i18n.value.buttonRegisterPlayerName);
     return {
       playerName,
       updatePlayerName,
       register,
-      label,
-      button,
+      i18n,
     };
   },
 });

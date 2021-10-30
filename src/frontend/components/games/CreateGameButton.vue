@@ -1,6 +1,6 @@
 <template>
   <button @click.prevent="createNewGame" class="createNewGame">
-    {{ createNewGameButtonLabel }}
+    {{ i18n.createNewGameButtonLabel }}
     <i class="far fa-long-arrow-right icon-right"></i>
   </button>
 </template>
@@ -18,12 +18,9 @@ export default defineComponent({
       store.commit("initNewGame");
     };
     const i18n = computed(() => store.getters.i18n);
-    const createNewGameButtonLabel = computed(
-      () => i18n.value.createNewGameButtonLabel
-    );
     return {
+      i18n,
       createNewGame,
-      createNewGameButtonLabel,
     };
   },
 });

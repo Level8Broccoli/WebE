@@ -2,7 +2,7 @@
   <form>
     <div>
       <div class="form-entry">
-        <label for="maxPlayerCount">{{ maxPlayerCountLabel }}:</label>
+        <label for="maxPlayerCount">{{ i18n.maxPlayerCountLabel }}:</label>
         <input
           type="number"
           :value="maxPlayerCount"
@@ -14,7 +14,7 @@
         />
       </div>
       <div class="form-entry">
-        <label for="levelCount">{{ levelCountLabel }}:</label>
+        <label for="levelCount">{{ i18n.levelCountLabel }}:</label>
         <input
           type="number"
           :value="levelCount"
@@ -30,23 +30,23 @@
           @click.prevent="changeToLevelSystemNormal"
           :class="levelSystem === 'NORMAL' ? 'active' : 'not-active'"
         >
-          {{ levelSystemNormalLabel }}
+          {{ i18n.levelSystemNormalLabel }}
         </button>
         <button
           @click.prevent="changeToLevelSystemRandom"
           :class="levelSystem === 'RANDOM' ? 'active' : 'not-active'"
         >
-          {{ levelSystemRandomLabel }}
+          {{ i18n.levelSystemRandomLabel }}
         </button>
       </div>
     </div>
     <div class="buttons bottom">
       <button @click.prevent="abort" class="secondary">
         <i class="far fa-long-arrow-left icon-left"></i>
-        {{ abortButton }}
+        {{ i18n.abortButton }}
       </button>
       <button @click.prevent="finalizeGameCreation">
-        {{ createGameButton }}
+        {{ i18n.createNewGameButtonLabel }}
         <i class="far fa-long-arrow-right icon-right"></i>
       </button>
     </div>
@@ -75,22 +75,9 @@ export default defineComponent({
     const finalizeGameCreation = (e: Event) => {
       store.commit("finalizeGameCreation");
     };
-    const createGameButton = computed(
-      () => i18n.value.createNewGameButtonLabel
-    );
     const abort = (e: Event) => {
       store.commit("abortGameInCreation");
     };
-    const abortButton = computed(() => i18n.value.abortButton);
-
-    const maxPlayerCountLabel = computed(() => i18n.value.maxPlayerCountLabel);
-    const levelCountLabel = computed(() => i18n.value.levelCountLabel);
-    const levelSystemNormalLabel = computed(
-      () => i18n.value.levelSystemNormalLabel
-    );
-    const levelSystemRandomLabel = computed(
-      () => i18n.value.levelSystemRandomLabel
-    );
 
     const changeToLevelSystemNormal = (e: Event) => {
       store.commit("updateGameInCreation", {
@@ -122,17 +109,12 @@ export default defineComponent({
       levelCount,
       levelSystem,
       finalizeGameCreation,
-      createGameButton,
       abort,
-      abortButton,
-      maxPlayerCountLabel,
-      levelCountLabel,
-      levelSystemNormalLabel,
-      levelSystemRandomLabel,
       changeToLevelSystemNormal,
       changeToLevelSystemRandom,
       updateMaxPlayerCount,
       updateLevelCount,
+      i18n,
     };
   },
 });
