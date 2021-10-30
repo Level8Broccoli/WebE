@@ -37,6 +37,7 @@ io.on("connection", (socket) => {
       .registerPlayer(request, socket.id)
       .then((response) => {
         socket.emit("registerPlayer", response);
+        console.log(`>>> Registered Player ${response.player.id}`);
       })
       .catch((error) => {
         const response: ErrorResponse = {
@@ -51,6 +52,7 @@ io.on("connection", (socket) => {
       .registerExistingPlayer(request, socket.id)
       .then((response) => {
         socket.emit("registerExistingPlayer", response);
+        console.log(`>>> Registered Existing Player ${response.player.id}`);
       })
       .catch((error) => {
         const response: ErrorResponse = {

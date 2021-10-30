@@ -50,7 +50,7 @@
 <script lang="ts">
 import { computed, defineComponent, ref } from "vue";
 import { useStore } from "vuex";
-import { LevelSystem } from "../../../shared/model/Game";
+import { GameViewType, LevelSystem } from "../../../shared/model/Game";
 import { key } from "../../store/store";
 
 export default defineComponent({
@@ -59,7 +59,11 @@ export default defineComponent({
     const store = useStore(key);
     const i18n = computed(() => store.getters.i18n);
 
-    const currentConfig = computed(() => store.state.gameInCreation);
+    const currentConfig = computed(() => {
+      if (store.state.activeGame.type === GameViewType.IN_CREATION) {
+        return store.state.activeGame.data;
+      }
+    });
     const maxPlayerCount = computed(() => currentConfig.value.maxPlayerCount);
     const levelCount = computed(() => currentConfig.value.levelCount);
     const levelSystem = computed(() => currentConfig.value.levelSystem);

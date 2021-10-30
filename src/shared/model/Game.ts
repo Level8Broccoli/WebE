@@ -1,5 +1,33 @@
 import { ChatMessage } from "./Chat";
 
+export enum GameViewType { NONE, IN_CREATION, IN_LOBBY, IN_PROGRESS };
+
+type NoGameSelectedView = {
+  type: GameViewType.NONE;
+  data: null;
+};
+
+type GameInCreationView = {
+  type: GameViewType.IN_CREATION;
+  data: Config;
+};
+
+type GameInLobbyView = {
+  type: GameViewType.IN_LOBBY;
+  data: Game;
+};
+
+type GameInProgressView = {
+  type: GameViewType.IN_PROGRESS;
+  data: Game;
+};
+
+export type GameView =
+  | NoGameSelectedView
+  | GameInCreationView
+  | GameInLobbyView
+  | GameInProgressView;
+
 export type Game = {
   id: string;
   creatorId: string;

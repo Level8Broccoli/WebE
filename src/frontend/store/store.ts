@@ -3,7 +3,7 @@ import { InjectionKey } from 'vue';
 import { createStore, Store } from 'vuex';
 import { PrivatePlayer } from '../../shared/model/Player';
 import { ChatResponse } from '../../shared/model/ResponseTypes';
-import { Config, Game, LevelSystem } from '../../shared/model/Game';
+import { Config, Game, GameView, GameViewType, LevelSystem } from '../../shared/model/Game';
 import { i18n, Language } from '../i18n/i18n';
 import { WebSocketPlugin } from './WebSocketPlugin';
 
@@ -13,8 +13,7 @@ export interface State {
     showRules: Boolean,
     player: PrivatePlayer,
     games: Game[],
-    gameInCreation: null | Config,
-    gameInProgress: null | Game,
+    activeGame: GameView,
     errorLog: String[]
 }
 
@@ -33,8 +32,7 @@ export const store = createStore<State>({
             secret: "",
         },
         games: [],
-        gameInCreation: null,
-        gameInProgress: null,
+        activeGame: { type: GameViewType.NONE, data: null },
         errorLog: [],
     },
     getters: {
@@ -48,10 +46,10 @@ export const store = createStore<State>({
             if (!(state.player.secret.length > 0)) {
                 return "start";
             }
-            if (state.gameInCreation !== null) {
+            if (state.activeGame.type === GameViewType.IN_CREATION) {
                 return "game-in-creation";
             }
-            if (state.gameInProgress !== null) {
+            if (state.activeGame.type === GameViewType.IN_PROGRESS) {
                 return "game-in-progress"
             }
             return "game-search";
@@ -63,6 +61,15 @@ export const store = createStore<State>({
         },
         updatePlayer(state, value: PrivatePlayer) {
             state.player = value;
+        },
+        removeInvalidPlayer(state) {
+            localStorage.setItem("player-credentials-invalid", JSON.stringify(state.player));
+            localStorage.removeItem("player-credentials");
+            state.player = {
+                name: "",
+                id: "",
+                secret: "",
+            }
         },
         updateGames(state, value: Game[]) {
             state.games = value;
@@ -95,21 +102,24 @@ export const store = createStore<State>({
                 secret: "",
                 id: "",
             };
-            state.gameInProgress = null;
+            state.activeGame = { type: GameViewType.NONE, data: null };
             state.games = [];
         },
         initNewGame(state) {
-            state.gameInCreation = {
-                maxPlayerCount: 6,
-                levelCount: 8,
-                levelSystem: LevelSystem.NORMAL
+            state.activeGame = {
+                type: GameViewType.IN_CREATION,
+                data: {
+                    maxPlayerCount: 6,
+                    levelCount: 8,
+                    levelSystem: LevelSystem.NORMAL
+                }
             }
         },
         updateGameInCreation(state, payload) {
-            state.gameInCreation = payload.config;
+            state.activeGame.data = payload.config;
         },
         updateGameInProgress(state, value: Game | null) {
-            state.gameInProgress = value;
+            state.activeGame.data = value;
         },
         updateConnection(state, value: Boolean) {
             state.connection = value;
@@ -118,7 +128,8 @@ export const store = createStore<State>({
             state.errorLog.unshift(value);
         },
         addChatMessage(state, value: ChatResponse) {
-            state.gameInProgress?.chat?.push(value);
+            if (state.activeGame.type === GameViewType.IN_LOBBY || state.activeGame.type === GameViewType.IN_PROGRESS)
+                state.activeGame.data.chat?.push(value);
         },
     },
     plugins: [WebSocketPlugin(socket)]
