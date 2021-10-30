@@ -91,5 +91,5 @@ export type DrawCardResponse = {
 
 export type UpdateGameBoardResponse = {
   timestamp: DateTime;
-  piles: Array<[string, Card]>; // Map<string, Card> as array;
+  piles: Array<[string, Card[]]>; // Map<string, Card> as array;
 };
