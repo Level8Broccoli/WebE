@@ -55,6 +55,9 @@ io.on("connection", (socket) => {
       .then((response) => {
         socket.emit("registerExistingPlayer", response);
         io.emit("updatePlayerList", { playerList: getAllRegisteredPlayers(serverState) });
+        if (typeof response.activeGame !== "undefined") {
+          socket.join(response.activeGame.id);
+        }
         console.log(`>>> Registered Existing Player ${response.player.id}`);
       })
       .catch((error) => {
