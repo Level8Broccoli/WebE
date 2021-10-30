@@ -43,7 +43,7 @@ export type JoinGameResponse = {
   status: StatusCode;
   timestamp: DateTime;
   player: PublicPlayer;
-  gameId: string;
+  game: Game;
 };
 
 export type LeaveGameResponse = {

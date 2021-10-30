@@ -14,7 +14,7 @@
       {{ i18n.playerCountLabel }}:
       <span>{{ game.players.length }} / {{ game.config.maxPlayerCount }}</span>
     </div>
-    <button v-if="joinButton">
+    <button v-if="joinButton" @click.prevent="joinGame">
       {{ i18n.joinGameButtonLabel }}
       <i class="far fa-long-arrow-right icon-right"></i>
     </button>
@@ -41,10 +41,14 @@ export default defineComponent({
         store.getters.getPlayerName(props.game.creatorId) ||
         props.game.creatorId
     );
+    const joinGame = (e: Event) => {
+      store.commit("joinGame", props.game.id);
+    };
     return {
       i18n,
       creatorName,
-      joinButton: props.joinButton,
+      joinGame,
+      ...props,
     };
   },
 });

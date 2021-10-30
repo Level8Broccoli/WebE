@@ -114,7 +114,7 @@ io.on("connection", (socket) => {
     api
       .joinGame(request)
       .then((response) => {
-        socket.join(response.gameId);
+        socket.join(response.game.id);
         io.emit("joinGame", response);
       })
       .catch((error) => {

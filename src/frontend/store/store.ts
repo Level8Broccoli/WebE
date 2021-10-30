@@ -103,6 +103,7 @@ export const store = createStore<State>({
         },
         registerPlayer() { /* handled by WebSocketPlugin */ },
         finalizeGameCreation() { /* handled by WebSocketPlugin */ },
+        joinGame() { /* handled by WebSocketPlugin */ },
         // createGame() { /* handled by WebSocketPlugin */ },
         // deleteGame() { /* handled by WebSocketPlugin */ },
         // chat() { /* handled by WebSocketPlugin */ },

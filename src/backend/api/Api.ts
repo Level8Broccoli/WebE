@@ -52,6 +52,7 @@ import {
   addCardToHand,
   discardCard,
   drawCard,
+  getGame,
   getGameState,
   initGameState,
   isCardOwner,
@@ -271,7 +272,7 @@ export class Api {
           id: request.player.id,
           name: request.player.name,
         },
-        gameId: request.gameId,
+        game: getGame(this._serverState, request.gameId)!,
       };
 
       resolve(response);

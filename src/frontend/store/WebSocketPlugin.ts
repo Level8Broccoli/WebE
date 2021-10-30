@@ -1,7 +1,7 @@
 import { Socket } from "socket.io-client";
 import { Store } from "vuex";
-import { CreateGameRequest, EditPlayerNameRequest, RegisterExistingPlayerRequest, RegisterPlayerRequest } from "../../shared/model/RequestTypes";
-import { CreateGameResponse, EditPlayerNameResponse, ErrorResponse, RegisterExistingPlayerResponse, RegisterPlayerResponse, UpdatePlayerListResponse } from "../../shared/model/ResponseTypes";
+import { CreateGameRequest, EditPlayerNameRequest, JoinGameRequest, RegisterExistingPlayerRequest, RegisterPlayerRequest } from "../../shared/model/RequestTypes";
+import { CreateGameResponse, EditPlayerNameResponse, ErrorResponse, JoinGameResponse, RegisterExistingPlayerResponse, RegisterPlayerResponse, UpdatePlayerListResponse } from "../../shared/model/ResponseTypes";
 import { State } from "./store";
 
 export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
@@ -94,16 +94,14 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
     //     }
     // });
 
-    // socket.on("joinGame", (res: JoinGameResponse | ErrorResponse) => {
-    //     if ("game" in res) {
-    //         if (res.player.id === store.state.player.id) {
-    //             store.commit("createGameInLobby", res.game);
-    //         }
-    //     } else {
-    //         console.error(res.status);
-    //         store.commit("addToErrorLog", res.status);
-    //     }
-    // });
+    socket.on("joinGame", (res: JoinGameResponse | ErrorResponse) => {
+        if ("game" in res) {
+            store.commit("activateGame", res.game);
+        } else {
+            console.error(res.status);
+            store.commit("addToErrorLog", res.status);
+        }
+    });
 
     // socket.on("leaveGame", (res: LeaveGameResponse | ErrorResponse) => {
     //     if ("game" in res) {
@@ -181,15 +179,13 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
         //     socket.emit("chat", payload);
         // }
 
-        // if (mutation.type === "joinGame") {
-        //     const payload: JoinGameRequest = {
-        //         player: state.player,
-        //         game: {
-        //             id: mutation.payload,
-        //         },
-        //     };
-        //     socket.emit("joinGame", payload);
-        // }
+        if (mutation.type === "joinGame") {
+            const payload: JoinGameRequest = {
+                player: state.player,
+                gameId: mutation.payload,
+            };
+            socket.emit("joinGame", payload);
+        }
 
         // if (mutation.type === "leaveGame") {
         //     if (state.activeGame.type === GameViewType.NONE || state.activeGame.type === GameViewType.IN_CREATION) {

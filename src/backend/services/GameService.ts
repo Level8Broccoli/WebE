@@ -1,10 +1,8 @@
 import {
   Card,
   CardType,
-  Color,
-  NumberCard,
-  SpecialCard,
-  GameState
+  Color, Game, GameState, NumberCard,
+  SpecialCard
 } from "../../shared/model/Game";
 import { PrivatePlayer } from "../../shared/model/Player";
 import { ServerState } from "../../shared/model/ServerState";
@@ -107,6 +105,13 @@ export function addCardToHand(
 ) {
   const state = serverState.games.find((g) => g.id === gameId)!.state!;
   state.hands.set(player.id, state.hands.get(player.id)!.concat(card));
+}
+
+export function getGame(
+  serverState: ServerState,
+  gameId: string
+): Game | undefined {
+  return serverState.games.find((g) => g.id === gameId);
 }
 
 export function getGameState(
