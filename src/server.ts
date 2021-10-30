@@ -99,7 +99,7 @@ io.on("connection", (socket) => {
     api
       .deleteGame(request)
       .then((response) => {
-        socket.leave(response.game.id);
+        socket.leave(response.gameId);
         io.emit("deleteGame", response);
       })
       .catch((error) => {
@@ -114,7 +114,7 @@ io.on("connection", (socket) => {
     api
       .joinGame(request)
       .then((response) => {
-        socket.join(response.game.id);
+        socket.join(response.gameId);
         io.emit("joinGame", response);
       })
       .catch((error) => {
@@ -129,7 +129,7 @@ io.on("connection", (socket) => {
     api
       .leaveGame(request)
       .then((response) => {
-        socket.leave(response.game.id);
+        socket.leave(response.gameId);
         io.emit("leaveGame", response);
       })
       .catch((error) => {
@@ -145,7 +145,7 @@ io.on("connection", (socket) => {
       .chat(request)
       .then((response) => {
         socket.emit("chat", response);
-        socket.to(request.game.id).emit("chat", response);
+        socket.to(request.gameId).emit("chat", response);
       })
       .catch((error) => {
         const response: ErrorResponse = {
@@ -171,10 +171,10 @@ io.on("connection", (socket) => {
         const r: StartMoveResponse = {
           timestamp: DateTime.now(),
           player: {
-            id: api.getActivePlayer(request.game.id),
+            id: api.getActivePlayer(request.gameId),
           },
         };
-        io.in(request.game.id).emit("startMove", r);
+        io.in(request.gameId).emit("startMove", r);
       })
       .catch((error) => {
         const response: ErrorResponse = {
@@ -189,7 +189,7 @@ io.on("connection", (socket) => {
       .drawCard(request)
       .then((responses) => {
         socket.emit("drawCard", responses[0]);
-        io.in(request.game.id).emit("updateGameBoard", responses[1]);
+        io.in(request.gameId).emit("updateGameBoard", responses[1]);
       })
       .catch((error) => {
         const response: ErrorResponse = {
@@ -204,7 +204,7 @@ io.on("connection", (socket) => {
       .discardCard(request)
       .then((response) => {
         // Send updated Gameboard
-        io.in(request.game.id).emit("updateGameBoard", response);
+        io.in(request.gameId).emit("updateGameBoard", response);
         // Check if a Winner exists
       })
       .catch((error) => {

@@ -1,5 +1,5 @@
 import { PrivatePlayer } from "./Player";
-import { Card, Config, SimpleGame } from "./Game";
+import { Card, Config } from "./Game";
 
 export type RegisterPlayerRequest = {
   playerName: string;
@@ -20,38 +20,38 @@ export type CreateGameRequest = {
 
 export type DeleteGameRequest = {
   player: PrivatePlayer;
-  game: SimpleGame;
+  gameId: string;
 };
 
 export type JoinGameRequest = {
   player: PrivatePlayer;
-  game: SimpleGame;
+  gameId: string;
 };
 
 export type LeaveGameRequest = {
   player: PrivatePlayer;
-  game: SimpleGame;
+  gameId: string;
 };
 
 export type ChatRequest = {
   player: PrivatePlayer;
-  game: SimpleGame;
+  gameId: string;
   message: string;
 };
 
 export type StartGameRequest = {
   player: PrivatePlayer;
-  game: SimpleGame;
+  gameId: string;
 };
 
 export type DrawCardRequest = {
   player: PrivatePlayer;
-  game: SimpleGame;
+  gameId: string;
   pileId: string;
 };
 
 export type DiscardCardRequest = {
   player: PrivatePlayer;
-  game: SimpleGame;
+  gameId: string;
   card: Card;
 };

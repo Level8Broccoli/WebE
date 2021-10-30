@@ -1,7 +1,7 @@
-import { FullPlayer, PrivatePlayer, PublicPlayer } from "../../shared/model/Player";
-import { Game, SimpleGame } from "../../shared/model/Game";
-import { ServerState } from "../../shared/model/ServerState";
 import { ChatMessage } from "../../shared/model/Chat";
+import { Game } from "../../shared/model/Game";
+import { FullPlayer, PrivatePlayer, PublicPlayer } from "../../shared/model/Player";
+import { ServerState } from "../../shared/model/ServerState";
 
 export function registerPlayer(serverState: ServerState, player: FullPlayer) {
   serverState.players.push(player);
@@ -44,33 +44,33 @@ export function playerExists(
 
 export function isCreator(
   serverState: ServerState,
-  game: SimpleGame,
+  gameId: string,
   player: PrivatePlayer
 ): boolean {
   // Find game with correct gameId and creatorId pair
   const found = serverState.games.find(
-    (g) => g.id === game.id && g.creatorId === player.id
+    (g) => g.id === gameId && g.creatorId === player.id
   );
 
   return found !== undefined;
 }
 
-export function deleteGame(serverState: ServerState, game: SimpleGame) {
-  serverState.games = serverState.games.filter((g) => g.id !== game.id);
+export function deleteGame(serverState: ServerState, gameId: string) {
+  serverState.games = serverState.games.filter((g) => g.id !== gameId);
 }
 
 export function gameExists(
   serverState: ServerState,
-  game: SimpleGame
+  gameId: string
 ): boolean {
-  return serverState.games.find((g) => g.id === game.id) !== undefined;
+  return serverState.games.find((g) => g.id === gameId) !== undefined;
 }
 
 export function freeSpaceInGame(
   serverState: ServerState,
-  game: SimpleGame
+  gameId: string
 ): boolean {
-  const g = serverState.games.find((g) => g.id === game.id);
+  const g = serverState.games.find((g) => g.id === gameId);
   if (g === undefined) {
     return false;
   }
@@ -80,17 +80,17 @@ export function freeSpaceInGame(
 export function joinGame(
   serverState: ServerState,
   player: PrivatePlayer,
-  game: SimpleGame
+  gameId: string
 ) {
-  serverState.games.find((g) => g.id === game.id)?.players.push(player.id);
+  serverState.games.find((g) => g.id === gameId)?.players.push(player.id);
 }
 
 export function leaveGame(
   serverState: ServerState,
   player: PrivatePlayer,
-  game: SimpleGame
+  gameId: string
 ) {
-  const g = serverState.games.find((g) => g.id === game.id);
+  const g = serverState.games.find((g) => g.id === gameId);
   if (g !== undefined) {
     g.players = g.players.filter((id) => id !== player.id);
   }
@@ -99,10 +99,10 @@ export function leaveGame(
 export function playerInGame(
   serverState: ServerState,
   player: PrivatePlayer,
-  game: SimpleGame
+  gameId: string
 ): boolean {
   // To be simplified
-  const g = serverState.games.find((g) => g.id === game.id);
+  const g = serverState.games.find((g) => g.id === gameId);
   if (g !== undefined) {
     const p = g.players.find((id) => id === player.id);
 
@@ -114,17 +114,17 @@ export function playerInGame(
 
 export function addChatMessage(
   serverState: ServerState,
-  game: SimpleGame,
+  gameId: string,
   chatMessage: ChatMessage
 ) {
-  serverState.games.find((g) => g.id === game.id)?.chat?.push(chatMessage);
+  serverState.games.find((g) => g.id === gameId)?.chat?.push(chatMessage);
 }
 
 export function checkPlayerCount(
   serverState: ServerState,
-  game: SimpleGame
+  gameId: string
 ): boolean {
-  const g = serverState.games.find((g) => g.id === game.id);
+  const g = serverState.games.find((g) => g.id === gameId);
 
   return g !== undefined
     ? g.players.length === g.config.maxPlayerCount

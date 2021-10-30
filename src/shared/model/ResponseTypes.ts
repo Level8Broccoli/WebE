@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
 import { StatusCode } from "../api/StatusCode";
 import { PublicPlayer, PrivatePlayer, SimplePlayer } from "./Player";
-import { Card, Game, SimpleGame } from "./Game";
+import { Card, Game } from "./Game";
 
 export type RegisterPlayerResponse = {
   status: StatusCode;
@@ -35,21 +35,21 @@ export type CreateGameResponse = {
 export type DeleteGameResponse = {
   status: StatusCode;
   timestamp: DateTime;
-  game: SimpleGame;
+  gameId: string;
 };
 
 export type JoinGameResponse = {
   status: StatusCode;
   timestamp: DateTime;
   player: PublicPlayer;
-  game: SimpleGame;
+  gameId: string;
 };
 
 export type LeaveGameResponse = {
   status: StatusCode;
   timestamp: DateTime;
   player: PublicPlayer;
-  game: SimpleGame;
+  gameId: string;
 };
 
 export type ChatResponse = {

@@ -223,20 +223,18 @@ export class Api {
         reject(new Error(StatusCode.PLAYER_INVALID));
       }
 
-      if (!isCreator(this._serverState, request.game, request.player)) {
+      if (!isCreator(this._serverState, request.gameId, request.player)) {
         reject(new Error(StatusCode.GAME_CREATOR_INVALID));
       }
 
       // [Server] Remove game from server state
-      deleteGame(this._serverState, request.game);
+      deleteGame(this._serverState, request.gameId);
 
       // [Server] Send response of type: deleteGame to all clients
       const response = {
         status: StatusCode.OK,
         timestamp: DateTime.now(),
-        game: {
-          id: request.game.id,
-        },
+        gameId: request.gameId,
       };
 
       resolve(response);
@@ -250,16 +248,16 @@ export class Api {
         reject(new Error(StatusCode.PLAYER_INVALID));
       }
 
-      if (!gameExists(this._serverState, request.game)) {
+      if (!gameExists(this._serverState, request.gameId)) {
         reject(new Error(StatusCode.GAME_NOT_EXISTS));
       }
 
-      if (!freeSpaceInGame(this._serverState, request.game)) {
+      if (!freeSpaceInGame(this._serverState, request.gameId)) {
         reject(new Error(StatusCode.GAME_FULL));
       }
 
       // [Server] Add playerId to the requested game in server state
-      joinGame(this._serverState, request.player, request.game);
+      joinGame(this._serverState, request.player, request.gameId);
 
       // [Server] Send response of type: joinGame to all clients
       const response = {
@@ -269,9 +267,7 @@ export class Api {
           id: request.player.id,
           name: request.player.name,
         },
-        game: {
-          id: request.game.id,
-        },
+        gameId: request.gameId,
       };
 
       resolve(response);
@@ -286,7 +282,7 @@ export class Api {
       }
 
       // [Server] Remove playerId in the requested game
-      leaveGame(this._serverState, request.player, request.game);
+      leaveGame(this._serverState, request.player, request.gameId);
 
       // [Server] Send response of type: leaveGame to all clients
       const response = {
@@ -296,9 +292,7 @@ export class Api {
           id: request.player.id,
           name: request.player.name,
         },
-        game: {
-          id: request.game.id,
-        },
+        gameId: request.gameId,
       };
 
       resolve(response);
@@ -313,7 +307,7 @@ export class Api {
       }
 
       // [Server] Check if player exists in game
-      if (!playerInGame(this._serverState, request.player, request.game)) {
+      if (!playerInGame(this._serverState, request.player, request.gameId)) {
         reject(new Error(StatusCode.PLAYER_ROOM_INVALID));
       }
 
@@ -323,7 +317,7 @@ export class Api {
         message: request.message,
       };
 
-      addChatMessage(this._serverState, request.game, message);
+      addChatMessage(this._serverState, request.gameId, message);
 
       const response = {
         timestamp: DateTime.now(),
@@ -346,20 +340,20 @@ export class Api {
         reject(new Error(StatusCode.PLAYER_INVALID));
       }
 
-      if (!gameExists(this._serverState, request.game)) {
+      if (!gameExists(this._serverState, request.gameId)) {
         reject(new Error(StatusCode.GAME_NOT_EXISTS));
       }
 
-      if (!isCreator(this._serverState, request.game, request.player)) {
+      if (!isCreator(this._serverState, request.gameId, request.player)) {
         reject(new Error(StatusCode.GAME_CREATOR_INVALID));
       }
 
-      if (!checkPlayerCount(this._serverState, request.game)) {
+      if (!checkPlayerCount(this._serverState, request.gameId)) {
         reject(new Error(StatusCode.PLAYER_COUNT_MATCH_INVALID));
       }
 
       // [Server] Create initial game state
-      const state = initGameState(this._serverState, request.game);
+      const state = initGameState(this._serverState, request.gameId);
 
       const piles = new Map<string, Card>(); // Empty because no discardPile is set
 
@@ -390,22 +384,22 @@ export class Api {
         reject(new Error(StatusCode.PLAYER_INVALID));
       }
 
-      if (!gameExists(this._serverState, request.game)) {
+      if (!gameExists(this._serverState, request.gameId)) {
         reject(new Error(StatusCode.GAME_NOT_EXISTS));
       }
 
-      if (!pileExists(this._serverState, request.game, request.pileId)) {
+      if (!pileExists(this._serverState, request.gameId, request.pileId)) {
         reject(new Error(StatusCode.PILE_NOT_EXISTS));
       }
 
-      if (!(this.getActivePlayer(request.game.id) === request.player.id)) {
+      if (!(this.getActivePlayer(request.gameId) === request.player.id)) {
         reject(new Error(StatusCode.NOT_ACTIVE_PLAYER));
       }
 
-      const card = drawCard(this._serverState, request.game, request.pileId);
-      const piles = getGameState(this._serverState, request.game).piles;
+      const card = drawCard(this._serverState, request.gameId, request.pileId);
+      const piles = getGameState(this._serverState, request.gameId).piles;
 
-      addCardToHand(this._serverState, request.game, request.player, card);
+      addCardToHand(this._serverState, request.gameId, request.player, card);
 
       const drawCardResponse = {
         timestamp: DateTime.now(),
@@ -428,18 +422,18 @@ export class Api {
         reject(new Error(StatusCode.PLAYER_INVALID));
       }
 
-      if (!gameExists(this._serverState, request.game)) {
+      if (!gameExists(this._serverState, request.gameId)) {
         reject(new Error(StatusCode.GAME_NOT_EXISTS));
       }
 
-      if (!(this.getActivePlayer(request.game.id) === request.player.id)) {
+      if (!(this.getActivePlayer(request.gameId) === request.player.id)) {
         reject(new Error(StatusCode.NOT_ACTIVE_PLAYER));
       }
 
       if (
         !isCardOwner(
           this._serverState,
-          request.game,
+          request.gameId,
           request.player,
           request.card
         )
@@ -449,12 +443,12 @@ export class Api {
 
       discardCard(
         this._serverState,
-        request.game,
+        request.gameId,
         request.player,
         request.card
       );
 
-      const piles = getGameState(this._serverState, request.game).piles;
+      const piles = getGameState(this._serverState, request.gameId).piles;
 
       const response = {
         timestamp: DateTime.now(),

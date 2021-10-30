@@ -37,10 +37,6 @@ export type Game = {
   state?: State;
 };
 
-export type SimpleGame = {
-  id: string;
-};
-
 export type Config = {
   maxPlayerCount: number;
   levelCount: number;

@@ -3,9 +3,8 @@ import {
   CardType,
   Color,
   NumberCard,
-  SimpleGame,
   SpecialCard,
-  State,
+  State
 } from "../../shared/model/Game";
 import { PrivatePlayer } from "../../shared/model/Player";
 import { ServerState } from "../../shared/model/ServerState";
@@ -60,9 +59,9 @@ function createHand(cardset: Card[]): Card[] {
 
 export function initGameState(
   serverState: ServerState,
-  game: SimpleGame
+  gameId: string
 ): State {
-  const g = serverState.games.find((g) => g.id === game.id);
+  const g = serverState.games.find((g) => g.id === gameId);
 
   if (g !== undefined) {
     // Init state with a full randomly sorted draw pile and the last joined person as beginner
@@ -86,12 +85,12 @@ export function initGameState(
 
 export function drawCard(
   serverState: ServerState,
-  game: SimpleGame,
+  gameId: string,
   pileId: string
 ): Card {
   if (pileId === "drawPile") {
     // if length from drawPile is 0 take all discardPiles,
-    const state = serverState.games.find((g) => g.id === game.id)!.state!;
+    const state = serverState.games.find((g) => g.id === gameId)!.state!;
     if (state.piles.get(pileId)!.length === 0) {
       const tempCards: Card[] = [];
       state.piles.forEach((cards, key) => {
@@ -109,49 +108,49 @@ export function drawCard(
   }
 
   return serverState.games
-    .find((g) => g.id === game.id)!
+    .find((g) => g.id === gameId)!
     .state!.piles.get(pileId)!
     .pop()!;
 }
 
 export function addCardToHand(
   serverState: ServerState,
-  game: SimpleGame,
+  gameId: string,
   player: PrivatePlayer,
   card: Card
 ) {
-  const state = serverState.games.find((g) => g.id === game.id)!.state!;
+  const state = serverState.games.find((g) => g.id === gameId)!.state!;
   state.hands.set(player.id, state.hands.get(player.id)!.concat(card));
 }
 
 export function getGameState(
   serverState: ServerState,
-  game: SimpleGame
+  gameId: string
 ): State {
-  return serverState.games.find((g) => g.id === game.id)!.state!;
+  return serverState.games.find((g) => g.id === gameId)!.state!;
 }
 
 export function pileExists(
   serverState: ServerState,
-  game: SimpleGame,
+  gameId: string,
   pileId: string
 ): boolean {
   return (
     serverState.games
-      .find((g) => g.id === game.id)!
+      .find((g) => g.id === gameId)!
       .state!.piles.get(pileId) !== undefined
   );
 }
 
 export function isCardOwner(
   serverState: ServerState,
-  game: SimpleGame,
+  gameId: string,
   player: PrivatePlayer,
   card: Card
 ): boolean {
   return (
     serverState.games
-      .find((g) => g.id === game.id)!
+      .find((g) => g.id === gameId)!
       .state!.hands.get(player.id)!
       .find((c) => c === card) !== undefined
   );
@@ -159,22 +158,22 @@ export function isCardOwner(
 
 export function discardCard(
   serverState: ServerState,
-  game: SimpleGame,
+  gameId: string,
   player: PrivatePlayer,
   card: Card
 ) {
   // remove the card from the hand
-  const hands = serverState.games.find((g) => g.id === game.id)!.state!.hands;
+  const hands = serverState.games.find((g) => g.id === gameId)!.state!.hands;
   hands.set(
     player.id,
     hands.get(player.id)!.filter((c) => c === card)
   );
   // then add it to the players discard pile
   const pile = serverState.games
-    .find((g) => g.id === game.id)!
+    .find((g) => g.id === gameId)!
     .state!.piles!.get(player.id);
   pile!.push(card);
   serverState.games
-    .find((g) => g.id === game.id)!
+    .find((g) => g.id === gameId)!
     .state!.piles!.set(player.id, pile!);
 }
