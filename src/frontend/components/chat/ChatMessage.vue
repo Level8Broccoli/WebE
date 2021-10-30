@@ -18,7 +18,7 @@ import { key } from "../../store/store";
 export default defineComponent({
   name: "ChatMessage",
   props: {
-    message: Object as PropType<ChatMessage>,
+    message: { type: Object as PropType<ChatMessage>, required: true },
   },
   setup(props) {
     const store = useStore(key);

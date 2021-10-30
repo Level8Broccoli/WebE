@@ -43,12 +43,17 @@ export default defineComponent({
       store.commit("deleteGame");
     };
 
+    const startGame = (e: Event) => {
+      console.error("To implemented");
+    };
+
     return {
       i18n,
       isCreator,
       gameIsValid,
       abort,
       deleteGame,
+      startGame,
     };
   },
 });

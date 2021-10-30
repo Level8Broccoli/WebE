@@ -5,10 +5,12 @@
       {{ i18n.creatorNameLabel }}: <span>{{ creatorName }}</span>
     </div>
     <div>
-      {{ i18n.levelSystemLabel }}: <span>{{ game.config.levelSystem }}</span>
+      {{ i18n.levelSystemLabel }}:
+      <span>{{ game.config.levelSystem }}</span>
     </div>
     <div>
-      {{ i18n.levelCountLabel }}: <span>{{ game.config.levelCount }}</span>
+      {{ i18n.levelCountLabel }}:
+      <span>{{ game.config.levelCount }}</span>
     </div>
     <div>
       {{ i18n.playerCountLabel }}:
@@ -30,7 +32,7 @@ import { key } from "../../store/store";
 export default defineComponent({
   name: "GameListEntry",
   props: {
-    game: Object as PropType<Game>,
+    game: { type: Object as PropType<Game>, required: true },
     joinButton: { type: Boolean, default: true },
   },
   setup(props) {

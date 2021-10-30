@@ -66,7 +66,7 @@ export default defineComponent({
     const i18n = computed(() => store.getters.i18n);
 
     const currentConfig: ComputedRef<Config> = computed(
-      () => store.state.gameInCreation
+      () => store.state.gameInCreation!
     );
     const maxPlayerCount = computed(() => currentConfig.value.maxPlayerCount);
     const levelCount = computed(() => currentConfig.value.levelCount);

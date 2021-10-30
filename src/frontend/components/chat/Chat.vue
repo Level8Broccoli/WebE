@@ -2,7 +2,7 @@
   <aside>
     <ChatInput />
     <ul role="list">
-      <li v-for="message in messageList" :key="message.id">
+      <li v-for="message in messageList" :key="String(message.timestamp)">
         <ChatMessage :message="message" />
       </li>
     </ul>
