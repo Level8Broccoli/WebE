@@ -3,7 +3,7 @@ import { InjectionKey } from 'vue';
 import { createStore, Store } from 'vuex';
 import { PrivatePlayer } from '../../shared/model/Player';
 import { ChatResponse } from '../../shared/model/ResponseTypes';
-import { Game } from '../../shared/model/Game';
+import { Config, Game, LevelSystem } from '../../shared/model/Game';
 import { i18n, Language } from '../i18n/i18n';
 import { WebSocketPlugin } from './WebSocketPlugin';
 
@@ -11,10 +11,10 @@ export interface State {
     language: Language,
     connection: Boolean,
     showRules: Boolean,
-    createGameMode: Boolean,
     player: PrivatePlayer,
     games: Game[],
-    activeGame: null | Game,
+    gameInCreation: null | Config,
+    gameInProgress: null | Game,
     errorLog: String[]
 }
 
@@ -27,14 +27,14 @@ export const store = createStore<State>({
         language: Language.ENGLISH,
         connection: false,
         showRules: false,
-        createGameMode: false,
         player: {
             name: "",
             id: "",
             secret: "",
         },
         games: [],
-        activeGame: null,
+        gameInCreation: null,
+        gameInProgress: null,
         errorLog: [],
     },
     getters: {
@@ -48,13 +48,13 @@ export const store = createStore<State>({
             if (!(state.player.secret.length > 0)) {
                 return "start";
             }
-            if (state.createGameMode) {
-                return "create-game";
+            if (state.gameInCreation !== null) {
+                return "game-in-creation";
             }
-            if (state.activeGame === null) {
-                return "game-search";
+            if (state.gameInProgress !== null) {
+                return "game-in-progress"
             }
-            return "unknown"
+            return "game-search";
         }
     },
     mutations: {
@@ -80,9 +80,6 @@ export const store = createStore<State>({
         switchRules(state) {
             state.showRules = !state.showRules;
         },
-        switchCreateGameMode(state) {
-            state.createGameMode = !state.createGameMode;
-        },
         registerPlayer() { /* handled by WebSocketPlugin */ },
         createGame() { /* handled by WebSocketPlugin */ },
         deleteGame() { /* handled by WebSocketPlugin */ },
@@ -98,11 +95,21 @@ export const store = createStore<State>({
                 secret: "",
                 id: "",
             };
-            state.activeGame = null;
+            state.gameInProgress = null;
             state.games = [];
         },
-        updateActiveGame(state, value: Game | null) {
-            state.activeGame = value;
+        initNewGame(state) {
+            state.gameInCreation = {
+                maxPlayerCount: 6,
+                levelCount: 8,
+                levelSystem: LevelSystem.NORMAL
+            }
+        },
+        updateGameInCreation(state, payload) {
+            state.gameInCreation = payload.config;
+        },
+        updateGameInProgress(state, value: Game | null) {
+            state.gameInProgress = value;
         },
         updateConnection(state, value: Boolean) {
             state.connection = value;
@@ -111,7 +118,7 @@ export const store = createStore<State>({
             state.errorLog.unshift(value);
         },
         addChatMessage(state, value: ChatResponse) {
-            state.activeGame?.chat?.push(value);
+            state.gameInProgress?.chat?.push(value);
         },
     },
     plugins: [WebSocketPlugin(socket)]

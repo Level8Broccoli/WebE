@@ -1,6 +1,5 @@
 import { Socket } from "socket.io-client";
 import { Store } from "vuex";
-import { LevelSystem } from "../../shared/model/Game";
 import { ChatRequest, CreateGameRequest, DeleteGameRequest, EditPlayerNameRequest, JoinGameRequest, LeaveGameRequest, RegisterExistingPlayerRequest, RegisterPlayerRequest, StartGameRequest } from "../../shared/model/RequestTypes";
 import { ChatResponse, CreateGameResponse, DeleteGameResponse, ErrorResponse, JoinGameResponse, LeaveGameResponse, RegisterPlayerResponse, StartGameResponse, StartMoveResponse } from "../../shared/model/ResponseTypes";
 import { State } from "./store";
@@ -32,7 +31,8 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
     socket.on("createGame", (res: CreateGameResponse | ErrorResponse) => {
         if ("game" in res) {
             if (res.game.creatorId === store.state.player.id) {
-                store.commit("updateActiveGame", res.game);
+                store.commit("updateGameInProgress", res.game);
+                store.commit("updateGameInCreation", { config: null });
             }
         } else {
             console.error(res.status);
@@ -42,8 +42,8 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
 
     socket.on("deleteGame", (res: DeleteGameResponse | ErrorResponse) => {
         if ("game" in res) {
-            if (res.game.id === store.state.activeGame?.id) {
-                store.commit("updateActiveGame", null);
+            if (res.game.id === store.state.gameInProgress?.id) {
+                store.commit("updateGameInProgress", null);
             }
         } else {
             console.error(res.status);
@@ -63,7 +63,7 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
     socket.on("joinGame", (res: JoinGameResponse | ErrorResponse) => {
         if ("game" in res) {
             if (res.player.id === store.state.player.id) {
-                store.commit("updateActiveGame", { ...res.game, chat: [] });
+                store.commit("updateGameInProgress", { ...res.game, chat: [] });
             }
         } else {
             console.error(res.status);
@@ -74,7 +74,7 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
     socket.on("leaveGame", (res: LeaveGameResponse | ErrorResponse) => {
         if ("game" in res) {
             if (res.player.id === store.state.player.id) {
-                store.commit("updateActiveGame", null);
+                store.commit("updateGameInProgress", null);
             }
         } else {
             console.error(res.status);
@@ -114,37 +114,33 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
         if (mutation.type === "createGame") {
             const payload: CreateGameRequest = {
                 player: state.player,
-                config: {
-                    maxPlayerCount: mutation.payload,
-                    levelCount: 2,
-                    levelSystem: LevelSystem.NORMAL
-                }
+                config: mutation.payload.config
             };
             socket.emit("createGame", payload);
         }
 
         if (mutation.type === "deleteGame") {
-            if (state.activeGame === null) {
+            if (state.gameInProgress === null) {
                 console.error("can't delete empty game");
                 store.commit("addToErrorLog", "can't delete empty game");
                 return;
             }
             const payload: DeleteGameRequest = {
                 player: state.player,
-                game: state.activeGame
+                game: state.gameInProgress
             };
             socket.emit("deleteGame", payload);
         }
 
         if (mutation.type === "chat") {
-            if (state.activeGame === null) {
+            if (state.gameInProgress === null) {
                 console.error("can't chat with empty game");
                 store.commit("addToErrorLog", "can't chat with empty game");
                 return;
             }
             const payload: ChatRequest = {
                 player: state.player,
-                game: state.activeGame,
+                game: state.gameInProgress,
                 message: mutation.payload
             };
             socket.emit("chat", payload);
@@ -161,7 +157,7 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
         }
 
         if (mutation.type === "leaveGame") {
-            if (state.activeGame === null) {
+            if (state.gameInProgress === null) {
                 console.error("can't leave an empty game");
                 store.commit("addToErrorLog", "can't leave an empty game");
                 return;
@@ -169,7 +165,7 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
             const payload: LeaveGameRequest = {
                 player: state.player,
                 game: {
-                    id: state.activeGame.id,
+                    id: state.gameInProgress.id,
                 },
             };
             socket.emit("leaveGame", payload);
@@ -183,14 +179,14 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
         }
 
         if (mutation.type === "startGame") {
-            if (state.activeGame === null) {
+            if (state.gameInProgress === null) {
                 console.error("can't start an empty game");
                 store.commit("addToErrorLog", "can't start an empty game");
                 return;
             }
             const payload: StartGameRequest = {
                 player: state.player,
-                game: state.activeGame
+                game: state.gameInProgress
             };
             socket.emit("startGame", payload);
         }

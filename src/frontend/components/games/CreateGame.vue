@@ -59,16 +59,25 @@ export default defineComponent({
     const store = useStore(key);
     const i18n = computed(() => store.getters.i18n);
 
-    const maxPlayerCount = ref(6);
-    const levelCount = ref(8);
-    const levelSystem = ref(LevelSystem.NORMAL);
+    const currentConfig = computed(() => store.state.gameInCreation);
+    const maxPlayerCount = computed(() => currentConfig.value.maxPlayerCount);
+    const levelCount = computed(() => currentConfig.value.levelCount);
+    const levelSystem = computed(() => currentConfig.value.levelSystem);
 
-    const createGame = false;
+    const createGame = (e: Event) => {
+      store.commit("createGame", {
+        config: {
+          maxPlayerCount: maxPlayerCount.value,
+          levelCount: levelCount.value,
+          levelSystem: levelSystem.value,
+        },
+      });
+    };
     const createGameButton = computed(
       () => i18n.value.createNewGameButtonLabel
     );
     const abort = (e: Event) => {
-      store.commit("switchCreateGameMode");
+      store.commit("updateGameInCreation", { config: null });
     };
     const abortButton = computed(() => i18n.value.abortButton);
 
@@ -82,17 +91,27 @@ export default defineComponent({
     );
 
     const changeToLevelSystemNormal = (e: Event) => {
-      levelSystem.value = LevelSystem.NORMAL;
+      store.commit("updateGameInCreation", {
+        config: { ...currentConfig.value, levelSystem: LevelSystem.NORMAL },
+      });
     };
     const changeToLevelSystemRandom = (e: Event) => {
-      levelSystem.value = LevelSystem.RANDOM;
+      store.commit("updateGameInCreation", {
+        config: { ...currentConfig.value, levelSystem: LevelSystem.RANDOM },
+      });
     };
-
     const updateMaxPlayerCount = (e: any) => {
-      maxPlayerCount.value = e.target.value;
+      store.commit("updateGameInCreation", {
+        config: {
+          ...currentConfig.value,
+          maxPlayerCount: Number(e.target.value),
+        },
+      });
     };
     const updateLevelCount = (e: any) => {
-      levelCount.value = e.target.value;
+      store.commit("updateGameInCreation", {
+        config: { ...currentConfig.value, levelCount: Number(e.target.value) },
+      });
     };
 
     return {

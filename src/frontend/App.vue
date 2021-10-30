@@ -5,8 +5,9 @@
     </Header>
     <RulesView v-if="view === 'rules'" />
     <StartView v-if="view === 'start'" />
-    <GameCreateView v-if="view === 'create-game'" />
+    <GameCreateView v-if="view === 'game-in-creation'" />
     <GameSearchView v-if="view === 'game-search'" />
+    {{ view }}
   </main>
 </template>
 
@@ -16,7 +17,6 @@ import { useStore } from "vuex";
 import { PrivatePlayer } from "../shared/model/Player";
 import Header from "./components/header/Header.vue";
 import Title from "./components/Title.vue";
-import { Language } from "./i18n/i18n";
 import { key } from "./store/store";
 import GameCreateView from "./views/GameCreateView.vue";
 import GameSearchView from "./views/GameSearchView.vue";

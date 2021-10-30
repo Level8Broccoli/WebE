@@ -15,7 +15,7 @@ export default defineComponent({
   setup() {
     const store = useStore(key);
     const createNewGame = (e: Event) => {
-      store.commit("switchCreateGameMode");
+      store.commit("initNewGame");
     };
     const i18n = computed(() => store.getters.i18n);
     const createNewGameButtonLabel = computed(
