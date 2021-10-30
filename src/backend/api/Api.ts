@@ -319,10 +319,7 @@ export class Api {
 
       // [Server] Add chat message to the corresponding game
       const message = {
-        player: {
-          id: request.player.id,
-          name: request.player.name,
-        },
+        playerId: request.player.id,
         message: request.message,
       };
 
