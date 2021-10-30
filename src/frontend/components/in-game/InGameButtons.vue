@@ -4,18 +4,6 @@
       <i class="far fa-long-arrow-left icon-left"></i>
       {{ i18n.deleteGameButton }}
     </button>
-    <button v-else @click.prevent="abort" class="secondary">
-      <i class="far fa-long-arrow-left icon-left"></i>
-      {{ i18n.abortButton }}
-    </button>
-    <button v-if="isCreator && gameIsValid" @click.prevent="startGame">
-      {{ i18n.startGameButton }}
-      <i class="far fa-long-arrow-right icon-right"></i>
-    </button>
-    <button v-if="isCreator && !gameIsValid" class="is-disabled" disabled>
-      {{ i18n.gameNeedsAtLeastTwoPlayers }}
-      <i class="far fa-long-arrow-right icon-right"></i>
-    </button>
   </footer>
 </template>
 
@@ -33,27 +21,13 @@ export default defineComponent({
     const isCreator = computed(
       () => game.value.creatorId === store.state.player.id
     );
-    const gameIsValid = computed(() => game.value.players.length > 1);
-
-    const abort = (e: Event) => {
-      store.commit("leaveGame");
-    };
-
     const deleteGame = (e: Event) => {
       store.commit("deleteGame");
     };
-
-    const startGame = (e: Event) => {
-      store.commit("startGame");
-    };
-
     return {
       i18n,
       isCreator,
-      gameIsValid,
-      abort,
       deleteGame,
-      startGame,
     };
   },
 });
