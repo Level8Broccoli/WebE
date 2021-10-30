@@ -1,7 +1,7 @@
 import { Socket } from "socket.io-client";
 import { Store } from "vuex";
-import { CreateGameRequest, EditPlayerNameRequest, JoinGameRequest, RegisterExistingPlayerRequest, RegisterPlayerRequest } from "../../shared/model/RequestTypes";
-import { CreateGameResponse, EditPlayerNameResponse, ErrorResponse, JoinGameResponse, RegisterExistingPlayerResponse, RegisterPlayerResponse, UpdatePlayerListResponse } from "../../shared/model/ResponseTypes";
+import { ChatRequest, CreateGameRequest, EditPlayerNameRequest, JoinGameRequest, RegisterExistingPlayerRequest, RegisterPlayerRequest } from "../../shared/model/RequestTypes";
+import { ChatResponse, CreateGameResponse, EditPlayerNameResponse, ErrorResponse, JoinGameResponse, RegisterExistingPlayerResponse, RegisterPlayerResponse, UpdatePlayerListResponse } from "../../shared/model/ResponseTypes";
 import { State } from "./store";
 
 export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
@@ -85,14 +85,14 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
     //     }
     // });
 
-    // socket.on("chat", (res: ChatResponse | ErrorResponse) => {
-    //     if ("message" in res) {
-    //         store.commit("addChatMessage", res);
-    //     } else {
-    //         console.error(res.status);
-    //         store.commit("addToErrorLog", res.status);
-    //     }
-    // });
+    socket.on("chat", (res: ChatResponse | ErrorResponse) => {
+        if ("message" in res) {
+            store.commit("addChatMessage", res);
+        } else {
+            console.error(res.status);
+            store.commit("addToErrorLog", res.status);
+        }
+    });
 
     socket.on("joinGame", (res: JoinGameResponse | ErrorResponse) => {
         if ("game" in res) {
@@ -165,19 +165,14 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
         //     socket.emit("deleteGame", payload);
         // }
 
-        // if (mutation.type === "chat") {
-        //     if (state.activeGame.type === GameViewType.NONE || state.activeGame.type === GameViewType.IN_CREATION) {
-        //         console.error("can't chat with empty game");
-        //         store.commit("addToErrorLog", "can't chat with empty game");
-        //         return;
-        //     }
-        //     const payload: ChatRequest = {
-        //         player: state.player,
-        //         game: state.activeGame.data,
-        //         message: mutation.payload
-        //     };
-        //     socket.emit("chat", payload);
-        // }
+        if (mutation.type === "sendChatMessage") {
+            const payload: ChatRequest = {
+                player: state.player,
+                gameId: state.activeGame!.id,
+                message: mutation.payload
+            };
+            socket.emit("chat", payload);
+        }
 
         if (mutation.type === "joinGame") {
             const payload: JoinGameRequest = {

@@ -6,7 +6,9 @@
       <PlayerList />
       <LobbyButtons />
     </div>
-    <div class="right">Chat</div>
+    <div class="right">
+      <Chat />
+    </div>
   </section>
 </template>
 
@@ -17,6 +19,7 @@ import { key } from "../store/store";
 import GameListEntry from "../components/games/GameListEntry.vue";
 import LobbyButtons from "../components/lobby/LobbyButtons.vue";
 import PlayerList from "../components/players/PlayerList.vue";
+import Chat from "../components/chat/Chat.vue";
 
 export default defineComponent({
   name: "GameLobbyView",
@@ -29,6 +32,7 @@ export default defineComponent({
     GameListEntry,
     PlayerList,
     LobbyButtons,
+    Chat,
   },
 });
 </script>

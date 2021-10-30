@@ -318,19 +318,14 @@ export class Api {
 
       // [Server] Add chat message to the corresponding game
       const message = {
+        timestamp: DateTime.now(),
         playerId: request.player.id,
         message: request.message,
       };
 
       addChatMessage(this._serverState, request.gameId, message);
 
-      const response = {
-        timestamp: DateTime.now(),
-        playerId: request.player.id,
-        message: request.message,
-      };
-
-      resolve(response);
+      resolve(message);
     });
   }
 

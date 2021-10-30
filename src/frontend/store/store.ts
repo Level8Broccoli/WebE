@@ -3,6 +3,7 @@ import { InjectionKey } from 'vue';
 import { createStore, Store } from 'vuex';
 import { Config, Game, GameStatus, LevelSystem } from '../../shared/model/Game';
 import { PrivatePlayer, PublicPlayer } from '../../shared/model/Player';
+import { ChatResponse } from '../../shared/model/ResponseTypes';
 import { i18n, Language } from '../i18n/i18n';
 import { WebSocketPlugin } from './WebSocketPlugin';
 
@@ -104,6 +105,7 @@ export const store = createStore<State>({
         registerPlayer() { /* handled by WebSocketPlugin */ },
         finalizeGameCreation() { /* handled by WebSocketPlugin */ },
         joinGame() { /* handled by WebSocketPlugin */ },
+        sendChatMessage() { /* handled by WebSocketPlugin */ },
         // createGame() { /* handled by WebSocketPlugin */ },
         // deleteGame() { /* handled by WebSocketPlugin */ },
         // chat() { /* handled by WebSocketPlugin */ },
@@ -149,6 +151,9 @@ export const store = createStore<State>({
         },
         addToErrorLog(state, value: string) {
             state.errorLog.unshift(value);
+        },
+        addChatMessage(state, value: ChatResponse) {
+            state.activeGame?.chat.push(value);
         }
     },
     plugins: [WebSocketPlugin(socket)]
