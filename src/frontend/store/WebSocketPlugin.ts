@@ -1,9 +1,9 @@
 import { Socket } from "socket.io-client";
-import { StatusCode } from "../../shared/api/StatusCode";
 import { Store } from "vuex";
+import { StatusCode } from "../../shared/api/StatusCode";
 import { GameViewType } from "../../shared/model/Game";
 import { ChatRequest, CreateGameRequest, DeleteGameRequest, EditPlayerNameRequest, JoinGameRequest, LeaveGameRequest, RegisterExistingPlayerRequest, RegisterPlayerRequest, StartGameRequest } from "../../shared/model/RequestTypes";
-import { ChatResponse, CreateGameResponse, DeleteGameResponse, ErrorResponse, JoinGameResponse, LeaveGameResponse, RegisterExistingPlayerResponse, RegisterPlayerResponse, StartGameResponse, StartMoveResponse } from "../../shared/model/ResponseTypes";
+import { ChatResponse, CreateGameResponse, DeleteGameResponse, EditPlayerNameResponse, ErrorResponse, JoinGameResponse, LeaveGameResponse, RegisterExistingPlayerResponse, RegisterPlayerResponse, StartGameResponse, StartMoveResponse } from "../../shared/model/ResponseTypes";
 import { State } from "./store";
 
 export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
@@ -32,6 +32,16 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
 
     socket.on("registerExistingPlayer", (res: RegisterExistingPlayerResponse | ErrorResponse) => {
         if (res.status !== StatusCode.OK) {
+            console.error(res.status);
+            store.commit("addToErrorLog", res.status);
+            store.commit("removeInvalidPlayer");
+        }
+    });
+
+    socket.on("editPlayerName", (res: EditPlayerNameResponse | ErrorResponse) => {
+        if ("player" in res) {
+            localStorage.setItem('player-credentials', JSON.stringify(res.player));
+        } else {
             console.error(res.status);
             store.commit("addToErrorLog", res.status);
             store.commit("removeInvalidPlayer");

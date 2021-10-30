@@ -72,7 +72,7 @@ io.on("connection", (socket) => {
         const response: ErrorResponse = {
           status: error.message,
         };
-        socket.emit("registerPlayer", response);
+        socket.emit("editPlayerName", response);
       });
   });
 
