@@ -26,23 +26,23 @@ function initialCardSet(): Card[] {
     }
   }
 
-  // 5 times joker
-  for (let index = 0; index < 5; index++) {
-    const card: SpecialCard = {
-      value: 0,
-      type: CardType.JOKER,
-    };
-    cardset.push(card);
-  }
+  // 5 times joker -- use later
+  // for (let index = 0; index < 5; index++) {
+  //   const card: SpecialCard = {
+  //     value: 0,
+  //     type: CardType.JOKER,
+  //   };
+  //   cardset.push(card);
+  // }
 
-  // 3 times skip
-  for (let index = 0; index < 3; index++) {
-    const card: SpecialCard = {
-      value: 0,
-      type: CardType.SKIP,
-    };
-    cardset.push(card);
-  }
+  // 3 times skip -- use later
+  // for (let index = 0; index < 3; index++) {
+  //   const card: SpecialCard = {
+  //     value: 0,
+  //     type: CardType.SKIP,
+  //   };
+  //   cardset.push(card);
+  // }
 
   return cardset;
 }
