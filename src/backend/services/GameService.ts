@@ -1,8 +1,9 @@
+import { toKeyValueArray } from "../../shared/helper/HelperService";
 import {
   Card,
   CardType,
-  Color, Game, GameState, GameStatus, NumberCard,
-  PublicGame,
+  Color, Game, GameState, GameStatus, NumberCard, PublicGameTransfer,
+  PublicGameTransferState,
   SpecialCard
 } from "../../shared/model/Game";
 import { PrivatePlayer } from "../../shared/model/Player";
@@ -227,19 +228,25 @@ function drawCard(game: Game, from: string, to: string) {
 export function getAllGames(
   serverState: ServerState,
   playerId?: string
-): PublicGame[] {
-  return serverState.games.map((g) => {
-    const handKeys = Array.from(g.state.hands.keys());
+): PublicGameTransfer[] {
+  return serverState.games.map(({ id, creatorId, players, config, status, chat, state: { activePlayerId, hands, piles } }) => {
+    const handKeys = Array.from(hands.keys());
     const newHands = new Map<string, Card[] | number>();
     handKeys.forEach(key => {
+      // only show the cards on the requesting player
+      // alternativally show the number of cards on all the other players
       if (key === playerId) {
-        newHands.set(key, g.state.hands.get(key)!);
+        newHands.set(key, hands.get(key)!);
       } else {
-        newHands.set(key, g.state.hands.get(key)!.length);
+        newHands.set(key, hands.get(key)!.length);
       }
     });
-    const newPublicGame: PublicGame = { ...g };
-    newPublicGame.state.hands = newHands;
+    const newPublicGameState: PublicGameTransferState = {
+      activePlayerId,
+      hands: toKeyValueArray(newHands),
+      piles: toKeyValueArray(piles)
+    }
+    const newPublicGame: PublicGameTransfer = { id, creatorId, players, config, status, chat, state: newPublicGameState };
     return newPublicGame;
   });
 }

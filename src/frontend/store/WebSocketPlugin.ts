@@ -1,5 +1,7 @@
 import { Socket } from "socket.io-client";
 import { Store } from "vuex";
+import { keyValueArrayToMap } from "../../shared/helper/HelperService";
+import { PublicGame, PublicGameState } from "../../shared/model/Game";
 import { ChatRequest, CreateGameRequest, DeleteGameRequest, EditPlayerNameRequest, JoinGameRequest, LeaveGameRequest, LogoutRequest, RegisterExistingPlayerRequest, RegisterPlayerRequest, StartGameRequest } from "../../shared/model/RequestTypes";
 import { ChatResponse, CreateGameResponse, DeleteGameResponse, EditPlayerNameResponse, ErrorResponse, JoinGameResponse, LeaveGameResponse, LogoutResponse, RegisterExistingPlayerResponse, RegisterPlayerResponse, StartGameResponse, UpdateGameListResponse, UpdatePlayerListResponse } from "../../shared/model/ResponseTypes";
 import { State } from "./store";
@@ -47,7 +49,15 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
 
     socket.on("updateGameList", (res: UpdateGameListResponse | ErrorResponse) => {
         if ("gameList" in res) {
-            store.commit("updateGames", res.gameList);
+            const parsedGameList: PublicGame[] = res.gameList.map(({ id, creatorId, players, config, status, chat, state: { activePlayerId, hands, piles } }) => {
+                const parsedState: PublicGameState = {
+                    activePlayerId,
+                    hands: keyValueArrayToMap(hands),
+                    piles: keyValueArrayToMap(piles),
+                }
+                return { id, creatorId, players, config, status, chat, state: parsedState };
+            });
+            store.commit("updateGames", parsedGameList);
         } else {
             console.error(res.status);
             store.commit("addToErrorLog", res.status);

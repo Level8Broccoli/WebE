@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
 import { StatusCode } from "../api/StatusCode";
 import { PublicPlayer, PrivatePlayer, SimplePlayer } from "./Player";
-import { Card, Game, PublicGame } from "./Game";
+import { Card, Game, PublicGame, PublicGameTransfer } from "./Game";
 
 export type RegisterPlayerResponse = {
   status: StatusCode;
@@ -32,7 +32,7 @@ export type EditPlayerNameResponse = {
 
 export type UpdatePlayerListResponse = { playerList: PublicPlayer[] }
 
-export type UpdateGameListResponse = { gameList: PublicGame[] }
+export type UpdateGameListResponse = { gameList: PublicGameTransfer[] }
 
 export type CreateGameResponse = {
   status: StatusCode;

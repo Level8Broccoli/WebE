@@ -3,6 +3,10 @@ export function toKeyValueArray<K, V>(map: Map<K, V>): [K, V][] {
   return Array.from(map.entries());
 }
 
+export function keyValueArrayToMap<K, V>(keyValueArray: [K, V][]): Map<K, V> {
+  return new Map(keyValueArray);
+}
+
 export function mapFromJson(jsonStr: string) {
   return new Map(JSON.parse(jsonStr));
 }
