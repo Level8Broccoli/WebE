@@ -7,6 +7,14 @@ export function registerPlayer(serverState: ServerState, player: FullPlayer) {
   serverState.players.push(player);
 }
 
+export function registerExistingPlayer(serverState: ServerState, player: PrivatePlayer, socketId: string) {
+  serverState.players = serverState.players.map((p) =>
+    p.id === player.id && p.secret === player.secret
+      ? { ...p, socketId: socketId }
+      : p
+  );
+}
+
 export function editPlayerName(
   serverState: ServerState,
   player: PrivatePlayer

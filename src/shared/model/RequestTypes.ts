@@ -9,6 +9,10 @@ export type EditPlayerNameRequest = {
   player: PrivatePlayer;
 };
 
+export type RegisterExistingPlayerRequest = {
+  player: PrivatePlayer;
+};
+
 export type CreateGameRequest = {
   player: PrivatePlayer;
   config: Config;

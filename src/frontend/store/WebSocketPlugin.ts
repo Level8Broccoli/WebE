@@ -1,7 +1,7 @@
 import { Socket } from "socket.io-client";
 import { Store } from "vuex";
 import { LevelSystem } from "../../shared/model/Game";
-import { ChatRequest, CreateGameRequest, DeleteGameRequest, EditPlayerNameRequest, JoinGameRequest, LeaveGameRequest, RegisterPlayerRequest, StartGameRequest } from "../../shared/model/RequestTypes";
+import { ChatRequest, CreateGameRequest, DeleteGameRequest, EditPlayerNameRequest, JoinGameRequest, LeaveGameRequest, RegisterExistingPlayerRequest, RegisterPlayerRequest, StartGameRequest } from "../../shared/model/RequestTypes";
 import { ChatResponse, CreateGameResponse, DeleteGameResponse, ErrorResponse, JoinGameResponse, LeaveGameResponse, RegisterPlayerResponse, StartGameResponse, StartMoveResponse } from "../../shared/model/ResponseTypes";
 import { State } from "./store";
 
@@ -22,6 +22,7 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
         if ("player" in res) {
             store.commit("updatePlayer", res.player);
             store.commit("updateGames", res.games);
+            localStorage.setItem('player-credentials', JSON.stringify(res.player));
         } else {
             console.error(res.status);
             store.commit("addToErrorLog", res.status);
@@ -103,6 +104,11 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
         if (mutation.type === "registerPlayer") {
             const payload: RegisterPlayerRequest = { playerName: state.player.name };
             socket.emit("registerPlayer", payload);
+        }
+
+        if (mutation.type === "registerExistingPlayer") {
+            const payload: RegisterExistingPlayerRequest = { player: state.player };
+            socket.emit("registerExistingPlayer", payload);
         }
 
         if (mutation.type === "createGame") {

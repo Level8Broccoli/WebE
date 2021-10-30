@@ -12,6 +12,7 @@ import {
   EditPlayerNameRequest,
   JoinGameRequest,
   LeaveGameRequest,
+  RegisterExistingPlayerRequest,
   RegisterPlayerRequest,
   StartGameRequest,
 } from "../../shared/model/RequestTypes";
@@ -23,6 +24,7 @@ import {
   EditPlayerNameResponse,
   JoinGameResponse,
   LeaveGameResponse,
+  RegisterExistingPlayerResponse,
   RegisterPlayerResponse,
   StartGameResponse,
   UpdateGameBoardResponse,
@@ -43,6 +45,7 @@ import {
   checkPlayerCount,
   playerToSocketId,
   activePlayerInGame,
+  registerExistingPlayer,
 } from "../services/ServerStateService";
 import {
   addCardToHand,
@@ -96,6 +99,37 @@ export class Api {
     });
   }
 
+  registerExistingPlayer(
+    request: RegisterExistingPlayerRequest,
+    socketId: string
+  ): Promise<RegisterExistingPlayerResponse> {
+    return new Promise((resolve, reject) => {
+      // [Server] Validation (not empty, valid UTF-8 Symbols) -> Errorfeedback
+      if (request.player.name.trim().length === 0) {
+        reject(new Error(StatusCode.PLAYER_INVALID));
+      }
+
+      // [Server] Validation (playerId + secret, no invalid rules) -> Errorfeedback
+      if (!playerExists(this._serverState, request.player)) {
+        reject(new Error(StatusCode.PLAYER_INVALID));
+      }
+
+      // [Server] Edit player name
+      registerExistingPlayer(this._serverState, request.player, socketId);
+
+      // [Server] Get all games
+      // [Server] and send response of type: registerPlayer
+      const response = {
+        status: StatusCode.OK,
+        timestamp: DateTime.now(),
+        player: request.player,
+        games: this._serverState.games,
+      };
+
+      resolve(response);
+    });
+  }
+
   editPlayerName(
     request: EditPlayerNameRequest
   ): Promise<EditPlayerNameResponse> {
@@ -112,6 +146,7 @@ export class Api {
 
       // [Server] Edit player name
       editPlayerName(this._serverState, request.player);
+
 
       // [Server] send response of type: registerPlayer
       const response = {

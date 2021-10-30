@@ -13,8 +13,10 @@
 <script lang="ts">
 import { computed, defineComponent } from "vue";
 import { useStore } from "vuex";
+import { PrivatePlayer } from "../shared/model/Player";
 import Header from "./components/header/Header.vue";
 import Title from "./components/Title.vue";
+import { Language } from "./i18n/i18n";
 import { key } from "./store/store";
 import GameCreateView from "./views/GameCreateView.vue";
 import GameSearchView from "./views/GameSearchView.vue";
@@ -30,6 +32,23 @@ export default defineComponent({
     Title,
     RulesView,
     GameCreateView,
+  },
+  mounted() {
+    const store = useStore(key);
+
+    function loadLocalStorage() {
+      const language = localStorage.getItem("language");
+      const playerCredentials = localStorage.getItem("player-credentials");
+      if (language !== null && language === "DE") {
+        store.commit("switchLanguage");
+      }
+      if (playerCredentials !== null) {
+        const player: PrivatePlayer = JSON.parse(playerCredentials);
+        store.commit("updatePlayer", player);
+        store.commit("registerExistingPlayer");
+      }
+    }
+    loadLocalStorage();
   },
   setup() {
     const store = useStore(key);

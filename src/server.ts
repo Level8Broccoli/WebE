@@ -10,6 +10,7 @@ import {
   EditPlayerNameRequest,
   JoinGameRequest,
   LeaveGameRequest,
+  RegisterExistingPlayerRequest,
   RegisterPlayerRequest,
   StartGameRequest,
 } from "./shared/model/RequestTypes";
@@ -42,6 +43,20 @@ io.on("connection", (socket) => {
           status: error.message,
         };
         socket.emit("registerPlayer", response);
+      });
+  });
+
+  socket.on("registerExistingPlayer", (request: RegisterExistingPlayerRequest) => {
+    api
+      .registerExistingPlayer(request, socket.id)
+      .then((response) => {
+        socket.emit("registerExistingPlayer", response);
+      })
+      .catch((error) => {
+        const response: ErrorResponse = {
+          status: error.message,
+        };
+        socket.emit("registerExistingPlayer", response);
       });
   });
 

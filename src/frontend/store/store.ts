@@ -71,8 +71,10 @@ export const store = createStore<State>({
             const currLanguage = state.language;
             if (currLanguage === Language.ENGLISH) {
                 state.language = Language.GERMAN;
+                localStorage.setItem("language", "DE");
             } else {
                 state.language = Language.ENGLISH;
+                localStorage.setItem("language", "EN");
             }
         },
         switchRules(state) {
@@ -89,6 +91,7 @@ export const store = createStore<State>({
         leaveGame() { /* handled by WebSocketPlugin */ },
         startGame() { /* handled by WebSocketPlugin */ },
         editPlayerName() { /* handled by WebSocketPlugin */ },
+        registerExistingPlayer() { /* handled by WebSocketPlugin */ },
         logout(state) {
             state.player = {
                 name: "",
