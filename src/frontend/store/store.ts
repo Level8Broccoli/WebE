@@ -120,7 +120,7 @@ export const store = createStore<State>({
         joinGame() { /* handled by WebSocketPlugin */ },
         sendChatMessage() { /* handled by WebSocketPlugin */ },
         // createGame() { /* handled by WebSocketPlugin */ },
-        // deleteGame() { /* handled by WebSocketPlugin */ },
+        deleteGame() { /* handled by WebSocketPlugin */ },
         // chat() { /* handled by WebSocketPlugin */ },
         // joinGame() { /* handled by WebSocketPlugin */ },
         leaveGame() { /* handled by WebSocketPlugin */ },

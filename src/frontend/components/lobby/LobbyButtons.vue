@@ -39,11 +39,16 @@ export default defineComponent({
       store.commit("leaveGame");
     };
 
+    const deleteGame = (e: Event) => {
+      store.commit("deleteGame");
+    };
+
     return {
       i18n,
       isCreator,
       gameIsValid,
       abort,
+      deleteGame,
     };
   },
 });

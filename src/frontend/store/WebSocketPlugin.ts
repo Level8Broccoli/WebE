@@ -1,7 +1,7 @@
 import { Socket } from "socket.io-client";
 import { Store } from "vuex";
-import { ChatRequest, CreateGameRequest, EditPlayerNameRequest, JoinGameRequest, LeaveGameRequest, RegisterExistingPlayerRequest, RegisterPlayerRequest } from "../../shared/model/RequestTypes";
-import { ChatResponse, CreateGameResponse, EditPlayerNameResponse, ErrorResponse, JoinGameResponse, LeaveGameResponse, RegisterExistingPlayerResponse, RegisterPlayerResponse, UpdateGameListResponse, UpdatePlayerListResponse } from "../../shared/model/ResponseTypes";
+import { ChatRequest, CreateGameRequest, DeleteGameRequest, EditPlayerNameRequest, JoinGameRequest, LeaveGameRequest, RegisterExistingPlayerRequest, RegisterPlayerRequest } from "../../shared/model/RequestTypes";
+import { ChatResponse, CreateGameResponse, DeleteGameResponse, EditPlayerNameResponse, ErrorResponse, JoinGameResponse, LeaveGameResponse, RegisterExistingPlayerResponse, RegisterPlayerResponse, UpdateGameListResponse, UpdatePlayerListResponse } from "../../shared/model/ResponseTypes";
 import { State } from "./store";
 
 export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
@@ -81,16 +81,16 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
         }
     });
 
-    // socket.on("deleteGame", (res: DeleteGameResponse | ErrorResponse) => {
-    //     if ("game" in res) {
-    //         if (store.state.activeGame.type === GameViewType.IN_LOBBY || store.state.activeGame.type === GameViewType.IN_PROGRESS && res.game.id === store.state.activeGame.data?.id) {
-    //             store.commit("updateGameInProgress", null);
-    //         }
-    //     } else {
-    //         console.error(res.status);
-    //         store.commit("addToErrorLog", res.status);
-    //     }
-    // });
+    socket.on("deleteGame", (res: DeleteGameResponse | ErrorResponse) => {
+        if ("gameId" in res) {
+            if (store.state.activeGameId === res.gameId) {
+                store.commit("abortGameInLobby");
+            }
+        } else {
+            console.error(res.status);
+            store.commit("addToErrorLog", res.status);
+        }
+    });
 
     socket.on("chat", (res: ChatResponse | ErrorResponse) => {
         if ("message" in res) {
@@ -161,18 +161,13 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
             socket.emit("createGame", payload);
         }
 
-        // if (mutation.type === "deleteGame") {
-        //     if (state.activeGame.type === GameViewType.NONE || state.activeGame.type === GameViewType.IN_CREATION) {
-        //         console.error("can't delete empty game");
-        //         store.commit("addToErrorLog", "can't delete empty game");
-        //         return;
-        //     }
-        //     const payload: DeleteGameRequest = {
-        //         player: state.player,
-        //         game: state.activeGame.data
-        //     };
-        //     socket.emit("deleteGame", payload);
-        // }
+        if (mutation.type === "deleteGame") {
+            const payload: DeleteGameRequest = {
+                player: state.player,
+                gameId: state.activeGameId
+            };
+            socket.emit("deleteGame", payload);
+        }
 
         if (mutation.type === "sendChatMessage") {
             const payload: ChatRequest = {
