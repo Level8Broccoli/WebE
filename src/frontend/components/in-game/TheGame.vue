@@ -1,17 +1,35 @@
 <template>
-  <main>{{ game }}</main>
+  <main>
+    <h2>Hände:</h2>
+    <ul>
+      <li v-for="(hand, i) in game.state.hands" :key="i">
+        {{ hand[0] }} <br />
+        {{ hand[1]}}
+      </li>
+    </ul>
+    <h2>Piles:</h2>
+    <ul>
+      <li v-for="(pile, i) in game.state.piles" :key="i">
+        {{ pile[0] }} <br />
+        {{ pile[1]}}
+      </li>
+    </ul>
+  </main>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "vue";
+import { computed, ComputedRef, defineComponent } from "vue";
 import { useStore } from "vuex";
+import { PublicGame } from "../../../shared/model/Game";
 import { key } from "../../store/store";
 
 export default defineComponent({
   name: "TheGame",
   setup() {
     const store = useStore(key);
-    const game = computed(() => store.getters.getActiveGame);
+    const game: ComputedRef<PublicGame> = computed(
+      () => store.getters.getActiveGame
+    );
     return { game };
   },
 });

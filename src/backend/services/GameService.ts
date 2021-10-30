@@ -241,10 +241,23 @@ export function getAllGames(
         newHands.set(key, hands.get(key)!.length);
       }
     });
+
+    const pileKeys = Array.from(piles.keys());
+    const newPiles = new Map<string, Card[] | number>();
+    pileKeys.forEach(key => {
+      // only show the cards on the requesting player
+      // alternativally show the number of cards on all the other players
+      if (key === DRAW_PILE) {
+        newPiles.set(key, piles.get(key)!.length);
+      } else {
+        newPiles.set(key, piles.get(key)!);
+      }
+    });
+
     const newPublicGameState: PublicGameTransferState = {
       activePlayerId,
       hands: toKeyValueArray(newHands),
-      piles: toKeyValueArray(piles)
+      piles: toKeyValueArray(newPiles)
     }
     const newPublicGame: PublicGameTransfer = { id, creatorId, players, config, status, chat, state: newPublicGameState };
     return newPublicGame;

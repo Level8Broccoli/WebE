@@ -79,12 +79,12 @@ export type GameState = {
 
 export type PublicGameState = {
   activePlayerId: string;
-  hands: Map<string, Card[] | Number>;
-  piles: Map<string, Card[]>; // Includes the drawPile and the player's discardPile
+  hands: Map<string, Card[] | number>;
+  piles: Map<string, Card[] | number>; // Includes the drawPile and the player's discardPile
 };
 
 export type PublicGameTransferState = {
   activePlayerId: string;
   hands: [string, Card[] | number][];
-  piles: [string, Card[]][]; // Includes the drawPile and the player's discardPile
+  piles: [string, Card[] | number][]; // Includes the drawPile and the player's discardPile
 };
