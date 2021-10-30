@@ -66,6 +66,8 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
         if ("game" in res) {
             if (res.game.creatorId === store.state.player.id) {
                 store.commit("activateGame", res.game);
+            } else {
+                store.commit("addGame", res.game);
             }
             store.commit("deleteGameInCreation")
         } else {

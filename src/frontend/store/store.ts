@@ -89,6 +89,9 @@ export const store = createStore<State>({
         updateGames(state, value: Game[]) {
             state.games = value;
         },
+        addGame(state, value: Game) {
+            state.games.push(value);
+        },
         switchLanguage(state) {
             const currLanguage = state.language;
             if (currLanguage === Language.ENGLISH) {
