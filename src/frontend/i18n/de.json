@@ -17,5 +17,8 @@
     "levelSystemLabel": "Level System",
     "joinGameButtonLabel": "Spiel beitreten",
     "creatorNameLabel": "Erstellt von",
-    "playerPlaceholder": "leerer Spielerplatz - lade deine Freunde ein, um mit dir zu spielen"
+    "playerPlaceholder": "leerer Spielerplatz - lade deine Freunde ein, um mit dir zu spielen",
+    "deleteGameButton": "Spiel löschen",
+    "startGameButton": "Spiel starten",
+    "gameNeedsAtLeastTwoPlayers": "Spiel benötigt mindestens 2 Spieler"
 }
