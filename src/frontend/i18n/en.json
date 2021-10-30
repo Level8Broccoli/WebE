@@ -7,5 +7,6 @@
     "closeRulesLabel": "Close Game Rules",
     "createNewGameButtonLabel": "Create New Game",
     "noGames": "No games available. Create one yourself.",
-    "abortButton": "Cancel"
+    "abortButton": "Cancel",
+    "pdfErrorMessage": "Error while loading rules. Please inform the administrator."
 }
