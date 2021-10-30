@@ -54,7 +54,7 @@ export type LeaveGameResponse = {
 
 export type ChatResponse = {
   timestamp: DateTime;
-  player: PublicPlayer;
+  playerId: string;
   message: string;
 };
 
