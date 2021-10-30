@@ -1,37 +1,43 @@
 <template>
   <form>
-    <label for="maxPlayerCount">{{ maxPlayerCountLabel }}:</label>
-    <input
-      type="number"
-      :value="maxPlayerCount"
-      @input="updateMaxPlayerCount"
-      name="maxPlayerCount"
-      id="maxPlayerCount"
-    />
-    <label for="levelCount">{{ levelCountLabel }}:</label>
-    <input
-      type="number"
-      :value="levelCount"
-      @input="updateLevelCount"
-      name="levelCount"
-      id="levelCount"
-    />
-    <label for="levelSystemNormal">{{ levelSystemNormalLabel }}:</label>
-    <input
-      type="radio"
-      :value="levelSystem"
-      @input="updateLevelSystem"
-      name="levelSystemNormal"
-      id="levelSystemNormal"
-    />
-    <label for="levelSystemRandom">{{ levelSystemRandomLabel }}:</label>
-    <input
-      type="radio"
-      :value="levelSystem"
-      @input="updateLevelSystem"
-      name="levelSystemRandom"
-      id="levelSystemRandom"
-    />
+    <div>
+      <label for="maxPlayerCount">{{ maxPlayerCountLabel }}:</label>
+      <input
+        type="number"
+        :value="maxPlayerCount"
+        @input="updateMaxPlayerCount"
+        min="1"
+        max="6"
+        name="maxPlayerCount"
+        id="maxPlayerCount"
+      />
+    </div>
+    <div>
+      <label for="levelCount">{{ levelCountLabel }}:</label>
+      <input
+        type="number"
+        :value="levelCount"
+        @input="updateLevelCount"
+        min="2"
+        max="8"
+        name="levelCount"
+        id="levelCount"
+      />
+    </div>
+    <div>
+      <button
+        @click.prevent="changeToLevelSystemNormal"
+        :class="levelSystem === 'NORMAL' ? 'active' : 'not-active'"
+      >
+        {{ levelSystemNormalLabel }}
+      </button>
+      <button
+        @click.prevent="changeToLevelSystemRandom"
+        :class="levelSystem === 'RANDOM' ? 'active' : 'not-active'"
+      >
+        {{ levelSystemRandomLabel }}
+      </button>
+    </div>
     <div class="buttons">
       <button @click.prevent="abort" class="secondary">
         {{ abortButton }}
@@ -61,8 +67,33 @@ export default defineComponent({
     const createGameButton = computed(
       () => i18n.value.createNewGameButtonLabel
     );
-    const abort = false;
+    const abort = (e: Event) => {
+      store.commit("switchCreateGameMode");
+    };
     const abortButton = computed(() => i18n.value.abortButton);
+
+    const maxPlayerCountLabel = computed(() => i18n.value.maxPlayerCountLabel);
+    const levelCountLabel = computed(() => i18n.value.levelCountLabel);
+    const levelSystemNormalLabel = computed(
+      () => i18n.value.levelSystemNormalLabel
+    );
+    const levelSystemRandomLabel = computed(
+      () => i18n.value.levelSystemRandomLabel
+    );
+
+    const changeToLevelSystemNormal = (e: Event) => {
+      levelSystem.value = LevelSystem.NORMAL;
+    };
+    const changeToLevelSystemRandom = (e: Event) => {
+      levelSystem.value = LevelSystem.RANDOM;
+    };
+
+    const updateMaxPlayerCount = (e: any) => {
+      maxPlayerCount.value = e.target.value;
+    };
+    const updateLevelCount = (e: any) => {
+      levelCount.value = e.target.value;
+    };
 
     return {
       maxPlayerCount,
@@ -72,6 +103,14 @@ export default defineComponent({
       createGameButton,
       abort,
       abortButton,
+      maxPlayerCountLabel,
+      levelCountLabel,
+      levelSystemNormalLabel,
+      levelSystemRandomLabel,
+      changeToLevelSystemNormal,
+      changeToLevelSystemRandom,
+      updateMaxPlayerCount,
+      updateLevelCount,
     };
   },
 });
@@ -86,6 +125,19 @@ export default defineComponent({
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-content: space-between;
+  gap: 1rem;
+}
+.active {
+  background-color: #ff6464;
+}
+.not-active {
+  border-color: #ff6464;
+  background-color: transparent;
+}
+div {
+  margin-bottom: 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 1rem;
 }
 </style>

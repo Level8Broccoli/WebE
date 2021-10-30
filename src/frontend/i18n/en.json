@@ -8,5 +8,9 @@
     "createNewGameButtonLabel": "Create New Game",
     "noGames": "No games available. Create one yourself.",
     "abortButton": "Cancel",
-    "pdfErrorMessage": "Error while loading rules. Please inform the administrator."
+    "pdfErrorMessage": "Error while loading rules. Please inform the administrator.",
+    "maxPlayerCountLabel": "Maximum Player Count",
+    "levelCountLabel": "Number of Levels",
+    "levelSystemNormalLabel": "Standard Game",
+    "levelSystemRandomLabel": "Random Levels"
 }

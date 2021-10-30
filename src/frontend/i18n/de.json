@@ -8,5 +8,9 @@
     "createNewGameButtonLabel": "Erstelle neues Spiel",
     "noGames": "Keine Spiele verfügbar. Erstelle dein eigenes Spiel.",
     "abortButton": "Abbrechen",
-    "pdfErrorMessage": "Während dem Laden der Regeln ist ein Fehler aufgetreten. Bitte wende dich an den Administrator."
+    "pdfErrorMessage": "Während dem Laden der Regeln ist ein Fehler aufgetreten. Bitte wende dich an den Administrator.",
+    "maxPlayerCountLabel": "Maximale Anzahl Spieler",
+    "levelCountLabel": "Anzahl Levels",
+    "levelSystemNormalLabel": "Standard Spiel",
+    "levelSystemRandomLabel": "Zufällige Levels"
 }
