@@ -126,7 +126,7 @@ export class Api {
         timestamp: DateTime.now(),
         player: request.player,
         games: this._serverState.games,
-        activeGame: getActiveGame(this._serverState.games, request.player.id),
+        activeGameId: getActiveGame(this._serverState.games, request.player.id)?.id || "",
       };
 
       resolve(response);

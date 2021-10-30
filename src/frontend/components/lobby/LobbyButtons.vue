@@ -29,13 +29,11 @@ export default defineComponent({
   setup() {
     const store = useStore(key);
     const i18n = computed(() => store.getters.i18n);
-    const game = computed(() => store.state.activeGame);
+    const game = computed(() => store.getters.getActiveGame);
     const isCreator = computed(
       () => game.value.creatorId === store.state.player.id
     );
-    const gameIsValid = computed(
-      () => store.state.activeGame.players.length > 1
-    );
+    const gameIsValid = computed(() => game.value.players.length > 1);
 
     const abort = (e: Event) => {
       store.commit("leaveGame");

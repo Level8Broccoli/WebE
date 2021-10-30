@@ -25,7 +25,7 @@ export default defineComponent({
   name: "GameLobbyView",
   setup() {
     const store = useStore(key);
-    const game = computed(() => store.state.activeGame);
+    const game = computed(() => store.getters.getActiveGame);
     return { game };
   },
   components: {

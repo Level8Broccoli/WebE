@@ -21,7 +21,7 @@ export default defineComponent({
   setup() {
     const store = useStore(key);
     const i18n = computed(() => store.getters.i18n);
-    const game = computed(() => store.state.activeGame);
+    const game = computed(() => store.getters.getActiveGame);
     const messageList = computed(() => game.value.chat.reverse());
     return {
       i18n,

@@ -15,7 +15,7 @@ export interface State {
     playerList: PublicPlayer[],
     games: Game[],
     gameInCreation?: Config,
-    activeGame?: Game,
+    activeGameId: string,
     errorLog: String[]
 }
 
@@ -36,14 +36,24 @@ export const store = createStore<State>({
         playerList: [],
         games: [],
         gameInCreation: undefined,
-        activeGame: undefined,
+        activeGameId: "",
         errorLog: [],
     },
     getters: {
         i18n: (state) => {
             return i18n(state.language);
         },
-        view: (state) => {
+        getActiveGame: (state) => {
+            const activeGame = state.games.find(g => g.id === state.activeGameId);
+            if (typeof activeGame === "undefined") {
+                throw new Error("Active Game ID is wrong!");
+            }
+            return activeGame;
+        },
+        view: (state, getters) => {
+            const activeGame = state.activeGameId.length > 0
+                && getters.getActiveGame as Game;
+
             if (state.showRules) {
                 return "rules";
             }
@@ -53,10 +63,10 @@ export const store = createStore<State>({
             if (typeof state.gameInCreation !== "undefined") {
                 return "game-in-creation";
             }
-            if (typeof state.activeGame !== "undefined" && state.activeGame.status === GameStatus.IN_LOBBY) {
+            if (activeGame && activeGame.status === GameStatus.IN_LOBBY) {
                 return "game-in-lobby"
             }
-            if (typeof state.activeGame !== "undefined" && state.activeGame.status === GameStatus.IN_PROGRESS) {
+            if (activeGame && activeGame.status === GameStatus.IN_PROGRESS) {
                 return "game-in-progress"
             }
             return "game-search";
@@ -123,7 +133,7 @@ export const store = createStore<State>({
                 secret: "",
                 id: "",
             };
-            state.activeGame = undefined;
+            state.activeGameId = "";
             state.gameInCreation = undefined;
             state.games = [];
         },
@@ -144,12 +154,12 @@ export const store = createStore<State>({
             state.gameInCreation = undefined;
         },
         abortGameInLobby(state) {
-            state.activeGame = undefined;
+            state.activeGameId = "";
         },
-        activateGame(state, payload: Game) {
-            state.activeGame = payload;
+        activateGame(state, payload: string) {
+            state.activeGameId = payload;
         },
-        createThirdPartyGame(state, payload) {
+        createThirdPartyGame(state, payload: Game) {
             state.games.push(payload);
         },
         updateConnection(state, value: Boolean) {
@@ -159,7 +169,8 @@ export const store = createStore<State>({
             state.errorLog.unshift(value);
         },
         addChatMessage(state, value: ChatResponse) {
-            state.activeGame?.chat.push(value);
+            const activeGame = state.games.find(g => g.id === state.activeGameId);
+            activeGame?.chat.push(value);
         }
     },
     plugins: [WebSocketPlugin(socket)]

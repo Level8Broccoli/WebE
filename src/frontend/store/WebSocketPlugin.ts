@@ -1,7 +1,7 @@
 import { Socket } from "socket.io-client";
 import { Store } from "vuex";
 import { ChatRequest, CreateGameRequest, EditPlayerNameRequest, JoinGameRequest, LeaveGameRequest, RegisterExistingPlayerRequest, RegisterPlayerRequest } from "../../shared/model/RequestTypes";
-import { ChatResponse, CreateGameResponse, EditPlayerNameResponse, ErrorResponse, JoinGameResponse, LeaveGameResponse, RegisterExistingPlayerResponse, RegisterPlayerResponse, UpdatePlayerListResponse } from "../../shared/model/ResponseTypes";
+import { ChatResponse, CreateGameResponse, EditPlayerNameResponse, ErrorResponse, JoinGameResponse, LeaveGameResponse, RegisterExistingPlayerResponse, RegisterPlayerResponse, UpdateGameListResponse, UpdatePlayerListResponse } from "../../shared/model/ResponseTypes";
 import { State } from "./store";
 
 export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
@@ -35,16 +35,21 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
         }
     })
 
+    socket.on("updateGameList", (res: UpdateGameListResponse | ErrorResponse) => {
+        if ("gameList" in res) {
+            store.commit("updateGames", res.gameList);
+        } else {
+            console.error(res.status);
+            store.commit("addToErrorLog", res.status);
+        }
+    })
+
     socket.on("registerExistingPlayer", (res: RegisterExistingPlayerResponse | ErrorResponse) => {
         if ("player" in res) {
             store.commit("updatePlayer", res.player);
             store.commit("updateGames", res.games);
+            store.commit("activateGame", res.activeGameId);
             localStorage.setItem('player-credentials', JSON.stringify(res.player));
-
-            if (typeof res.activeGame !== undefined) {
-                store.commit("activateGame", res.activeGame);
-            }
-
         } else {
             console.error(res.status);
             store.commit("addToErrorLog", res.status);
@@ -65,7 +70,7 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
     socket.on("createGame", (res: CreateGameResponse | ErrorResponse) => {
         if ("game" in res) {
             if (res.game.creatorId === store.state.player.id) {
-                store.commit("activateGame", res.game);
+                store.commit("activateGame", res.game.id);
             } else {
                 store.commit("addGame", res.game);
             }
@@ -98,7 +103,9 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
 
     socket.on("joinGame", (res: JoinGameResponse | ErrorResponse) => {
         if ("game" in res) {
-            store.commit("activateGame", res.game);
+            if (res.player.id === store.state.player.id) {
+                store.commit("activateGame", res.game.id);
+            }
         } else {
             console.error(res.status);
             store.commit("addToErrorLog", res.status);
@@ -170,7 +177,7 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
         if (mutation.type === "sendChatMessage") {
             const payload: ChatRequest = {
                 player: state.player,
-                gameId: state.activeGame!.id,
+                gameId: state.activeGameId,
                 message: mutation.payload
             };
             socket.emit("chat", payload);
@@ -187,7 +194,7 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
         if (mutation.type === "leaveGame") {
             const payload: LeaveGameRequest = {
                 player: state.player,
-                gameId: state.activeGame!.id,
+                gameId: state.activeGameId,
             };
             socket.emit("leaveGame", payload);
         }

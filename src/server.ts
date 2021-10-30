@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
 import { Server } from "socket.io";
 import { Api } from "./backend/api/Api";
-import { getAllRegisteredPlayers } from "./backend/services/ServerStateService";
+import { getAllGames, getAllRegisteredPlayers } from "./backend/services/ServerStateService";
 import {
   ChatRequest,
   CreateGameRequest,
@@ -55,8 +55,8 @@ io.on("connection", (socket) => {
       .then((response) => {
         socket.emit("registerExistingPlayer", response);
         io.emit("updatePlayerList", { playerList: getAllRegisteredPlayers(serverState) });
-        if (typeof response.activeGame !== "undefined") {
-          socket.join(response.activeGame.id);
+        if (response.activeGameId.length > 0) {
+          socket.join(response.activeGameId);
         }
         console.log(`>>> Registered Existing Player ${response.player.id}`);
       })
@@ -89,6 +89,7 @@ io.on("connection", (socket) => {
       .then((response) => {
         socket.join(response.game.id);
         io.emit("createGame", response);
+        io.emit("updateGameList", { gameList: getAllGames(serverState) });
       })
       .catch((error) => {
         const response: ErrorResponse = {
@@ -104,6 +105,7 @@ io.on("connection", (socket) => {
       .then((response) => {
         socket.leave(response.gameId);
         io.emit("deleteGame", response);
+        io.emit("updateGameList", { gameList: getAllGames(serverState) });
       })
       .catch((error) => {
         const response: ErrorResponse = {
@@ -119,6 +121,7 @@ io.on("connection", (socket) => {
       .then((response) => {
         socket.join(response.game.id);
         io.emit("joinGame", response);
+        io.emit("updateGameList", { gameList: getAllGames(serverState) });
       })
       .catch((error) => {
         const response: ErrorResponse = {
@@ -134,6 +137,7 @@ io.on("connection", (socket) => {
       .then((response) => {
         socket.leave(response.gameId);
         io.emit("leaveGame", response);
+        io.emit("updateGameList", { gameList: getAllGames(serverState) });
       })
       .catch((error) => {
         const response: ErrorResponse = {

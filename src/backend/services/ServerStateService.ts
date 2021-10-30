@@ -159,3 +159,9 @@ export function getAllRegisteredPlayers(
     return { id, name }
   });
 }
+
+export function getAllGames(
+  serverState: ServerState
+): Game[] {
+  return serverState.games;
+}

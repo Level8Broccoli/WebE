@@ -22,7 +22,7 @@ export default defineComponent({
   components: { PlayerListEntry },
   setup() {
     const store = useStore(key);
-    const game = computed(() => store.state.activeGame);
+    const game = computed(() => store.getters.getActiveGame);
     const playerCount = computed(() => game.value.config.maxPlayerCount);
     const playerList = computed(() => game.value.players);
     const creatorId = computed(() => game.value.creatorId);
