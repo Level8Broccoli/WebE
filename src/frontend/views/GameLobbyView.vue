@@ -12,11 +12,9 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "vue";
-import { useStore } from "vuex";
-import { key } from "../store/store";
+import { defineComponent } from "vue";
 import GameMeta from "../components/games/GameMeta.vue";
-import PlayerList from "../components/games/PlayerList.vue";
+import PlayerList from "../components/players/PlayerList.vue";
 
 export default defineComponent({
   name: "GameLobbyView",

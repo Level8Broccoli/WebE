@@ -16,5 +16,6 @@
     "playerCountLabel": "Player Count",
     "levelSystemLabel": "Level System",
     "joinGameButtonLabel": "Join Game",
-    "creatorNameLabel": "Created by"
+    "creatorNameLabel": "Created by",
+    "playerPlaceholder": "empty player slot - invite your friends to play with you"
 }
