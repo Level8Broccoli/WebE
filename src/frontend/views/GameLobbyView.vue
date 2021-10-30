@@ -2,9 +2,8 @@
   <section>
     <div class="left">
       <GameListEntry :game="game" :joinButton="false" />
-      <hr />
+      <div><hr /></div>
       <PlayerList />
-      <hr />
       <LobbyButtons />
     </div>
     <div class="right">Chat</div>
@@ -42,6 +41,6 @@ section {
 
 .left {
   display: grid;
-  grid-template-rows: max-content max-content 1fr max-content max-content;
+  grid-template-rows: max-content max-content 1fr max-content;
 }
 </style>

@@ -31,7 +31,7 @@ export default defineComponent({
   name: "GameListEntry",
   props: {
     game: Object as PropType<Game>,
-    joinButton: Boolean,
+    joinButton: { type: Boolean, default: true },
   },
   setup(props) {
     const store = useStore(key);
