@@ -1,7 +1,7 @@
 <template>
   <section>
     <div class="left">
-      <GameMeta />
+      <GameListEntry :game="game" :joinButton="false" />
       <hr />
       <PlayerList />
       <hr />
@@ -12,15 +12,22 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import GameMeta from "../components/lobby/GameMeta.vue";
-import PlayerList from "../components/players/PlayerList.vue";
+import { computed, defineComponent } from "vue";
+import { useStore } from "vuex";
+import { key } from "../store/store";
+import GameListEntry from "../components/games/GameListEntry.vue";
 import LobbyButtons from "../components/lobby/LobbyButtons.vue";
+import PlayerList from "../components/players/PlayerList.vue";
 
 export default defineComponent({
   name: "GameLobbyView",
+  setup() {
+    const store = useStore(key);
+    const game = computed(() => store.state.activeGame);
+    return { game };
+  },
   components: {
-    GameMeta,
+    GameListEntry,
     PlayerList,
     LobbyButtons,
   },

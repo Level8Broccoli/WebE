@@ -1,6 +1,6 @@
 
 <template>
-  <div class="entry">
+  <div :class="joinButton ? 'entry' : 'entry no-join-button'">
     <div>
       {{ i18n.creatorNameLabel }}: <span>{{ creatorName }}</span>
     </div>
@@ -14,7 +14,7 @@
       {{ i18n.playerCountLabel }}:
       <span>{{ game.players.length }} / {{ game.config.maxPlayerCount }}</span>
     </div>
-    <button>
+    <button v-if="joinButton">
       {{ i18n.joinGameButtonLabel }}
       <i class="far fa-long-arrow-right icon-right"></i>
     </button>
@@ -31,6 +31,7 @@ export default defineComponent({
   name: "GameListEntry",
   props: {
     game: Object as PropType<Game>,
+    joinButton: Boolean,
   },
   setup(props) {
     const store = useStore(key);
@@ -43,6 +44,7 @@ export default defineComponent({
     return {
       i18n,
       creatorName,
+      joinButton: props.joinButton,
     };
   },
 });
@@ -64,5 +66,10 @@ export default defineComponent({
 span {
   font-weight: 900;
   display: block;
+}
+
+.no-join-button {
+  background-color: #ffffff;
+  grid-template-columns: 2fr repeat(3, 1fr);
 }
 </style>
