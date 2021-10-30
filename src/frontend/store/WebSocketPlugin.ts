@@ -8,12 +8,10 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
 
     socket.on("connect", () => {
         store.commit("updateConnection", true);
-        console.log("connected", socket.id);
     });
 
     socket.on("disconnect", (reason) => {
         store.commit("updateConnection", false);
-        console.log("disconnected", reason);
         store.commit("addToErrorLog", reason);
     });
 
@@ -42,6 +40,11 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
             store.commit("updatePlayer", res.player);
             store.commit("updateGames", res.games);
             localStorage.setItem('player-credentials', JSON.stringify(res.player));
+
+            if (typeof res.activeGame !== undefined) {
+                store.commit("activateGame", res.activeGame);
+            }
+
         } else {
             console.error(res.status);
             store.commit("addToErrorLog", res.status);
@@ -62,7 +65,7 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
     socket.on("createGame", (res: CreateGameResponse | ErrorResponse) => {
         if ("game" in res) {
             if (res.game.creatorId === store.state.player.id) {
-                store.commit("activateMyGame", res.game);
+                store.commit("activateGame", res.game);
             }
             store.commit("deleteGameInCreation")
         } else {
@@ -115,7 +118,6 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
 
     // socket.on("startGame", (res: StartGameResponse | ErrorResponse) => {
     //     if ("hand" in res) {
-    //         console.log("incoming: startGame", res);
     //     } else {
     //         console.error(res.status);
     //         store.commit("addToErrorLog", res.status);
@@ -124,7 +126,6 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
 
     // socket.on("startMove", (res: StartMoveResponse | ErrorResponse) => {
     //     if ("timestamp" in res) {
-    //         console.log("incoming: startMove", res);
     //     } else {
     //         console.error(res.status);
     //         store.commit("addToErrorLog", res.status);

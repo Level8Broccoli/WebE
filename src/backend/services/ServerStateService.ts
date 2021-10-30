@@ -148,6 +148,10 @@ export function activePlayerInGame(
   return serverState.games.find((g) => g.id === gameId)!.state!.activePlayerId;
 }
 
+export function getActiveGame(games: Game[], playerId: string): undefined | Game {
+  return games.find(g => g.players.includes(playerId));
+}
+
 export function getAllRegisteredPlayers(
   serverState: ServerState
 ): PublicPlayer[] {

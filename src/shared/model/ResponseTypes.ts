@@ -15,6 +15,7 @@ export type RegisterExistingPlayerResponse = {
   timestamp: DateTime;
   player: PrivatePlayer;
   games: Game[];
+  activeGame?: Game;
 };
 
 export type EditPlayerNameResponse = {

@@ -137,7 +137,7 @@ export const store = createStore<State>({
         abortGameInCreation(state) {
             state.gameInCreation = undefined;
         },
-        activateMyGame(state, payload: Game) {
+        activateGame(state, payload: Game) {
             state.activeGame = payload;
         },
         createThirdPartyGame(state, payload) {

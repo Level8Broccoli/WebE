@@ -46,6 +46,7 @@ import {
   playerToSocketId,
   activePlayerInGame,
   registerExistingPlayer,
+  getActiveGame,
 } from "../services/ServerStateService";
 import {
   addCardToHand,
@@ -124,6 +125,7 @@ export class Api {
         timestamp: DateTime.now(),
         player: request.player,
         games: this._serverState.games,
+        activeGame: getActiveGame(this._serverState.games, request.player.id),
       };
 
       resolve(response);
