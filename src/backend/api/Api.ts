@@ -56,7 +56,7 @@ import {
   isCardOwner,
   pileExists,
 } from "../services/GameService";
-import { Card, LevelSystem } from "../../shared/model/Game";
+import { Card, GameStatus, LevelSystem } from "../../shared/model/Game";
 import { toKeyValueArray } from "../../shared/helper/HelperService";
 
 export class Api {
@@ -197,6 +197,8 @@ export class Api {
         config: request.config,
         players: [request.player.id],
         chat: [],
+        status: GameStatus.IN_LOBBY,
+        state: initGameState(),
       };
 
       createGame(this._serverState, game);
@@ -353,25 +355,25 @@ export class Api {
       }
 
       // [Server] Create initial game state
-      const state = initGameState(this._serverState, request.gameId);
+      // const state = initGameState(this._serverState, request.gameId);
 
-      const piles = new Map<string, Card>(); // Empty because no discardPile is set
+      // const piles = new Map<string, Card>(); // Empty because no discardPile is set
 
-      // Create response messages for all players
-      const responseArray = [];
-      for (const [playerId, hand] of state.hands) {
-        const response = {
-          timestamp: DateTime.now(),
-          player: {
-            id: playerId,
-          },
-          piles: toKeyValueArray(piles),
-          hand: hand,
-        };
+      // // Create response messages for all players
+      // const responseArray = [];
+      // for (const [playerId, hand] of state.hands) {
+      //   const response = {
+      //     timestamp: DateTime.now(),
+      //     player: {
+      //       id: playerId,
+      //     },
+      //     piles: toKeyValueArray(piles),
+      //     hand: hand,
+      //   };
 
-        responseArray.push(response);
-      }
-      resolve(responseArray);
+      //   responseArray.push(response);
+      // }
+      // resolve(responseArray);
     });
   }
 

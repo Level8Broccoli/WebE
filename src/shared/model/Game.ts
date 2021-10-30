@@ -1,5 +1,7 @@
 import { ChatMessage } from "./Chat";
 
+export enum GameStatus { IN_LOBBY, IN_PROGRESS, FINISHED };
+
 export enum GameViewType { NONE, IN_CREATION, IN_LOBBY, IN_PROGRESS };
 
 type NoGameSelectedView = {
@@ -33,8 +35,9 @@ export type Game = {
   creatorId: string;
   players: string[];
   config: Config;
-  chat?: ChatMessage[];
-  state?: State;
+  status: GameStatus;
+  chat: ChatMessage[];
+  state: GameState;
 };
 
 export type Config = {
@@ -76,7 +79,7 @@ export enum CardType {
   SKIP = "SKIP",
 }
 
-export type State = {
+export type GameState = {
   activePlayerId: string;
   hands: Map<string, Card[]>;
   piles: Map<string, Card[]>; // Includes the drawPile and the player's discardPile

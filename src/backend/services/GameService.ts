@@ -4,7 +4,7 @@ import {
   Color,
   NumberCard,
   SpecialCard,
-  State
+  GameState
 } from "../../shared/model/Game";
 import { PrivatePlayer } from "../../shared/model/Player";
 import { ServerState } from "../../shared/model/ServerState";
@@ -57,30 +57,16 @@ function createHand(cardset: Card[]): Card[] {
   return cards;
 }
 
-export function initGameState(
-  serverState: ServerState,
-  gameId: string
-): State {
-  const g = serverState.games.find((g) => g.id === gameId);
-
-  if (g !== undefined) {
-    // Init state with a full randomly sorted draw pile and the last joined person as beginner
-    g.state = {
-      activePlayerId: g.players[g.players.length - 1],
-      hands: new Map(),
-      piles: new Map().set(
-        "drawPile",
-        initialCardSet().sort((a, b) => 0.5 - Math.random())
-      ),
-    };
-
-    // Create for every player a hand with 10 cards from the draw pile
-    for (const playerId of g.players) {
-      g.state.hands.set(playerId, createHand(g.state.piles.get("drawPile")!));
-    }
-  }
-
-  return g!.state!;
+export function initGameState(): GameState {
+  // Init state with a full randomly sorted draw pile
+  return {
+    activePlayerId: "",
+    hands: new Map(),
+    piles: new Map().set(
+      "drawPile",
+      initialCardSet().sort((a, b) => 0.5 - Math.random())
+    ),
+  };
 }
 
 export function drawCard(
@@ -126,7 +112,7 @@ export function addCardToHand(
 export function getGameState(
   serverState: ServerState,
   gameId: string
-): State {
+): GameState {
   return serverState.games.find((g) => g.id === gameId)!.state!;
 }
 
