@@ -42,12 +42,12 @@
     </div>
     <div class="buttons bottom">
       <button @click.prevent="abort" class="secondary">
-        <i class="far fa-long-arrow-left"></i>
+        <i class="far fa-long-arrow-left icon-left"></i>
         {{ abortButton }}
       </button>
       <button @click.prevent="createGame">
         {{ createGameButton }}
-        <i class="far fa-long-arrow-right"></i>
+        <i class="far fa-long-arrow-right icon-right"></i>
       </button>
     </div>
   </form>

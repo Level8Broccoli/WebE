@@ -3,7 +3,7 @@
     "labelChoosePlayerName": "Choose your player name",
     "buttonRegisterPlayerName": "Register",
     "buttonUpdatePlayerName": "Update",
-    "showRulesLabel": "Game Rules",
+    "rulesMenuLabel": "Game Rules",
     "closeRulesLabel": "Close Game Rules",
     "createNewGameButtonLabel": "Create New Game",
     "noGames": "No games available. Create one yourself.",

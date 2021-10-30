@@ -1,7 +1,7 @@
 <template>
   <button @click.prevent="createNewGame" class="createNewGame">
     {{ createNewGameButtonLabel }}
-    <i class="far fa-long-arrow-right"></i>
+    <i class="far fa-long-arrow-right icon-right"></i>
   </button>
 </template>
 

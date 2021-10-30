@@ -142,7 +142,7 @@ button {
   background-color: #5432d3;
   border-color: transparent;
   color: #fff;
-  border-radius: .375em;
+  border-radius: 0.375em;
 }
 
 input,
@@ -153,4 +153,12 @@ textarea {
   border-radius: 0.375em;
   color: #363636;
   padding: 0 1rem;
+}
+
+button .icon-left {
+  margin-right: .5rem;
+}
+
+button .icon-right {
+  margin-left: .5rem;
 }
