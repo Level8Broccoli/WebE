@@ -2,9 +2,12 @@
   <section>
     <div class="left">
       <GameMeta />
+      <hr />
+      Player
+      <hr />
+       Buttons
     </div>
-    <div class="right"></div>
-    Player - Chat - Buttons
+    <div class="right">Chat</div>
   </section>
 </template>
 
@@ -29,7 +32,7 @@ export default defineComponent({
 <style scoped>
 section {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 4fr 2fr;
   gap: 1rem;
 }
 </style>
