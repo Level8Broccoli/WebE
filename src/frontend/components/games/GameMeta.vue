@@ -16,7 +16,7 @@ export default defineComponent({
   setup() {
     const store = useStore(key);
     const i18n = computed(() => store.getters.i18n);
-    const gameConfig = computed(() => store.getters.getGameConfig);
+    const gameConfig = computed(() => store.state.activeGame.config);
 
     return {
       gameConfig,

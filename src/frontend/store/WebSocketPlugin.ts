@@ -1,8 +1,7 @@
 import { Socket } from "socket.io-client";
 import { Store } from "vuex";
-import { GameViewType } from "../../shared/model/Game";
-import { ChatRequest, CreateGameRequest, DeleteGameRequest, EditPlayerNameRequest, JoinGameRequest, LeaveGameRequest, RegisterExistingPlayerRequest, RegisterPlayerRequest, StartGameRequest } from "../../shared/model/RequestTypes";
-import { ChatResponse, CreateGameResponse, DeleteGameResponse, EditPlayerNameResponse, ErrorResponse, JoinGameResponse, LeaveGameResponse, RegisterExistingPlayerResponse, RegisterPlayerResponse, StartGameResponse, StartMoveResponse, UpdatePlayerListResponse } from "../../shared/model/ResponseTypes";
+import { CreateGameRequest, EditPlayerNameRequest, RegisterExistingPlayerRequest, RegisterPlayerRequest } from "../../shared/model/RequestTypes";
+import { CreateGameResponse, EditPlayerNameResponse, ErrorResponse, RegisterExistingPlayerResponse, RegisterPlayerResponse, UpdatePlayerListResponse } from "../../shared/model/ResponseTypes";
 import { State } from "./store";
 
 export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
@@ -63,75 +62,74 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
     socket.on("createGame", (res: CreateGameResponse | ErrorResponse) => {
         if ("game" in res) {
             if (res.game.creatorId === store.state.player.id) {
-                store.commit("createGameInLobby", res.game);
-            } else {
-                store.commit("createThirdPartyGame", res.game);
+                store.commit("activateMyGame", res.game);
             }
+            store.commit("deleteGameInCreation")
         } else {
             console.error(res.status);
             store.commit("addToErrorLog", res.status);
         }
     });
 
-    socket.on("deleteGame", (res: DeleteGameResponse | ErrorResponse) => {
-        if ("game" in res) {
-            if (store.state.activeGame.type === GameViewType.IN_LOBBY || store.state.activeGame.type === GameViewType.IN_PROGRESS && res.game.id === store.state.activeGame.data?.id) {
-                store.commit("updateGameInProgress", null);
-            }
-        } else {
-            console.error(res.status);
-            store.commit("addToErrorLog", res.status);
-        }
-    });
+    // socket.on("deleteGame", (res: DeleteGameResponse | ErrorResponse) => {
+    //     if ("game" in res) {
+    //         if (store.state.activeGame.type === GameViewType.IN_LOBBY || store.state.activeGame.type === GameViewType.IN_PROGRESS && res.game.id === store.state.activeGame.data?.id) {
+    //             store.commit("updateGameInProgress", null);
+    //         }
+    //     } else {
+    //         console.error(res.status);
+    //         store.commit("addToErrorLog", res.status);
+    //     }
+    // });
 
-    socket.on("chat", (res: ChatResponse | ErrorResponse) => {
-        if ("message" in res) {
-            store.commit("addChatMessage", res);
-        } else {
-            console.error(res.status);
-            store.commit("addToErrorLog", res.status);
-        }
-    });
+    // socket.on("chat", (res: ChatResponse | ErrorResponse) => {
+    //     if ("message" in res) {
+    //         store.commit("addChatMessage", res);
+    //     } else {
+    //         console.error(res.status);
+    //         store.commit("addToErrorLog", res.status);
+    //     }
+    // });
 
-    socket.on("joinGame", (res: JoinGameResponse | ErrorResponse) => {
-        if ("game" in res) {
-            if (res.player.id === store.state.player.id) {
-                store.commit("createGameInLobby", res.game);
-            }
-        } else {
-            console.error(res.status);
-            store.commit("addToErrorLog", res.status);
-        }
-    });
+    // socket.on("joinGame", (res: JoinGameResponse | ErrorResponse) => {
+    //     if ("game" in res) {
+    //         if (res.player.id === store.state.player.id) {
+    //             store.commit("createGameInLobby", res.game);
+    //         }
+    //     } else {
+    //         console.error(res.status);
+    //         store.commit("addToErrorLog", res.status);
+    //     }
+    // });
 
-    socket.on("leaveGame", (res: LeaveGameResponse | ErrorResponse) => {
-        if ("game" in res) {
-            if (res.player.id === store.state.player.id) {
-                store.commit("updateGameInProgress", null);
-            }
-        } else {
-            console.error(res.status);
-            store.commit("addToErrorLog", res.status);
-        }
-    });
+    // socket.on("leaveGame", (res: LeaveGameResponse | ErrorResponse) => {
+    //     if ("game" in res) {
+    //         if (res.player.id === store.state.player.id) {
+    //             store.commit("updateGameInProgress", null);
+    //         }
+    //     } else {
+    //         console.error(res.status);
+    //         store.commit("addToErrorLog", res.status);
+    //     }
+    // });
 
-    socket.on("startGame", (res: StartGameResponse | ErrorResponse) => {
-        if ("hand" in res) {
-            console.log("incoming: startGame", res);
-        } else {
-            console.error(res.status);
-            store.commit("addToErrorLog", res.status);
-        }
-    });
+    // socket.on("startGame", (res: StartGameResponse | ErrorResponse) => {
+    //     if ("hand" in res) {
+    //         console.log("incoming: startGame", res);
+    //     } else {
+    //         console.error(res.status);
+    //         store.commit("addToErrorLog", res.status);
+    //     }
+    // });
 
-    socket.on("startMove", (res: StartMoveResponse | ErrorResponse) => {
-        if ("timestamp" in res) {
-            console.log("incoming: startMove", res);
-        } else {
-            console.error(res.status);
-            store.commit("addToErrorLog", res.status);
-        }
-    });
+    // socket.on("startMove", (res: StartMoveResponse | ErrorResponse) => {
+    //     if ("timestamp" in res) {
+    //         console.log("incoming: startMove", res);
+    //     } else {
+    //         console.error(res.status);
+    //         store.commit("addToErrorLog", res.status);
+    //     }
+    // });
 
     store.subscribe((mutation, state) => {
         if (mutation.type === "registerPlayer") {
@@ -144,65 +142,68 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
             socket.emit("registerExistingPlayer", payload);
         }
 
-        if (mutation.type === "createGame") {
+        if (mutation.type === "finalizeGameCreation") {
+            if (typeof state.gameInCreation === "undefined") {
+                throw new Error("Missing Config for Creation of new Game!");
+            }
             const payload: CreateGameRequest = {
                 player: state.player,
-                config: mutation.payload.config
+                config: state.gameInCreation
             };
             socket.emit("createGame", payload);
         }
 
-        if (mutation.type === "deleteGame") {
-            if (state.activeGame.type === GameViewType.NONE || state.activeGame.type === GameViewType.IN_CREATION) {
-                console.error("can't delete empty game");
-                store.commit("addToErrorLog", "can't delete empty game");
-                return;
-            }
-            const payload: DeleteGameRequest = {
-                player: state.player,
-                game: state.activeGame.data
-            };
-            socket.emit("deleteGame", payload);
-        }
+        // if (mutation.type === "deleteGame") {
+        //     if (state.activeGame.type === GameViewType.NONE || state.activeGame.type === GameViewType.IN_CREATION) {
+        //         console.error("can't delete empty game");
+        //         store.commit("addToErrorLog", "can't delete empty game");
+        //         return;
+        //     }
+        //     const payload: DeleteGameRequest = {
+        //         player: state.player,
+        //         game: state.activeGame.data
+        //     };
+        //     socket.emit("deleteGame", payload);
+        // }
 
-        if (mutation.type === "chat") {
-            if (state.activeGame.type === GameViewType.NONE || state.activeGame.type === GameViewType.IN_CREATION) {
-                console.error("can't chat with empty game");
-                store.commit("addToErrorLog", "can't chat with empty game");
-                return;
-            }
-            const payload: ChatRequest = {
-                player: state.player,
-                game: state.activeGame.data,
-                message: mutation.payload
-            };
-            socket.emit("chat", payload);
-        }
+        // if (mutation.type === "chat") {
+        //     if (state.activeGame.type === GameViewType.NONE || state.activeGame.type === GameViewType.IN_CREATION) {
+        //         console.error("can't chat with empty game");
+        //         store.commit("addToErrorLog", "can't chat with empty game");
+        //         return;
+        //     }
+        //     const payload: ChatRequest = {
+        //         player: state.player,
+        //         game: state.activeGame.data,
+        //         message: mutation.payload
+        //     };
+        //     socket.emit("chat", payload);
+        // }
 
-        if (mutation.type === "joinGame") {
-            const payload: JoinGameRequest = {
-                player: state.player,
-                game: {
-                    id: mutation.payload,
-                },
-            };
-            socket.emit("joinGame", payload);
-        }
+        // if (mutation.type === "joinGame") {
+        //     const payload: JoinGameRequest = {
+        //         player: state.player,
+        //         game: {
+        //             id: mutation.payload,
+        //         },
+        //     };
+        //     socket.emit("joinGame", payload);
+        // }
 
-        if (mutation.type === "leaveGame") {
-            if (state.activeGame.type === GameViewType.NONE || state.activeGame.type === GameViewType.IN_CREATION) {
-                console.error("can't leave an empty game");
-                store.commit("addToErrorLog", "can't leave an empty game");
-                return;
-            }
-            const payload: LeaveGameRequest = {
-                player: state.player,
-                game: {
-                    id: state.activeGame.data.id,
-                },
-            };
-            socket.emit("leaveGame", payload);
-        }
+        // if (mutation.type === "leaveGame") {
+        //     if (state.activeGame.type === GameViewType.NONE || state.activeGame.type === GameViewType.IN_CREATION) {
+        //         console.error("can't leave an empty game");
+        //         store.commit("addToErrorLog", "can't leave an empty game");
+        //         return;
+        //     }
+        //     const payload: LeaveGameRequest = {
+        //         player: state.player,
+        //         game: {
+        //             id: state.activeGame.data.id,
+        //         },
+        //     };
+        //     socket.emit("leaveGame", payload);
+        // }
 
         if (mutation.type === "editPlayerName") {
             const payload: EditPlayerNameRequest = {
@@ -211,17 +212,17 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
             socket.emit("editPlayerName", payload);
         }
 
-        if (mutation.type === "startGame") {
-            if (state.activeGame.type === GameViewType.NONE || state.activeGame.type === GameViewType.IN_CREATION) {
-                console.error("can't start an empty game");
-                store.commit("addToErrorLog", "can't start an empty game");
-                return;
-            }
-            const payload: StartGameRequest = {
-                player: state.player,
-                game: state.activeGame.data
-            };
-            socket.emit("startGame", payload);
-        }
+        // if (mutation.type === "startGame") {
+        //     if (state.activeGame.type === GameViewType.NONE || state.activeGame.type === GameViewType.IN_CREATION) {
+        //         console.error("can't start an empty game");
+        //         store.commit("addToErrorLog", "can't start an empty game");
+        //         return;
+        //     }
+        //     const payload: StartGameRequest = {
+        //         player: state.player,
+        //         game: state.activeGame.data
+        //     };
+        //     socket.emit("startGame", payload);
+        // }
     });
 }

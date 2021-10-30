@@ -1,9 +1,8 @@
 import { io } from 'socket.io-client';
 import { InjectionKey } from 'vue';
 import { createStore, Store } from 'vuex';
-import { Game, GameView, GameViewType, LevelSystem } from '../../shared/model/Game';
+import { Config, Game, GameStatus, LevelSystem } from '../../shared/model/Game';
 import { PrivatePlayer, PublicPlayer } from '../../shared/model/Player';
-import { ChatResponse } from '../../shared/model/ResponseTypes';
 import { i18n, Language } from '../i18n/i18n';
 import { WebSocketPlugin } from './WebSocketPlugin';
 
@@ -14,7 +13,8 @@ export interface State {
     player: PrivatePlayer,
     playerList: PublicPlayer[],
     games: Game[],
-    activeGame: GameView,
+    gameInCreation?: Config,
+    activeGame?: Game,
     errorLog: String[]
 }
 
@@ -34,7 +34,8 @@ export const store = createStore<State>({
         },
         playerList: [],
         games: [],
-        activeGame: { type: GameViewType.NONE, data: null },
+        gameInCreation: undefined,
+        activeGame: undefined,
         errorLog: [],
     },
     getters: {
@@ -48,26 +49,16 @@ export const store = createStore<State>({
             if (!(state.player.secret.length > 0)) {
                 return "start";
             }
-            if (state.activeGame.type === GameViewType.IN_CREATION) {
+            if (typeof state.gameInCreation !== "undefined") {
                 return "game-in-creation";
             }
-            if (state.activeGame.type === GameViewType.IN_LOBBY) {
+            if (typeof state.activeGame !== "undefined" && state.activeGame.status === GameStatus.IN_LOBBY) {
                 return "game-in-lobby"
             }
-            if (state.activeGame.type === GameViewType.IN_PROGRESS) {
+            if (typeof state.activeGame !== "undefined" && state.activeGame.status === GameStatus.IN_PROGRESS) {
                 return "game-in-progress"
             }
             return "game-search";
-        },
-        getGameConfig(state) {
-            if (state.activeGame.type === GameViewType.IN_CREATION) {
-                return state.activeGame.data;
-            }
-            if (state.activeGame.type === GameViewType.IN_LOBBY || state.activeGame.type === GameViewType.IN_PROGRESS) {
-                return state.activeGame.data.config;
-            }
-            throw new Error("No Config Found!");
-
         },
         getPlayerName(state) {
             return (playerId: String) => {
@@ -111,12 +102,13 @@ export const store = createStore<State>({
             state.showRules = !state.showRules;
         },
         registerPlayer() { /* handled by WebSocketPlugin */ },
-        createGame() { /* handled by WebSocketPlugin */ },
-        deleteGame() { /* handled by WebSocketPlugin */ },
-        chat() { /* handled by WebSocketPlugin */ },
-        joinGame() { /* handled by WebSocketPlugin */ },
-        leaveGame() { /* handled by WebSocketPlugin */ },
-        startGame() { /* handled by WebSocketPlugin */ },
+        finalizeGameCreation() { /* handled by WebSocketPlugin */ },
+        // createGame() { /* handled by WebSocketPlugin */ },
+        // deleteGame() { /* handled by WebSocketPlugin */ },
+        // chat() { /* handled by WebSocketPlugin */ },
+        // joinGame() { /* handled by WebSocketPlugin */ },
+        // leaveGame() { /* handled by WebSocketPlugin */ },
+        // startGame() { /* handled by WebSocketPlugin */ },
         editPlayerName() { /* handled by WebSocketPlugin */ },
         registerExistingPlayer() { /* handled by WebSocketPlugin */ },
         logout(state) {
@@ -125,44 +117,38 @@ export const store = createStore<State>({
                 secret: "",
                 id: "",
             };
-            state.activeGame = { type: GameViewType.NONE, data: null };
+            state.activeGame = undefined;
+            state.gameInCreation = undefined;
             state.games = [];
         },
         initNewGame(state) {
-            state.activeGame = {
-                type: GameViewType.IN_CREATION,
-                data: {
-                    maxPlayerCount: 6,
-                    levelCount: 8,
-                    levelSystem: LevelSystem.NORMAL
-                }
+            state.gameInCreation = {
+                maxPlayerCount: 6,
+                levelCount: 8,
+                levelSystem: LevelSystem.NORMAL
             }
         },
-        updateGameInCreation(state, payload) {
-            state.activeGame.data = payload.config;
+        updateGameInCreation(state, payload: Config) {
+            state.gameInCreation = payload;
+        },
+        deleteGameInCreation(state) {
+            state.gameInCreation = undefined;
         },
         abortGameInCreation(state) {
-            state.activeGame = { type: GameViewType.NONE, data: null };
+            state.gameInCreation = undefined;
         },
-        createGameInLobby(state, payload) {
-            state.activeGame = { type: GameViewType.IN_LOBBY, data: payload }
+        activateMyGame(state, payload: Game) {
+            state.activeGame = payload;
         },
         createThirdPartyGame(state, payload) {
             state.games.push(payload);
-        },
-        updateGameInProgress(state, value: Game | null) {
-            state.activeGame.data = value;
         },
         updateConnection(state, value: Boolean) {
             state.connection = value;
         },
         addToErrorLog(state, value: string) {
             state.errorLog.unshift(value);
-        },
-        addChatMessage(state, value: ChatResponse) {
-            if (state.activeGame.type === GameViewType.IN_LOBBY || state.activeGame.type === GameViewType.IN_PROGRESS)
-                state.activeGame.data.chat?.push(value);
-        },
+        }
     },
     plugins: [WebSocketPlugin(socket)]
 })

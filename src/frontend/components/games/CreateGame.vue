@@ -45,7 +45,7 @@
         <i class="far fa-long-arrow-left icon-left"></i>
         {{ abortButton }}
       </button>
-      <button @click.prevent="createGame">
+      <button @click.prevent="finalizeGameCreation">
         {{ createGameButton }}
         <i class="far fa-long-arrow-right icon-right"></i>
       </button>
@@ -66,20 +66,14 @@ export default defineComponent({
     const i18n = computed(() => store.getters.i18n);
 
     const currentConfig: ComputedRef<Config> = computed(
-      () => store.getters.getGameConfig
+      () => store.state.gameInCreation
     );
     const maxPlayerCount = computed(() => currentConfig.value.maxPlayerCount);
     const levelCount = computed(() => currentConfig.value.levelCount);
     const levelSystem = computed(() => currentConfig.value.levelSystem);
 
-    const createGame = (e: Event) => {
-      store.commit("createGame", {
-        config: {
-          maxPlayerCount: maxPlayerCount.value,
-          levelCount: levelCount.value,
-          levelSystem: levelSystem.value,
-        },
-      });
+    const finalizeGameCreation = (e: Event) => {
+      store.commit("finalizeGameCreation");
     };
     const createGameButton = computed(
       () => i18n.value.createNewGameButtonLabel
@@ -100,25 +94,26 @@ export default defineComponent({
 
     const changeToLevelSystemNormal = (e: Event) => {
       store.commit("updateGameInCreation", {
-        config: { ...currentConfig.value, levelSystem: LevelSystem.NORMAL },
+        ...currentConfig.value,
+        levelSystem: LevelSystem.NORMAL,
       });
     };
     const changeToLevelSystemRandom = (e: Event) => {
       store.commit("updateGameInCreation", {
-        config: { ...currentConfig.value, levelSystem: LevelSystem.RANDOM },
+        ...currentConfig.value,
+        levelSystem: LevelSystem.RANDOM,
       });
     };
     const updateMaxPlayerCount = (e: any) => {
       store.commit("updateGameInCreation", {
-        config: {
-          ...currentConfig.value,
-          maxPlayerCount: Number(e.target.value),
-        },
+        ...currentConfig.value,
+        maxPlayerCount: Number(e.target.value),
       });
     };
     const updateLevelCount = (e: any) => {
       store.commit("updateGameInCreation", {
-        config: { ...currentConfig.value, levelCount: Number(e.target.value) },
+        ...currentConfig.value,
+        levelCount: Number(e.target.value),
       });
     };
 
@@ -126,7 +121,7 @@ export default defineComponent({
       maxPlayerCount,
       levelCount,
       levelSystem,
-      createGame,
+      finalizeGameCreation,
       createGameButton,
       abort,
       abortButton,
