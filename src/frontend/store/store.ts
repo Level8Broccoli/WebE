@@ -75,6 +75,11 @@ export const store = createStore<State>({
             return (playerId: String) => {
                 return state.playerList.find(p => p.id === playerId)?.name;
             }
+        },
+        getMyHands(state, getters) {
+            const activeGame = state.activeGameId.length > 0
+                && getters.getActiveGame as Game;
+            return activeGame && activeGame.state.hands.get(state.player.id);
         }
     },
     mutations: {
