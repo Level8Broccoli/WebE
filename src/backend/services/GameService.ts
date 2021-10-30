@@ -88,6 +88,8 @@ export function startGameState(
   for (const playerId of playerIdList) {
     createEmptyDiscardPile(game, playerId);
   }
+
+  setActivePlayer(game, playerIdList[0]);
 }
 
 // export function drawCard(
@@ -200,6 +202,10 @@ function createPlayerStartHand(game: Game, playerId: string, numberOfCards: numb
 
 function createEmptyDiscardPile(game: Game, playerId: string) {
   game.state.piles.set(playerId, []);
+}
+
+function setActivePlayer(game: Game, playerId: string) {
+  game.state.activePlayerId = playerId;
 }
 
 function drawCard(game: Game, from: string, to: string) {
