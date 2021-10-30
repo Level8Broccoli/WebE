@@ -1,6 +1,7 @@
 import { DateTime } from "luxon";
 import { Server } from "socket.io";
 import { Api } from "./backend/api/Api";
+import { getAllRegisteredPlayers } from "./backend/services/ServerStateService";
 import {
   ChatRequest,
   CreateGameRequest,
@@ -37,6 +38,7 @@ io.on("connection", (socket) => {
       .registerPlayer(request, socket.id)
       .then((response) => {
         socket.emit("registerPlayer", response);
+        io.emit("updatePlayerList", { playerList: getAllRegisteredPlayers(serverState) });
         console.log(`>>> Registered Player ${response.player.id}`);
       })
       .catch((error) => {
@@ -52,6 +54,7 @@ io.on("connection", (socket) => {
       .registerExistingPlayer(request, socket.id)
       .then((response) => {
         socket.emit("registerExistingPlayer", response);
+        io.emit("updatePlayerList", { playerList: getAllRegisteredPlayers(serverState) });
         console.log(`>>> Registered Existing Player ${response.player.id}`);
       })
       .catch((error) => {
@@ -66,6 +69,7 @@ io.on("connection", (socket) => {
     api
       .editPlayerName(request)
       .then((response) => {
+        io.emit("updatePlayerList", { playerList: getAllRegisteredPlayers(serverState) });
         socket.emit("editPlayerName", response);
       })
       .catch((error) => {

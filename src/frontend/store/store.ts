@@ -1,9 +1,9 @@
 import { io } from 'socket.io-client';
 import { InjectionKey } from 'vue';
 import { createStore, Store } from 'vuex';
-import { PrivatePlayer } from '../../shared/model/Player';
+import { Game, GameView, GameViewType, LevelSystem } from '../../shared/model/Game';
+import { PrivatePlayer, PublicPlayer } from '../../shared/model/Player';
 import { ChatResponse } from '../../shared/model/ResponseTypes';
-import { Config, Game, GameView, GameViewType, LevelSystem } from '../../shared/model/Game';
 import { i18n, Language } from '../i18n/i18n';
 import { WebSocketPlugin } from './WebSocketPlugin';
 
@@ -12,6 +12,7 @@ export interface State {
     connection: Boolean,
     showRules: Boolean,
     player: PrivatePlayer,
+    playerList: PublicPlayer[],
     games: Game[],
     activeGame: GameView,
     errorLog: String[]
@@ -31,6 +32,7 @@ export const store = createStore<State>({
             id: "",
             secret: "",
         },
+        playerList: [],
         games: [],
         activeGame: { type: GameViewType.NONE, data: null },
         errorLog: [],
@@ -56,6 +58,21 @@ export const store = createStore<State>({
                 return "game-in-progress"
             }
             return "game-search";
+        },
+        getGameConfig(state) {
+            if (state.activeGame.type === GameViewType.IN_CREATION) {
+                return state.activeGame.data;
+            }
+            if (state.activeGame.type === GameViewType.IN_LOBBY || state.activeGame.type === GameViewType.IN_PROGRESS) {
+                return state.activeGame.data.config;
+            }
+            throw new Error("No Config Found!");
+
+        },
+        getPlayerName(state) {
+            return (playerId: String) => {
+                return state.playerList.find(p => p.id === playerId)?.name;
+            }
         }
     },
     mutations: {
@@ -64,6 +81,9 @@ export const store = createStore<State>({
         },
         updatePlayer(state, value: PrivatePlayer) {
             state.player = value;
+        },
+        updatePlayerList(state, value: PublicPlayer[]) {
+            state.playerList = value;
         },
         removeInvalidPlayer(state) {
             localStorage.setItem("player-credentials-invalid", JSON.stringify(state.player));
@@ -126,6 +146,9 @@ export const store = createStore<State>({
         },
         createGameInLobby(state, payload) {
             state.activeGame = { type: GameViewType.IN_LOBBY, data: payload }
+        },
+        createThirdPartyGame(state, payload) {
+            state.games.push(payload);
         },
         updateGameInProgress(state, value: Game | null) {
             state.activeGame.data = value;

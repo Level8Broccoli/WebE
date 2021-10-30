@@ -1,9 +1,8 @@
 import { Socket } from "socket.io-client";
 import { Store } from "vuex";
-import { StatusCode } from "../../shared/api/StatusCode";
 import { GameViewType } from "../../shared/model/Game";
 import { ChatRequest, CreateGameRequest, DeleteGameRequest, EditPlayerNameRequest, JoinGameRequest, LeaveGameRequest, RegisterExistingPlayerRequest, RegisterPlayerRequest, StartGameRequest } from "../../shared/model/RequestTypes";
-import { ChatResponse, CreateGameResponse, DeleteGameResponse, EditPlayerNameResponse, ErrorResponse, JoinGameResponse, LeaveGameResponse, RegisterExistingPlayerResponse, RegisterPlayerResponse, StartGameResponse, StartMoveResponse } from "../../shared/model/ResponseTypes";
+import { ChatResponse, CreateGameResponse, DeleteGameResponse, EditPlayerNameResponse, ErrorResponse, JoinGameResponse, LeaveGameResponse, RegisterExistingPlayerResponse, RegisterPlayerResponse, StartGameResponse, StartMoveResponse, UpdatePlayerListResponse } from "../../shared/model/ResponseTypes";
 import { State } from "./store";
 
 export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
@@ -30,8 +29,21 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
         }
     });
 
+    socket.on("updatePlayerList", (res: UpdatePlayerListResponse | ErrorResponse) => {
+        if ("playerList" in res) {
+            store.commit("updatePlayerList", res.playerList);
+        } else {
+            console.error(res.status);
+            store.commit("addToErrorLog", res.status);
+        }
+    })
+
     socket.on("registerExistingPlayer", (res: RegisterExistingPlayerResponse | ErrorResponse) => {
-        if (res.status !== StatusCode.OK) {
+        if ("player" in res) {
+            store.commit("updatePlayer", res.player);
+            store.commit("updateGames", res.games);
+            localStorage.setItem('player-credentials', JSON.stringify(res.player));
+        } else {
             console.error(res.status);
             store.commit("addToErrorLog", res.status);
             store.commit("removeInvalidPlayer");
@@ -50,10 +62,10 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
 
     socket.on("createGame", (res: CreateGameResponse | ErrorResponse) => {
         if ("game" in res) {
-            console.log("createGame", res);
-
             if (res.game.creatorId === store.state.player.id) {
                 store.commit("createGameInLobby", res.game);
+            } else {
+                store.commit("createThirdPartyGame", res.game);
             }
         } else {
             console.error(res.status);

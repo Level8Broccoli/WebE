@@ -1,4 +1,4 @@
-import { FullPlayer, PrivatePlayer } from "../../shared/model/Player";
+import { FullPlayer, PrivatePlayer, PublicPlayer } from "../../shared/model/Player";
 import { Game, SimpleGame } from "../../shared/model/Game";
 import { ServerState } from "../../shared/model/ServerState";
 import { ChatMessage } from "../../shared/model/Chat";
@@ -146,4 +146,12 @@ export function activePlayerInGame(
   gameId: string
 ): string {
   return serverState.games.find((g) => g.id === gameId)!.state!.activePlayerId;
+}
+
+export function getAllRegisteredPlayers(
+  serverState: ServerState
+): PublicPlayer[] {
+  return serverState.players.map(({ id, name }) => {
+    return { id, name }
+  });
 }

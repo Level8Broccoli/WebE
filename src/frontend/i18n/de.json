@@ -12,5 +12,9 @@
     "maxPlayerCountLabel": "Maximale Anzahl Spieler",
     "levelCountLabel": "Anzahl Levels",
     "levelSystemNormalLabel": "Standard Spiel",
-    "levelSystemRandomLabel": "Zufällige Levels"
+    "levelSystemRandomLabel": "Zufällige Levels",
+    "playerCountLabel": "Spieleranzahl",
+    "levelSystemLabel": "Level System",
+    "joinGameButtonLabel": "Spiel beitreten",
+    "creatorNameLabel": "Erstellt von"
 }

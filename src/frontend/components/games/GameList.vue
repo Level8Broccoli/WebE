@@ -1,8 +1,8 @@
 
 <template>
-  <ul v-if="games && games.length > 0">
+  <ul v-if="games && games.length > 0" role="list">
     <li v-for="game in games" :key="game.id">
-      {{ game.id }}
+      <GameListEntry :game="game" />
     </li>
   </ul>
   <div v-else class="no-games">{{ noGames }}</div>
@@ -12,9 +12,11 @@
 import { computed, defineComponent } from "vue";
 import { useStore } from "vuex";
 import { key } from "../../store/store";
+import GameListEntry from "./GameListEntry.vue";
 
 export default defineComponent({
   name: "GameList",
+  components: { GameListEntry },
   setup() {
     const store = useStore(key);
     const i18n = computed(() => store.getters.i18n);
@@ -33,5 +35,15 @@ export default defineComponent({
   text-align: center;
   margin-top: 2rem;
   font-style: italic;
+}
+
+ul {
+  padding: 0;
+  margin: 0;
+  margin-top: 1rem;
+}
+
+li + li {
+  margin-top: 1rem;
 }
 </style>

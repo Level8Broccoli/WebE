@@ -2,6 +2,7 @@
 <template>
   <section>
     <CreateGameButton />
+    <hr />
     <GameList />
   </section>
 </template>

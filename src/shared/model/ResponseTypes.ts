@@ -23,6 +23,8 @@ export type EditPlayerNameResponse = {
   player: PrivatePlayer;
 };
 
+export type UpdatePlayerListResponse = { playerList: PublicPlayer[] }
+
 export type CreateGameResponse = {
   status: StatusCode;
   timestamp: DateTime;
