@@ -1,7 +1,7 @@
 import { Socket } from "socket.io-client";
 import { Store } from "vuex";
-import { ChatRequest, CreateGameRequest, EditPlayerNameRequest, JoinGameRequest, RegisterExistingPlayerRequest, RegisterPlayerRequest } from "../../shared/model/RequestTypes";
-import { ChatResponse, CreateGameResponse, EditPlayerNameResponse, ErrorResponse, JoinGameResponse, RegisterExistingPlayerResponse, RegisterPlayerResponse, UpdatePlayerListResponse } from "../../shared/model/ResponseTypes";
+import { ChatRequest, CreateGameRequest, EditPlayerNameRequest, JoinGameRequest, LeaveGameRequest, RegisterExistingPlayerRequest, RegisterPlayerRequest } from "../../shared/model/RequestTypes";
+import { ChatResponse, CreateGameResponse, EditPlayerNameResponse, ErrorResponse, JoinGameResponse, LeaveGameResponse, RegisterExistingPlayerResponse, RegisterPlayerResponse, UpdatePlayerListResponse } from "../../shared/model/ResponseTypes";
 import { State } from "./store";
 
 export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
@@ -105,16 +105,16 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
         }
     });
 
-    // socket.on("leaveGame", (res: LeaveGameResponse | ErrorResponse) => {
-    //     if ("game" in res) {
-    //         if (res.player.id === store.state.player.id) {
-    //             store.commit("updateGameInProgress", null);
-    //         }
-    //     } else {
-    //         console.error(res.status);
-    //         store.commit("addToErrorLog", res.status);
-    //     }
-    // });
+    socket.on("leaveGame", (res: LeaveGameResponse | ErrorResponse) => {
+        if ("player" in res) {
+            if (res.player.id === store.state.player.id) {
+                store.commit("abortGameInLobby");
+            }
+        } else {
+            console.error(res.status);
+            store.commit("addToErrorLog", res.status);
+        }
+    });
 
     // socket.on("startGame", (res: StartGameResponse | ErrorResponse) => {
     //     if ("hand" in res) {
@@ -184,20 +184,13 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
             socket.emit("joinGame", payload);
         }
 
-        // if (mutation.type === "leaveGame") {
-        //     if (state.activeGame.type === GameViewType.NONE || state.activeGame.type === GameViewType.IN_CREATION) {
-        //         console.error("can't leave an empty game");
-        //         store.commit("addToErrorLog", "can't leave an empty game");
-        //         return;
-        //     }
-        //     const payload: LeaveGameRequest = {
-        //         player: state.player,
-        //         game: {
-        //             id: state.activeGame.data.id,
-        //         },
-        //     };
-        //     socket.emit("leaveGame", payload);
-        // }
+        if (mutation.type === "leaveGame") {
+            const payload: LeaveGameRequest = {
+                player: state.player,
+                gameId: state.activeGame!.id,
+            };
+            socket.emit("leaveGame", payload);
+        }
 
         if (mutation.type === "editPlayerName") {
             const payload: EditPlayerNameRequest = {

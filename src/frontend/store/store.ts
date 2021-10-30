@@ -113,7 +113,7 @@ export const store = createStore<State>({
         // deleteGame() { /* handled by WebSocketPlugin */ },
         // chat() { /* handled by WebSocketPlugin */ },
         // joinGame() { /* handled by WebSocketPlugin */ },
-        // leaveGame() { /* handled by WebSocketPlugin */ },
+        leaveGame() { /* handled by WebSocketPlugin */ },
         // startGame() { /* handled by WebSocketPlugin */ },
         editPlayerName() { /* handled by WebSocketPlugin */ },
         registerExistingPlayer() { /* handled by WebSocketPlugin */ },
@@ -142,6 +142,9 @@ export const store = createStore<State>({
         },
         abortGameInCreation(state) {
             state.gameInCreation = undefined;
+        },
+        abortGameInLobby(state) {
+            state.activeGame = undefined;
         },
         activateGame(state, payload: Game) {
             state.activeGame = payload;

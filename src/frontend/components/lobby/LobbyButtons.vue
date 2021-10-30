@@ -37,10 +37,15 @@ export default defineComponent({
       () => store.state.activeGame.players.length > 1
     );
 
+    const abort = (e: Event) => {
+      store.commit("leaveGame");
+    };
+
     return {
       i18n,
       isCreator,
       gameIsValid,
+      abort,
     };
   },
 });
