@@ -1,7 +1,11 @@
 
 <template>
   <div :class="'entry ' + (isActivePlayer ? 'is-active' : '')">
-    <p>{{ playerName }}</p>
+    <p>
+      {{ playerName }}
+      <span v-if="isActivePlayer">{{ currentStep }}</span>
+      <span v-else>{{i18n.stepWaiting}}</span>
+    </p>
     <BackPileView :count="handCount" />
     <CardView :card="discardPileTop" />
   </div>
@@ -33,13 +37,20 @@ export default defineComponent({
     );
     const isActivePlayer = computed(() => props.player.isActivePlayer);
     const handCount = computed(() => props.player.handCardCount);
+    const i18n = computed(() => store.getters.i18n);
+
+    const currentStep = computed(() =>
+      store.getters.translateCurrentStep(props.player.currentStep)
+    );
     const discardPileTop = computed(() => props.player.discardPile[0]);
 
     return {
       playerName,
       isActivePlayer,
       handCount,
+      currentStep,
       discardPileTop,
+      i18n,
     };
   },
 });
@@ -52,7 +63,7 @@ export default defineComponent({
     "name name" max-content
     "hand discard" max-content
     / max-content max-content;
-  gap: .5rem;
+  gap: 0.5rem;
 }
 
 p {

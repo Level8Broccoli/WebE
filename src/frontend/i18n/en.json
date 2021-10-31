@@ -24,5 +24,10 @@
     "logout": "Logout",
     "playerUnknown": "Player unknown",
     "emptyCardSlot": "empty",
-    "drawPile": "Drawpile"
+    "drawPile": "Drawpile",
+    "currentStep0": "Drawing",
+    "currentStep1": "Checking Level",
+    "currentStep2": "Playing Cards",
+    "currentStep3": "Discarding",
+    "stepWaiting": "Waiting"
 }

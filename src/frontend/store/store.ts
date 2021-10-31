@@ -75,6 +75,12 @@ export const store = createStore<State>({
                 return state.playerList.find(p => p.id === playerId)?.name;
             };
         },
+        translateCurrentStep(_, getters) {
+            return (step: number) => {
+                const i18n = getters.i18n;
+                return i18n["currentStep" + String(step)];
+            }
+        },
         getMyHands(state, getters): Card[] {
             const activeGame = state.activeGameId.length > 0
                 && getters.getActiveGame as PublicGame;
@@ -89,6 +95,7 @@ export const store = createStore<State>({
                 return [];
             }
             const activePlayerId = activeGame.state.activePlayerId;
+            const currentStep = activeGame.state.currentStep;
             const playerIdList = activeGame.players;
             const hands = activeGame.state.hands;
             const piles = activeGame.state.piles;
@@ -99,6 +106,7 @@ export const store = createStore<State>({
                     aggregate.push({
                         playerId,
                         isActivePlayer: playerId === activePlayerId,
+                        currentStep,
                         handCardCount: hands.get(playerId) as number,
                         discardPile: piles.get(playerId) as Card[]
                     });
@@ -106,6 +114,7 @@ export const store = createStore<State>({
                     aggregate.push({
                         playerId,
                         isActivePlayer: playerId === activePlayerId,
+                        currentStep,
                         handCardCount: (hands.get(playerId) as Card[]).length,
                         discardPile: piles.get(playerId) as Card[]
                     });

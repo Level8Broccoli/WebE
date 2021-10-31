@@ -71,7 +71,7 @@ export enum CardType {
   SKIP = "SKIP",
 }
 
-export enum GameStep { DRAW, FULFIL_LEVEL, PLAY, DISCARD }
+export enum GameStep { DRAW, FULFILL_LEVEL, PLAY, DISCARD }
 
 export type GameState = {
   activePlayerId: string;
@@ -97,6 +97,7 @@ export type PublicGameTransferState = {
 export type PlayerOverviewAggregate = {
   playerId: string;
   isActivePlayer: boolean;
+  currentStep: GameStep;
   handCardCount: number;
   discardPile: Card[];
 }

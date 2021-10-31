@@ -24,5 +24,10 @@
     "logout": "Abmelden",
     "playerUnknown": "Unbekannter Spieler",
     "emptyCardSlot": "leer",
-    "drawPile": "Nachziehstapel"
+    "drawPile": "Nachziehstapel",
+    "currentStep0": "Ziehen",
+    "currentStep1": "Überprüfe Level",
+    "currentStep2": "Karten spielen",
+    "currentStep3": "Abwerfen",
+    "stepWaiting": "Warten"
 }
