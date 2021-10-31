@@ -81,6 +81,12 @@ export const store = createStore<State>({
                 return i18n["currentStep" + String(step)];
             }
         },
+        translateCurrentStepExplanation(_, getters) {
+            return (step: number) => {
+                const i18n = getters.i18n;
+                return i18n["currentStepExplanation" + String(step)];
+            }
+        },
         getMyHands(state, getters): Card[] {
             const activeGame = state.activeGameId.length > 0
                 && getters.getActiveGame as Game;

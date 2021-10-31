@@ -29,5 +29,11 @@
     "currentStep1": "Überprüfe Level",
     "currentStep2": "Karten spielen",
     "currentStep3": "Abwerfen",
-    "stepWaiting": "Warten"
+    "currentStepExplanation0": "Ziehe eine Karte entweder vom Nachziehstapel oder einem der offenen Abwurfstapel.",
+    "currentStepExplanation1": "Kannst du dein aktuelles Level erfüllen? Falls ja, wähle alle Karten aus, basierend auf deinem Level.",
+    "currentStepExplanation2": "Du kannst so viele Karten spielen, wie du magst, solange sie zu einem der Kartenreihen passen.",
+    "currentStepExplanation3": "Wirf eine Karte aus der Hand ab.",
+    "stepWaiting": "Warten",
+    "pleaseWaitOnPlayer": "Bitte warte auf Spieler",
+    "yourTurn": "Du bist an der Reihe:"
 }

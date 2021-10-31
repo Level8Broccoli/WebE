@@ -29,5 +29,11 @@
     "currentStep1": "Checking Level",
     "currentStep2": "Playing Cards",
     "currentStep3": "Discarding",
-    "stepWaiting": "Waiting"
+    "currentStepExplanation0": "Draw a card from the draw pile or one of the open discard piles.",
+    "currentStepExplanation1": "Can you achieve your current level? If so click on all cards according to your level.",
+    "currentStepExplanation2": "You can play as many cards as you want on to the board, as long as the adhere to the respective card rows.",
+    "currentStepExplanation3": "Choose one card in your hand to discard.",
+    "stepWaiting": "Waiting",
+    "pleaseWaitOnPlayer": "Please wait on player",
+    "yourTurn": "It's your turn:"
 }

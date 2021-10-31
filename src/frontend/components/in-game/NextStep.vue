@@ -1,11 +1,20 @@
 <template>
-  <span v-if="isActivePlayer">{{ currentStep }}</span>
-  <span v-else>{{ i18n.stepWaiting }}</span>
+  <span v-if="isActivePlayer">
+    {{ i18n.yourTurn }}
+    {{ currentStep }}. <br />
+    <em> {{ currentStepExplanation }} </em>
+  </span>
+  <span v-else>
+    {{ i18n.pleaseWaitOnPlayer }}
+    <em>{{ currentPlayerName }}</em>
+    ({{ currentStep }})
+  </span>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent } from "vue";
 import { useStore } from "vuex";
+import { Game } from "../../../shared/model/Game";
 import { key } from "../../store/store";
 
 export default defineComponent({
@@ -17,9 +26,21 @@ export default defineComponent({
     const currentStep = computed(() =>
       store.getters.translateCurrentStep(store.getters.getCurrentStep)
     );
+    const currentStepExplanation = computed(() =>
+      store.getters.translateCurrentStepExplanation(
+        store.getters.getCurrentStep
+      )
+    );
+    const currentPlayerName = computed(() => {
+      const game: Game = store.getters.getActiveGame;
+      const activePlayerId = game.state.activePlayerId;
+      return store.getters.getPlayerName(activePlayerId) || activePlayerId;
+    });
     return {
       isActivePlayer,
       currentStep,
+      currentPlayerName,
+      currentStepExplanation,
       i18n,
     };
   },
