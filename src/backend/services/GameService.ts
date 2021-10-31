@@ -82,46 +82,6 @@ export function startGameState(
   setActivePlayer(game, playerIdList[0]);
 }
 
-// export function drawCard(
-//   serverState: ServerState,
-//   gameId: string,
-//   pileId: string
-// ): Card {
-//   if (pileId === "drawPile") {
-//     // if length from drawPile is 0 take all discardPiles,
-//     const state = serverState.games.find((g) => g.id === gameId)!.state!;
-//     if (state.piles.get(pileId)!.length === 0) {
-//       const tempCards: Card[] = [];
-//       state.piles.forEach((cards, key) => {
-//         if (!(key === pileId)) {
-//           tempCards.concat(cards!);
-//           state.piles.delete(key);
-//         }
-//       });
-//       // shuffle the array again and place all cards in the drawPile
-//       state.piles.set(
-//         pileId,
-//         tempCards.sort((a, b) => 0.5 - Math.random())
-//       );
-//     }
-//   }
-
-//   return serverState.games
-//     .find((g) => g.id === gameId)!
-//     .state!.piles.get(pileId)!
-//     .pop()!;
-// }
-
-// export function addCardToHand(
-//   serverState: ServerState,
-//   gameId: string,
-//   player: PrivatePlayer,
-//   card: Card
-// ) {
-//   const state = serverState.games.find((g) => g.id === gameId)!.state!;
-//   state.hands.set(player.id, state.hands.get(player.id)!.concat(card));
-// }
-
 export function getGame(
   gameList: Game[],
   gameId: string
