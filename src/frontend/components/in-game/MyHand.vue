@@ -1,8 +1,13 @@
 <template>
   <main class="my-hand">
     <ul role="list">
-      <li v-for="(card) in myHands" :key="card.id">
-        <CardView :card="card" :isHand="true" />
+      <li v-for="card in myHands" :key="card.id">
+        <CardView
+          :color="card.color"
+          :id="card.id"
+          :value="card.value"
+          :isHand="true"
+        />
       </li>
     </ul>
   </main>

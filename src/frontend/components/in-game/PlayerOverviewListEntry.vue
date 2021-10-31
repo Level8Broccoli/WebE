@@ -7,7 +7,15 @@
       <span v-else>{{ i18n.stepWaiting }}</span>
     </p>
     <BackPileView :count="handCount" />
-    <CardView :card="discardPileTop" :isDiscard="true" :owner="playerId" />
+    <CardView
+      v-if="discardPile[0] !== null"
+      :id="discardPile[0].id"
+      :color="discardPile[0].color"
+      :value="discardPile[0].value"
+      :isDiscard="true"
+      :owner="playerId"
+    />
+    <EmptyPileView v-else />
   </div>
 </template>
 
@@ -18,10 +26,11 @@ import { PlayerOverviewAggregate } from "../../../shared/model/Game";
 import { key } from "../../store/store";
 import BackPileView from "./BackPileView.vue";
 import CardView from "./CardView.vue";
+import EmptyPileView from "./EmptyPileView.vue";
 
 export default defineComponent({
   name: "PlayerOverviewListEntry",
-  components: { CardView, BackPileView },
+  components: { CardView, BackPileView, EmptyPileView },
   props: {
     player: {
       type: Object as PropType<PlayerOverviewAggregate>,
@@ -41,7 +50,7 @@ export default defineComponent({
     const currentStep = computed(() =>
       store.getters.translateCurrentStep(props.player.currentStep)
     );
-    const discardPileTop = computed(() => props.player.discardPile[0]);
+    const discardPile = computed(() => props.player.discardPile);
 
     return {
       playerId,
@@ -49,7 +58,7 @@ export default defineComponent({
       isActivePlayer,
       handCount,
       currentStep,
-      discardPileTop,
+      discardPile,
       i18n,
     };
   },

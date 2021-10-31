@@ -6,7 +6,6 @@
       color +
       (canBeDiscarded || canBeDrawn ? ' interactive' : '')
     "
-    v-if="isCard"
     v-on="
       canBeDiscarded
         ? { click: discardCard }
@@ -27,44 +26,25 @@
       <i v-if="color === 'GREEN'" class="fas fa-hexagon"></i>
     </footer>
   </div>
-  <EmptyPileView v-else />
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType } from "vue";
+import { computed, defineComponent } from "vue";
 import { useStore } from "vuex";
-import { Card } from "../../../shared/model/Game";
 import { key } from "../../store/store";
-import EmptyPileView from "./EmptyPileView.vue";
+
 export default defineComponent({
   name: "CardView",
-  components: { EmptyPileView },
   props: {
-    card: { type: Object as PropType<Card> },
+    value: { type: Number, required: true },
+    color: { type: String, required: true },
+    id: { type: String, required: true },
     isHand: { type: Boolean, default: false },
     isDiscard: { type: Boolean, default: false },
     owner: { type: String, default: "" },
   },
   setup(props) {
     const store = useStore(key);
-    const card = computed(() => props.card);
-    if (typeof card === "undefined" || typeof card!.value === "undefined") {
-      return {
-        isCard: false,
-        value: 0,
-        color: "NONE",
-        canBeDiscarded: false,
-        discardCard: () => {},
-        canBeDrawn: false,
-        drawCard: () => {},
-      };
-    }
-    const color = computed(() => {
-      if (typeof card !== "undefined" && "color" in card!.value!) {
-        return card!.value!.color;
-      }
-      return "NONE";
-    });
 
     const canBeDiscarded = computed(
       () =>
@@ -74,7 +54,7 @@ export default defineComponent({
     );
 
     const discardCard = (e: Event) => {
-      store.commit("discardCard", { cardId: card!.value!.id! });
+      store.commit("discardCard", { cardId: props.id });
     };
 
     const canBeDrawn = computed(
@@ -88,9 +68,8 @@ export default defineComponent({
     };
 
     return {
-      isCard: true,
-      value: card!.value!.value!,
-      color,
+      value: props.value,
+      color: props.color,
       canBeDiscarded,
       discardCard,
       canBeDrawn,
