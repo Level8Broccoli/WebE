@@ -1,6 +1,14 @@
 <template>
-  <main>
-    {{ otherPlayers }}
+  <main class="player-overview">
+    <ul role="list">
+      <li
+        v-for="player in otherPlayers"
+        :key="player.playerId"
+        :class="player.isActivePlayer ? 'is-active' : ''"
+      >
+        <PlayerOverviewListEntry :player="player" />
+      </li>
+    </ul>
   </main>
 </template>
 
@@ -9,9 +17,11 @@ import { computed, ComputedRef, defineComponent } from "vue";
 import { useStore } from "vuex";
 import { OtherPlayerAggregate } from "../../../shared/model/Game";
 import { key } from "../../store/store";
+import PlayerOverviewListEntry from "./PlayerOverviewListEntry.vue";
 
 export default defineComponent({
-  name: "OtherPlayers",
+  name: "PlayerOverviewList",
+  components: { PlayerOverviewListEntry },
   setup() {
     const store = useStore(key);
     const otherPlayers: ComputedRef<OtherPlayerAggregate[]> = computed(
@@ -21,3 +31,10 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+ul {
+  margin: 0;
+  padding: 0;
+}
+</style>
