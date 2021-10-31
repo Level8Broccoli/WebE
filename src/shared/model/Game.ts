@@ -11,8 +11,17 @@ export type Game = {
   config: Config;
   status: GameStatus;
   chat: ChatMessage[];
+  levels: GameLevel[];
   state: GameState;
 };
+
+export enum GameLevel { LVL1, LVL2, LVL3, LVL4, LVL5, LVL6, LVL7, LVL8 };
+
+export type PlayerLevel = {
+  playerId: string;
+  currentLevelIndex: number;
+  hasAchievedLevel: boolean;
+}
 
 export type Config = {
   maxPlayerCount: number;
@@ -73,6 +82,7 @@ export type CardStack = CardStackOpen | CardStackSecret;
 export type GameState = {
   activePlayerId: string;
   currentStep: GameStep;
+  playerLevels: PlayerLevel[];
   hands: CardStack[];
   piles: CardStack[]; // Includes the drawPile and the player's discardPile
 };
@@ -81,6 +91,9 @@ export type PlayerOverviewAggregate = {
   playerId: string;
   isActivePlayer: boolean;
   currentStep: GameStep;
+  currentLevelIndex: number;
+  maxLevelCount: number;
+  hasAchievedLevel: boolean;
   handCardCount: number;
   discardPile: Card[];
 }

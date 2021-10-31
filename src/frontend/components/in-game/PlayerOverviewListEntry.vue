@@ -2,7 +2,10 @@
 <template>
   <div :class="'entry ' + (isActivePlayer ? 'is-active' : '')">
     <p>
-      {{ playerName }}
+      {{ playerName }} || Level: {{ currentLevelIndex + 1 }}/{{ maxLevelCount }}
+      || Done:
+      {{ hasAchievedLevel ? "YES" : "NO" }}
+      <br />
       <span v-if="isActivePlayer">{{ currentStep }}</span>
       <span v-else>{{ i18n.stepWaiting }}</span>
     </p>
@@ -48,6 +51,9 @@ export default defineComponent({
       () => store.getters.getPlayerName(playerId.value) || playerId.value
     );
     const isActivePlayer = computed(() => props.player.isActivePlayer);
+    const currentLevelIndex = computed(() => props.player.currentLevelIndex);
+    const hasAchievedLevel = computed(() => props.player.hasAchievedLevel);
+    const maxLevelCount = computed(() => props.player.maxLevelCount);
     const handCount = computed(() => props.player.handCardCount);
     const i18n = computed(() => store.getters.i18n);
 
@@ -62,6 +68,9 @@ export default defineComponent({
       handCount,
       currentStep,
       discardPile,
+      currentLevelIndex,
+      hasAchievedLevel,
+      maxLevelCount,
       i18n,
     };
   },

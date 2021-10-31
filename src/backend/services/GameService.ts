@@ -5,9 +5,11 @@ import {
   Color,
   DRAW_PILE_ID,
   Game,
+  GameLevel,
   GameState,
   GameStatus,
   GameStep,
+  LevelSystem,
   NumberCard
 } from "../../shared/model/Game";
 import { ServerState } from "../../shared/model/ServerState";
@@ -38,6 +40,7 @@ export function initGameState(): GameState {
   return {
     activePlayerId: "",
     currentStep: GameStep.DISCARD,
+    playerLevels: [],
     hands: [],
     piles: [{
       id: DRAW_PILE_ID,
@@ -60,6 +63,8 @@ export function startGameState(
   for (const playerId of playerIdList) {
     createEmptyDiscardPile(game, playerId);
   }
+
+  setupGameLevels(game);
 
   setActivePlayer(game, playerIdList[0]);
 }
@@ -161,6 +166,23 @@ function setActivePlayer(game: Game, playerId: string) {
   game.state.activePlayerId = playerId;
 }
 
+function setupGameLevels(game: Game) {
+  const { levelCount, levelSystem } = game.config;
+  const levels = [GameLevel.LVL1, GameLevel.LVL2, GameLevel.LVL3, GameLevel.LVL4, GameLevel.LVL5, GameLevel.LVL6, GameLevel.LVL7, GameLevel.LVL8];
+  if (levelSystem === LevelSystem.RANDOM) {
+    levels.sort((a, b) => 0.5 - Math.random());
+  }
+  game.levels = levels.slice(0, levelCount);
+
+  for (const playerId of game.players) {
+    game.state.playerLevels.push({
+      playerId,
+      currentLevelIndex: 0,
+      hasAchievedLevel: false,
+    });
+  }
+}
+
 export function drawCardFromPile(game: Game, from: string, to: string) {
   const fromPile = getPile(game, from);
   const nextCard = fromPile.shift();
@@ -182,7 +204,7 @@ export function getAllGamesForPlayer(
   gameList: Game[],
   playerId?: string
 ): Game[] {
-  return gameList.map(({ id, creatorId, players, config, status, chat, state: { activePlayerId, currentStep, hands, piles } }) => {
+  return gameList.map(({ id, creatorId, players, config, status, chat, levels, state: { activePlayerId, currentStep, playerLevels, hands, piles } }) => {
     const newHands = (hands as CardStackOpen[]).map(({ id, cards }) => {
       // only show the cards on the requesting player
       // alternativally show the number of cards on all the other players
@@ -217,10 +239,11 @@ export function getAllGamesForPlayer(
     const newPublicGameState: GameState = {
       activePlayerId,
       currentStep,
+      playerLevels,
       hands: newHands,
       piles: newPiles
     }
-    const newPublicGame: Game = { id, creatorId, players, config, status, chat, state: newPublicGameState };
+    const newPublicGame: Game = { id, creatorId, players, config, status, levels, chat, state: newPublicGameState };
     return newPublicGame;
   });
 }

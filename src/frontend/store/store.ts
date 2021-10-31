@@ -104,16 +104,23 @@ export const store = createStore<State>({
             }
             const activePlayerId = activeGame.state.activePlayerId;
             const currentStep = activeGame.state.currentStep;
+            const playerLevels = activeGame.state.playerLevels;
+            const maxLevelCount = activeGame.levels.length;
             const playerIdList = activeGame.players;
             const hands = activeGame.state.hands;
             const piles = activeGame.state.piles;
             const aggregate: PlayerOverviewAggregate[] = [];
 
             for (const playerId of playerIdList) {
+                const currentLevelIndex = playerLevels.find(p => p.playerId === playerId)?.currentLevelIndex;
+                const hasAchievedLevel = playerLevels.find(p => p.playerId === playerId)?.hasAchievedLevel;
                 if (playerId !== state.player.id) {
                     aggregate.push({
                         playerId,
                         isActivePlayer: playerId === activePlayerId,
+                        currentLevelIndex: typeof currentLevelIndex === "undefined" ? -1 : currentLevelIndex,
+                        maxLevelCount,
+                        hasAchievedLevel: typeof hasAchievedLevel === "undefined" ? false : hasAchievedLevel,
                         currentStep,
                         handCardCount: (hands.find(h => h.id === playerId) as CardStackSecret).count,
                         discardPile: (piles.find(p => p.id === playerId) as CardStackOpen).cards
@@ -122,6 +129,9 @@ export const store = createStore<State>({
                     aggregate.push({
                         playerId,
                         isActivePlayer: playerId === activePlayerId,
+                        currentLevelIndex: typeof currentLevelIndex === "undefined" ? -1 : currentLevelIndex,
+                        maxLevelCount,
+                        hasAchievedLevel: typeof hasAchievedLevel === "undefined" ? false : hasAchievedLevel,
                         currentStep,
                         handCardCount: (hands.find(h => h.id === playerId) as CardStackOpen).cards.length,
                         discardPile: (piles.find(p => p.id === playerId) as CardStackOpen).cards

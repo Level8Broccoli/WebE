@@ -206,13 +206,14 @@ export class Api {
 
       // [Server] Generate gameId
       // [Server] Add game to server state
-      const game = {
+      const game: Game = {
         id: getUUID(),
         creatorId: request.player.id,
         config: request.config,
         players: [request.player.id],
         chat: [],
         status: GameStatus.IN_LOBBY,
+        levels: [],
         state: initGameState(),
       };
 
