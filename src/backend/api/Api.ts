@@ -1,8 +1,7 @@
 import { DateTime } from "luxon";
 import { StatusCode } from "../../shared/api/StatusCode";
-import { toKeyValueArray } from "../../shared/helper/HelperService";
-import { GameStatus, GameStep, LevelSystem } from "../../shared/model/Game";
-import { FullPlayer } from "../../shared/model/Player";
+import { GameStatus, GameStep, LevelSystem, PublicGameTransfer } from "../../shared/model/Game";
+import { FullPlayer, PublicPlayer } from "../../shared/model/Player";
 import {
   ChatRequest,
   CreateGameRequest,
@@ -34,18 +33,15 @@ import {
 import { ServerState } from "../../shared/model/ServerState";
 import {
   discardCard,
-  getAllGames,
-  getGame,
-  getGameState, getPlayerIdList, initGameState, isCardOwner,
+  getAllGamesForPlayer,
+  getGame, initGameState, isCardOwner,
   nextGameStep,
-  nextPlayer,
-  pileExists,
-  startGameState
+  nextPlayer, startGameState
 } from "../services/GameService";
 import {
-  activePlayerInGame, addChatMessage, createGame,
-  deleteGame, deleteOwnGame, editPlayerName, freeSpaceInGame, gameExists, getActiveGame, isCreator, isPlayerCountValid, joinGame,
-  leaveGame, playerExists, playerInGame, playerToSocketId, registerExistingPlayer, registerPlayer, removePlayerFromJoinedGame, removePlayerFromPlayerList
+  addChatMessage, authenticatePlayer, createGame,
+  deleteGame, deleteOwnGame, editPlayerName, freeSpaceInGame, gameExists, getActiveGameId, getAllRegisteredPlayers, isCreator, isPlayerCountValid, joinGame,
+  leaveGame, playerInGame, playerToSocketId, registerExistingPlayer, registerPlayer, removePlayerFromJoinedGame, removePlayerFromPlayerList
 } from "../services/ServerStateService";
 import { getSecret, getUUID } from "../services/TokenGeneratorService";
 
@@ -82,7 +78,7 @@ export class Api {
         status: StatusCode.OK,
         timestamp: DateTime.now(),
         player: player,
-        games: getAllGames(this._serverState, player.id),
+        games: this.getAllGames(player.id),
       };
 
       resolve(response);
@@ -97,7 +93,7 @@ export class Api {
       }
 
       // [Server] Validation (playerId + secret, no invalid rules) -> Errorfeedback
-      if (!playerExists(this._serverState, request.player)) {
+      if (!authenticatePlayer(this._serverState.players, request.player)) {
         reject(new Error(StatusCode.PLAYER_INVALID));
       }
 
@@ -108,7 +104,7 @@ export class Api {
       removePlayerFromJoinedGame(this._serverState, request.player.id);
 
       // [Server] Remove player from global player list
-      removePlayerFromPlayerList(this._serverState, request.player.id);
+      removePlayerFromPlayerList(this._serverState.players, request.player.id);
 
       const response: LogoutResponse = {
         status: StatusCode.OK,
@@ -131,12 +127,12 @@ export class Api {
       }
 
       // [Server] Validation (playerId + secret, no invalid rules) -> Errorfeedback
-      if (!playerExists(this._serverState, request.player)) {
+      if (!authenticatePlayer(this._serverState.players, request.player)) {
         reject(new Error(StatusCode.PLAYER_INVALID));
       }
 
       // [Server] Edit player name
-      registerExistingPlayer(this._serverState, request.player, socketId);
+      registerExistingPlayer(this._serverState.players, request.player, socketId);
 
       // [Server] Get all games
       // [Server] and send response of type: registerPlayer
@@ -144,8 +140,8 @@ export class Api {
         status: StatusCode.OK,
         timestamp: DateTime.now(),
         player: request.player,
-        games: getAllGames(this._serverState, request.player.id),
-        activeGameId: getActiveGame(this._serverState.games, request.player.id)?.id || "",
+        games: this.getAllGames(request.player.id),
+        activeGameId: getActiveGameId(this._serverState.games, request.player.id),
       };
 
       resolve(response);
@@ -162,12 +158,12 @@ export class Api {
       }
 
       // [Server] Validation (playerId + secret, no invalid rules) -> Errorfeedback
-      if (!playerExists(this._serverState, request.player)) {
+      if (!authenticatePlayer(this._serverState.players, request.player)) {
         reject(new Error(StatusCode.PLAYER_INVALID));
       }
 
       // [Server] Edit player name
-      editPlayerName(this._serverState, request.player);
+      editPlayerName(this._serverState.players, request.player);
 
 
       // [Server] send response of type: registerPlayer
@@ -184,7 +180,7 @@ export class Api {
   createGame(request: CreateGameRequest): Promise<CreateGameResponse> {
     return new Promise((resolve, reject) => {
       // [Server] Validation (playerId + secret, no invalid rules) -> Errorfeedback
-      if (!playerExists(this._serverState, request.player)) {
+      if (!authenticatePlayer(this._serverState.players, request.player)) {
         reject(new Error(StatusCode.PLAYER_INVALID));
       }
 
@@ -223,7 +219,7 @@ export class Api {
         state: initGameState(),
       };
 
-      createGame(this._serverState, game);
+      createGame(this._serverState.games, game);
 
       // [Server] Send response of type: createGame to all clients
       const response: CreateGameResponse = {
@@ -243,16 +239,22 @@ export class Api {
   deleteGame(request: DeleteGameRequest): Promise<DeleteGameResponse> {
     return new Promise((resolve, reject) => {
       // [Server] Validation (playerId + Secret + gameId, playerId must be equal to creatorId of game) -> Errorfeedback
-      if (!playerExists(this._serverState, request.player)) {
+      if (!authenticatePlayer(this._serverState.players, request.player)) {
         reject(new Error(StatusCode.PLAYER_INVALID));
       }
 
-      if (!isCreator(this._serverState, request.gameId, request.player)) {
+      if (!gameExists(this._serverState.games, request.gameId)) {
+        reject(new Error(StatusCode.GAME_NOT_EXISTS));
+      }
+
+      const game = getGame(this._serverState.games, request.gameId);
+
+      if (!isCreator(game, request.player.id)) {
         reject(new Error(StatusCode.GAME_CREATOR_INVALID));
       }
 
       // [Server] Remove game from server state
-      deleteGame(this._serverState, request.gameId);
+      deleteGame(this._serverState.games, request.gameId);
 
       // [Server] Send response of type: deleteGame to all clients
       const response: DeleteGameResponse = {
@@ -268,20 +270,22 @@ export class Api {
   joinGame(request: JoinGameRequest): Promise<JoinGameResponse> {
     return new Promise((resolve, reject) => {
       // [Server] Validation (playerId + Secret, is there a free place in the game room?) -> Errorfeedback
-      if (!playerExists(this._serverState, request.player)) {
+      if (!authenticatePlayer(this._serverState.players, request.player)) {
         reject(new Error(StatusCode.PLAYER_INVALID));
       }
 
-      if (!gameExists(this._serverState, request.gameId)) {
+      if (!gameExists(this._serverState.games, request.gameId)) {
         reject(new Error(StatusCode.GAME_NOT_EXISTS));
       }
 
-      if (!freeSpaceInGame(this._serverState, request.gameId)) {
+      const game = getGame(this._serverState.games, request.gameId);
+
+      if (!freeSpaceInGame(game)) {
         reject(new Error(StatusCode.GAME_FULL));
       }
 
       // [Server] Add playerId to the requested game in server state
-      joinGame(this._serverState, request.player, request.gameId);
+      joinGame(game, request.player);
 
       // [Server] Send response of type: joinGame to all clients
       const response: JoinGameResponse = {
@@ -291,7 +295,7 @@ export class Api {
           id: request.player.id,
           name: request.player.name,
         },
-        game: getGame(this._serverState, request.gameId)!,
+        game,
       };
 
       resolve(response);
@@ -301,7 +305,7 @@ export class Api {
   leaveGame(request: LeaveGameRequest): Promise<LeaveGameResponse> {
     return new Promise((resolve, reject) => {
       // [Server] Validation (playerId + Secret) -> Errorfeedback
-      if (!playerExists(this._serverState, request.player)) {
+      if (!authenticatePlayer(this._serverState.players, request.player)) {
         reject(new Error(StatusCode.PLAYER_INVALID));
       }
 
@@ -326,7 +330,7 @@ export class Api {
   chat(request: ChatRequest): Promise<ChatResponse> {
     return new Promise((resolve, reject) => {
       // [Server] Validation (playerId + Secret) -> Errorfeedback
-      if (!playerExists(this._serverState, request.player)) {
+      if (!authenticatePlayer(this._serverState.players, request.player)) {
         reject(new Error(StatusCode.PLAYER_INVALID));
       }
 
@@ -352,24 +356,26 @@ export class Api {
     return new Promise((resolve, reject) => {
       // [Server] Validation (playerId + Secret, game exists? playerId equals creatorId,
       // playerCount in room == playerCount in ruleset) -> Errorfeedback
-      if (!playerExists(this._serverState, request.player)) {
+      if (!authenticatePlayer(this._serverState.players, request.player)) {
         reject(new Error(StatusCode.PLAYER_INVALID));
       }
 
-      if (!gameExists(this._serverState, request.gameId)) {
+      if (!gameExists(this._serverState.games, request.gameId)) {
         reject(new Error(StatusCode.GAME_NOT_EXISTS));
       }
 
-      if (!isCreator(this._serverState, request.gameId, request.player)) {
+      const game = getGame(this._serverState.games, request.gameId);
+
+      if (!isCreator(game, request.player.id)) {
         reject(new Error(StatusCode.GAME_CREATOR_INVALID));
       }
 
-      if (!isPlayerCountValid(this._serverState, request.gameId)) {
+      if (!isPlayerCountValid(game)) {
         reject(new Error(StatusCode.PLAYER_COUNT_MATCH_INVALID));
       }
 
       // [Server] Create initial game state
-      startGameState(this._serverState, request.gameId);
+      startGameState(game);
 
       const response: StartGameResponse = {
         status: StatusCode.OK,
@@ -386,21 +392,23 @@ export class Api {
   ): Promise<[DrawCardResponse, UpdateGameBoardResponse]> {
     return new Promise((resolve, reject) => {
       // [Server] Validation (playerId + Secret, player is on move? -> Errorfeedback
-      if (!playerExists(this._serverState, request.player)) {
+      if (!authenticatePlayer(this._serverState.players, request.player)) {
         reject(new Error(StatusCode.PLAYER_INVALID));
       }
 
-      if (!gameExists(this._serverState, request.gameId)) {
+      if (!gameExists(this._serverState.games, request.gameId)) {
         reject(new Error(StatusCode.GAME_NOT_EXISTS));
       }
 
-      if (!pileExists(this._serverState, request.gameId, request.pileId)) {
-        reject(new Error(StatusCode.PILE_NOT_EXISTS));
-      }
+      const game = getGame(this._serverState.games, request.gameId);
 
-      if (!(this.getActivePlayer(request.gameId) === request.player.id)) {
-        reject(new Error(StatusCode.NOT_ACTIVE_PLAYER));
-      }
+      // if (!pileExists(this._serverState, request.gameId, request.pileId)) {
+      //   reject(new Error(StatusCode.PILE_NOT_EXISTS));
+      // }
+
+      // if (!(this.activePlayerInGame(this._serverState, request.gameId) === request.player.id)) {
+      //   reject(new Error(StatusCode.NOT_ACTIVE_PLAYER));
+      // }
 
       // const card = drawCard(this._serverState, request.gameId, request.pileId);
       // const piles = getGameState(this._serverState, request.gameId).piles;
@@ -424,23 +432,24 @@ export class Api {
   discardCard(request: DiscardCardRequest): Promise<UpdateGameBoardResponse> {
     return new Promise((resolve, reject) => {
       // [Server] Validation (playerId + Secret, player is on move? -> Errorfeedback
-      if (!playerExists(this._serverState, request.player)) {
+      if (!authenticatePlayer(this._serverState.players, request.player)) {
         reject(new Error(StatusCode.PLAYER_INVALID));
       }
 
-      if (!gameExists(this._serverState, request.gameId)) {
+      if (!gameExists(this._serverState.games, request.gameId)) {
         reject(new Error(StatusCode.GAME_NOT_EXISTS));
       }
 
-      if (!(this.getActivePlayer(request.gameId) === request.player.id)) {
+      const game = getGame(this._serverState.games, request.gameId);
+
+      if (!(game.state.activePlayerId === request.player.id)) {
         reject(new Error(StatusCode.NOT_ACTIVE_PLAYER));
       }
 
       if (
         !isCardOwner(
-          this._serverState,
-          request.gameId,
-          request.player,
+          game,
+          request.player.id,
           request.cardId
         )
       ) {
@@ -448,15 +457,14 @@ export class Api {
       }
 
       discardCard(
-        this._serverState,
-        request.gameId,
-        request.player,
+        game,
+        request.player.id,
         request.cardId
       );
 
-      nextPlayer(this._serverState, request.gameId);
+      nextPlayer(game);
 
-      nextGameStep(this._serverState, request.gameId, GameStep.DRAW);
+      nextGameStep(game, GameStep.DRAW);
 
       const response: UpdateGameBoardResponse = {
         status: StatusCode.OK,
@@ -469,14 +477,19 @@ export class Api {
   }
 
   getSocketId(playerId: string): string {
-    return playerToSocketId(this._serverState, playerId);
-  }
-
-  getActivePlayer(gameId: string): string {
-    return activePlayerInGame(this._serverState, gameId);
+    return playerToSocketId(this._serverState.players, playerId);
   }
 
   getPlayerIdListFromGame(gameId: string): string[] {
-    return getPlayerIdList(this._serverState, gameId);
+    const game = getGame(this._serverState.games, gameId);
+    return game.players;
+  }
+
+  getAllPlayers(): PublicPlayer[] {
+    return getAllRegisteredPlayers(this._serverState.players);
+  }
+
+  getAllGames(playerId?: string): PublicGameTransfer[] {
+    return getAllGamesForPlayer(this._serverState.games, playerId)
   }
 }

@@ -1,7 +1,5 @@
 import { Server } from "socket.io";
 import { Api } from "./backend/api/Api";
-import { getAllGames } from "./backend/services/GameService";
-import { getAllRegisteredPlayers } from "./backend/services/ServerStateService";
 import {
   ChatRequest,
   CreateGameRequest,
@@ -39,7 +37,7 @@ io.on("connection", (socket) => {
       .registerPlayer(request, socket.id)
       .then((response) => {
         socket.emit("registerPlayer", response);
-        io.emit("updatePlayerList", { playerList: getAllRegisteredPlayers(serverState) });
+        io.emit("updatePlayerList", { playerList: api.getAllPlayers() });
         console.log(`>>> Registered Player ${response.player.id}`);
       })
       .catch((error) => {
@@ -55,8 +53,8 @@ io.on("connection", (socket) => {
       .logoutPlayer(request)
       .then((response) => {
         socket.emit("logout", response);
-        io.emit("updatePlayerList", { playerList: getAllRegisteredPlayers(serverState) });
-        io.emit("updateGameList", { gameList: getAllGames(serverState) });
+        io.emit("updatePlayerList", { playerList: api.getAllPlayers() });
+        io.emit("updateGameList", { gameList: api.getAllGames() });
       })
       .catch((error) => {
         const response: ErrorResponse = {
@@ -71,7 +69,7 @@ io.on("connection", (socket) => {
       .registerExistingPlayer(request, socket.id)
       .then((response) => {
         socket.emit("registerExistingPlayer", response);
-        io.emit("updatePlayerList", { playerList: getAllRegisteredPlayers(serverState) });
+        io.emit("updatePlayerList", { playerList: api.getAllPlayers() });
         if (response.activeGameId.length > 0) {
           socket.join(response.activeGameId);
         }
@@ -89,7 +87,7 @@ io.on("connection", (socket) => {
     api
       .editPlayerName(request)
       .then((response) => {
-        io.emit("updatePlayerList", { playerList: getAllRegisteredPlayers(serverState) });
+        io.emit("updatePlayerList", { playerList: api.getAllPlayers() });
         socket.emit("editPlayerName", response);
       })
       .catch((error) => {
@@ -106,7 +104,7 @@ io.on("connection", (socket) => {
       .then((response) => {
         socket.join(response.game.id);
         io.emit("createGame", response);
-        io.emit("updateGameList", { gameList: getAllGames(serverState) });
+        io.emit("updateGameList", { gameList: api.getAllGames() });
       })
       .catch((error) => {
         const response: ErrorResponse = {
@@ -122,7 +120,7 @@ io.on("connection", (socket) => {
       .then((response) => {
         socket.leave(response.gameId);
         io.emit("deleteGame", response);
-        io.emit("updateGameList", { gameList: getAllGames(serverState) });
+        io.emit("updateGameList", { gameList: api.getAllGames() });
       })
       .catch((error) => {
         const response: ErrorResponse = {
@@ -138,7 +136,7 @@ io.on("connection", (socket) => {
       .then((response) => {
         socket.join(response.game.id);
         io.emit("joinGame", response);
-        io.emit("updateGameList", { gameList: getAllGames(serverState) });
+        io.emit("updateGameList", { gameList: api.getAllGames() });
       })
       .catch((error) => {
         const response: ErrorResponse = {
@@ -154,7 +152,7 @@ io.on("connection", (socket) => {
       .then((response) => {
         socket.leave(response.gameId);
         io.emit("leaveGame", response);
-        io.emit("updateGameList", { gameList: getAllGames(serverState) });
+        io.emit("updateGameList", { gameList: api.getAllGames() });
       })
       .catch((error) => {
         const response: ErrorResponse = {
@@ -235,6 +233,6 @@ function broadcastUpdateGameState(response: StartGameResponse) {
   const playerIdList = api.getPlayerIdListFromGame(response.gameId);
   for (const playerId of playerIdList) {
     const socketId = api.getSocketId(playerId);
-    io.to(socketId).emit("updateGameList", { gameList: getAllGames(serverState, playerId) });
+    io.to(socketId).emit("updateGameList", { gameList: api.getAllGames(playerId) });
   }
 }

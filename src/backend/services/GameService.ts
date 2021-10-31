@@ -49,19 +49,6 @@ function initialCardSet(): Card[] {
   return cardset;
 }
 
-function createHand(cardset: Card[]): Card[] {
-  const cards = [];
-
-  for (let index = 0; index < 10; index++) {
-    const card = cardset.pop();
-    if (card !== undefined) {
-      cards.push(card);
-    }
-  }
-
-  return cards;
-}
-
 export function initGameState(): GameState {
   // Init state with a full randomly sorted draw pile
   return {
@@ -76,11 +63,8 @@ export function initGameState(): GameState {
 }
 
 export function startGameState(
-  serverState: ServerState,
-  gameId: string
-): void {
-  const game = serverState.games.find(g => g.id === gameId)!;
-
+  game: Game
+) {
   game.status = GameStatus.IN_PROGRESS;
 
   const playerIdList = game.players;
@@ -137,10 +121,14 @@ export function addCardToHand(
 }
 
 export function getGame(
-  serverState: ServerState,
+  gameList: Game[],
   gameId: string
-): Game | undefined {
-  return serverState.games.find((g) => g.id === gameId);
+): Game {
+  const game = gameList.find(g => g.id === gameId);
+  if (typeof game === "undefined") {
+    throw new Error("Game not Found!");
+  }
+  return game;
 }
 
 export function getGameState(
@@ -163,35 +151,29 @@ export function pileExists(
 }
 
 export function isCardOwner(
-  serverState: ServerState,
-  gameId: string,
-  player: PrivatePlayer,
+  game: Game,
+  playerId: string,
   cardId: string
 ): boolean {
-  return (
-    serverState.games
-      .find((g) => g.id === gameId)!
-      .state!.hands.get(player.id)!
-      .find((c) => c.id === cardId) !== undefined
-  );
+  return game.state.hands.get(playerId)!
+    .find((c) => c.id === cardId) !== undefined
+
 }
 
 export function discardCard(
-  serverState: ServerState,
-  gameId: string,
-  player: PrivatePlayer,
+  game: Game,
+  playerId: string,
   cardId: string
 ) {
-  const game = serverState.games.find((g) => g.id === gameId);
   // remove the card from the hand
   const hands = game!.state.hands;
-  const card = hands.get(player.id)!.find(c => c.id === cardId);
+  const card = hands.get(playerId)!.find(c => c.id === cardId);
   hands.set(
-    player.id,
-    hands.get(player.id)!.filter((c) => c.id !== cardId)
+    playerId,
+    hands.get(playerId)!.filter((c) => c.id !== cardId)
   );
   // then add it to the players discard pile
-  const pile = game!.state.piles.get(player.id);
+  const pile = game!.state.piles.get(playerId);
   pile!.unshift(card!);
 }
 
@@ -225,11 +207,11 @@ function drawCard(game: Game, from: string, to: string) {
   toHand.push(nextCard);
 }
 
-export function getAllGames(
-  serverState: ServerState,
+export function getAllGamesForPlayer(
+  gameList: Game[],
   playerId?: string
 ): PublicGameTransfer[] {
-  return serverState.games.map(({ id, creatorId, players, config, status, chat, state: { activePlayerId, currentStep, hands, piles } }) => {
+  return gameList.map(({ id, creatorId, players, config, status, chat, state: { activePlayerId, currentStep, hands, piles } }) => {
     const handKeys = Array.from(hands.keys());
     const newHands = new Map<string, Card[] | number>();
     handKeys.forEach(key => {
@@ -265,12 +247,8 @@ export function getAllGames(
   });
 }
 
-export function getPlayerIdList(serverState: ServerState, gameId: string): string[] {
-  return serverState.games.find(g => g.id === gameId)!.players;
-}
 
-export function nextPlayer(serverState: ServerState, gameId: string): void {
-  const game = serverState.games.find(g => g.id === gameId)!;
+export function nextPlayer(game: Game) {
   const activePlayerId = game.state.activePlayerId;
   const playerIdList = game.players;
   const numberOfPlayers = game.players.length;
@@ -280,7 +258,6 @@ export function nextPlayer(serverState: ServerState, gameId: string): void {
   game.state.activePlayerId = playerIdList[nextPlayerIndex];
 }
 
-export function nextGameStep(serverState: ServerState, gameId: string, gameStep: GameStep): void {
-  const game = serverState.games.find(g => g.id === gameId)!;
+export function nextGameStep(game: Game, gameStep: GameStep) {
   game.state.currentStep = gameStep;
 }

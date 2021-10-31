@@ -15,12 +15,12 @@ export function removePlayerFromJoinedGame(serverState: ServerState, playerId: s
   serverState.games.map(g => g.players = g.players.filter(p => p !== playerId));
 }
 
-export function removePlayerFromPlayerList(serverState: ServerState, playerId: string) {
-  serverState.players = serverState.players.filter(p => p.id !== playerId);
+export function removePlayerFromPlayerList(playerIdList: FullPlayer[], playerId: string) {
+  playerIdList = playerIdList.filter(p => p.id !== playerId);
 }
 
-export function registerExistingPlayer(serverState: ServerState, player: PrivatePlayer, socketId: string) {
-  serverState.players = serverState.players.map((p) =>
+export function registerExistingPlayer(playerIdList: FullPlayer[], player: PrivatePlayer, socketId: string) {
+  playerIdList = playerIdList.map((p) =>
     p.id === player.id && p.secret === player.secret
       ? { ...p, socketId: socketId }
       : p
@@ -28,73 +28,60 @@ export function registerExistingPlayer(serverState: ServerState, player: Private
 }
 
 export function editPlayerName(
-  serverState: ServerState,
+  playerIdList: FullPlayer[],
   player: PrivatePlayer
 ) {
-  serverState.players = serverState.players.map((p) =>
+  playerIdList = playerIdList.map((p) =>
     p.id === player.id && p.secret === player.secret
       ? { ...p, name: player.name }
       : p
   );
 }
 
-export function createGame(serverState: ServerState, game: Game) {
-  serverState.games.push(game);
+export function createGame(gameList: Game[], game: Game) {
+  gameList.push(game);
 }
 
-export function playerExists(
-  serverState: ServerState,
+export function authenticatePlayer(
+  playerList: FullPlayer[],
   player: PrivatePlayer
 ): boolean {
   // Find player with correct id and secret pair
-  const found = serverState.players.find(
+  return !!playerList.find(
     (p) => p.id === player.id && p.secret === player.secret
   );
-
-  return found !== undefined;
 }
 
 export function isCreator(
-  serverState: ServerState,
-  gameId: string,
-  player: PrivatePlayer
+  game: Game,
+  playerId: string
 ): boolean {
   // Find game with correct gameId and creatorId pair
-  const found = serverState.games.find(
-    (g) => g.id === gameId && g.creatorId === player.id
-  );
-
-  return found !== undefined;
+  return game.creatorId === playerId
 }
 
-export function deleteGame(serverState: ServerState, gameId: string) {
-  serverState.games = serverState.games.filter((g) => g.id !== gameId);
+export function deleteGame(gameList: Game[], gameId: string) {
+  gameList = gameList.filter((g) => g.id !== gameId);
 }
 
 export function gameExists(
-  serverState: ServerState,
+  gameList: Game[],
   gameId: string
 ): boolean {
-  return serverState.games.find((g) => g.id === gameId) !== undefined;
+  return gameList.find((g) => g.id === gameId) !== undefined;
 }
 
 export function freeSpaceInGame(
-  serverState: ServerState,
-  gameId: string
+  game: Game,
 ): boolean {
-  const g = serverState.games.find((g) => g.id === gameId);
-  if (g === undefined) {
-    return false;
-  }
-  return g.players.length < g.config.maxPlayerCount;
+  return game.players.length < game.config.maxPlayerCount;
 }
 
 export function joinGame(
-  serverState: ServerState,
+  game: Game,
   player: PrivatePlayer,
-  gameId: string
 ) {
-  serverState.games.find((g) => g.id === gameId)?.players.push(player.id);
+  game.players.push(player.id);
 }
 
 export function leaveGame(
@@ -133,39 +120,34 @@ export function addChatMessage(
 }
 
 export function isPlayerCountValid(
-  serverState: ServerState,
-  gameId: string
+  game: Game
 ): boolean {
-  const game = serverState.games.find((g) => g.id === gameId);
-  if (typeof game === "undefined") {
-    return false;
-  }
   return game.players.length <= game.config.maxPlayerCount;
 }
 
 export function playerToSocketId(
-  serverState: ServerState,
+  playerList: FullPlayer[],
   playerId: string
 ): string {
-  const player = serverState.players.find((p) => p.id === playerId);
-  return player!.socketId;
+  const player = playerList.find((p) => p.id === playerId);
+  if (typeof player === "undefined") {
+    throw new Error("Player not found!");
+  }
+  return player.socketId;
 }
 
-export function activePlayerInGame(
-  serverState: ServerState,
-  gameId: string
-): string {
-  return serverState.games.find((g) => g.id === gameId)!.state!.activePlayerId;
-}
-
-export function getActiveGame(games: Game[], playerId: string): undefined | Game {
-  return games.find(g => g.players.includes(playerId));
+export function getActiveGameId(games: Game[], playerId: string): string {
+  const game = games.find(g => g.players.includes(playerId));
+  if (typeof game === "undefined") {
+    return "";
+  }
+  return game.id;
 }
 
 export function getAllRegisteredPlayers(
-  serverState: ServerState
+  playerList: FullPlayer[]
 ): PublicPlayer[] {
-  return serverState.players.map(({ id, name }) => {
+  return playerList.map(({ id, name }) => {
     return { id, name }
   });
 }
