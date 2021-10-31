@@ -1,22 +1,22 @@
 
 <template>
-  <div :class="'card color-' + card.color">
+  <div :class="'card color-' + color">
     <header class="top">
       <strong>{{ card.value }}</strong>
     </header>
     <footer class="bottom">
-      <i v-if="card.color === 'ORANGE'" class="fas fa-circle"></i>
-      <i v-if="card.color === 'BLUE'" class="fas fa-square"></i>
-      <i v-if="card.color === 'RED'" class="fas fa-triangle"></i>
-      <i v-if="card.color === 'VIOLET'" class="fas fa-star"></i>
-      <i v-if="card.color === 'YELLOW'" class="fas fa-atom-alt"></i>
-      <i v-if="card.color === 'GREEN'" class="fas fa-hexagon"></i>
+      <i v-if="color === 'ORANGE'" class="fas fa-circle"></i>
+      <i v-if="color === 'BLUE'" class="fas fa-square"></i>
+      <i v-if="color === 'RED'" class="fas fa-triangle"></i>
+      <i v-if="color === 'VIOLET'" class="fas fa-star"></i>
+      <i v-if="color === 'YELLOW'" class="fas fa-atom-alt"></i>
+      <i v-if="color === 'GREEN'" class="fas fa-hexagon"></i>
     </footer>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
+import { computed, defineComponent, PropType } from "vue";
 import { Card } from "../../../shared/model/Game";
 
 export default defineComponent({
@@ -25,8 +25,16 @@ export default defineComponent({
     card: { type: Object as PropType<Card>, required: true },
   },
   setup(props) {
+    const color = computed(() => {
+      const { card } = props;
+      if ("color" in card) {
+        return card.color;
+      }
+      return "NONE";
+    });
     return {
       ...props,
+      color,
     };
   },
 });
