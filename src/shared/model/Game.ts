@@ -106,41 +106,45 @@ export type PlayerOverviewAggregate = {
   discardPile: Card[];
 }
 
+export type GameRule = {
+  type: CardRowType;
+  count: number;
+}
 
-export const GameRules = {
-  LVL1: [
+export const GameRules: GameRule[][] = [
+  [
     { type: CardRowType.STREET, count: 3 },
     { type: CardRowType.STREET, count: 3 }
   ],
-  LVL2: [
+  [
     { type: CardRowType.SAME_NUMBER, count: 2 },
     { type: CardRowType.SAME_NUMBER, count: 2 },
     { type: CardRowType.SAME_NUMBER, count: 2 },
     { type: CardRowType.SAME_NUMBER, count: 2 }
   ],
-  LVL3: [
+  [
     { type: CardRowType.STREET, count: 4 },
     { type: CardRowType.STREET, count: 4 },
   ],
-  LVL4: [
+  [
     { type: CardRowType.STREET, count: 6 },
     { type: CardRowType.SAME_NUMBER, count: 2 },
   ],
-  LVL5: [
+  [
     { type: CardRowType.STREET, count: 7 },
   ],
-  LVL6: [
+  [
     { type: CardRowType.SAME_NUMBER, count: 2 },
     { type: CardRowType.SAME_NUMBER, count: 3 },
     { type: CardRowType.SAME_NUMBER, count: 3 },
   ],
-  LVL7: [
+  [
     { type: CardRowType.SAME_NUMBER, count: 3 },
     { type: CardRowType.SAME_COLOR, count: 5 },
   ],
-  LVL8: [
+  [
     { type: CardRowType.SAME_NUMBER, count: 2 },
     { type: CardRowType.SAME_NUMBER, count: 3 },
     { type: CardRowType.SAME_NUMBER, count: 4 },
   ],
-}
+]

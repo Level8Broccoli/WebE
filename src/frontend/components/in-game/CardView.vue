@@ -4,13 +4,21 @@
     :class="
       'card card-shadow color-' +
       color +
-      (canBeDiscarded || canBeDrawn ? ' interactive' : '')
+      (isAlreadyInFulfillment ? ' already-selected' : '') +
+      (isAlreadySelected ? ' currently-selected' : '') +
+      (canBeDiscarded || canBeDrawn || isInFulfillmentMode
+        ? ' interactive'
+        : '')
     "
     v-on="
       canBeDiscarded
         ? { click: discardCard }
         : canBeDrawn
         ? { click: drawCard }
+        : isInFulfillmentMode
+        ? { click: chooseForFulfillment }
+        : isAlreadySelected
+        ? { click: deselectCard }
         : {}
     "
   >
@@ -41,22 +49,20 @@ export default defineComponent({
     id: { type: String, required: true },
     isHand: { type: Boolean, default: false },
     isDiscard: { type: Boolean, default: false },
+    isInFulfillmentMode: { type: Boolean, default: false },
     owner: { type: String, default: "" },
   },
   setup(props) {
     const store = useStore(key);
-
     const canBeDiscarded = computed(
       () =>
         props.isHand &&
         store.getters.amIActivePlayer &&
         store.getters.getCurrentStep === 3
     );
-
     const discardCard = (e: Event) => {
       store.commit("discardCard", { cardId: props.id });
     };
-
     const canBeDrawn = computed(
       () =>
         props.isDiscard &&
@@ -70,7 +76,34 @@ export default defineComponent({
         cardValue: props.value,
       });
     };
-
+    const isAlreadySelected = computed(() => {
+      const temp = store.state.tempCardsForFulfillment;
+      if (temp.find((s) => s === props.id) !== undefined) {
+        return true;
+      }
+      return false;
+    });
+    const isAlreadyInFulfillment = computed(() => {
+      const prepared = store.state.cardRowsForFulfillment;
+      for (const cardIdList of prepared) {
+        if (cardIdList.find((s) => s === props.id) !== undefined) {
+          return true;
+        }
+      }
+      return false;
+    });
+    const isInFulfillmentMode = computed(
+      () =>
+        props.isInFulfillmentMode &&
+        !isAlreadyInFulfillment.value &&
+        !isAlreadySelected.value
+    );
+    const chooseForFulfillment = () => {
+      store.commit("storeForFulfillment", { cardId: props.id });
+    };
+    const deselectCard = () => {
+      store.commit("deselectCard", { cardId: props.id });
+    };
     return {
       value: props.value,
       color: props.color,
@@ -78,6 +111,11 @@ export default defineComponent({
       discardCard,
       canBeDrawn,
       drawCard,
+      isInFulfillmentMode,
+      chooseForFulfillment,
+      isAlreadyInFulfillment,
+      isAlreadySelected,
+      deselectCard,
     };
   },
 });

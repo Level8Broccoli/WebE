@@ -70,8 +70,4 @@ export default defineComponent({
   align-content: space-between;
   gap: 1rem;
 }
-.is-disabled {
-  background-color: #363636;
-  cursor: not-allowed;
-}
 </style>

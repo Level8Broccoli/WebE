@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client';
 import { InjectionKey } from 'vue';
 import { createStore, Store } from 'vuex';
-import { Card, CardStackOpen, CardStackSecret, CardType, Config, DRAW_PILE_ID, Game, GameStatus, LevelSystem, PlayerOverviewAggregate } from '../../shared/model/Game';
+import { Card, CardStackOpen, CardStackSecret, CardType, Color, Config, DRAW_PILE_ID, Game, GameRule, GameRules, GameStatus, LevelSystem, PlayerOverviewAggregate } from '../../shared/model/Game';
 import { PrivatePlayer, PublicPlayer } from '../../shared/model/Player';
 import { ChatResponse } from '../../shared/model/ResponseTypes';
 import { i18n, Language } from '../i18n/i18n';
@@ -16,6 +16,8 @@ export interface State {
     games: Game[],
     gameInCreation?: Config,
     activeGameId: string,
+    tempCardsForFulfillment: string[],
+    cardRowsForFulfillment: string[][],
     errorLog: string[]
 }
 
@@ -37,6 +39,8 @@ export const store = createStore<State>({
         games: [],
         gameInCreation: undefined,
         activeGameId: "",
+        tempCardsForFulfillment: [],
+        cardRowsForFulfillment: [],
         errorLog: [],
     },
     getters: {
@@ -177,6 +181,16 @@ export const store = createStore<State>({
             }
             return activeGame.state.activePlayerId === state.player.id;
         },
+        getCurrentLevelRules(state, getters): GameRule[] {
+            const activeGame = state.activeGameId.length > 0
+                && getters.getActiveGame as Game;
+            if (!activeGame) {
+                return [];
+            }
+            const rules = GameRules;
+            const currentLevel: number = getters.myCurrentLevel;
+            return rules[currentLevel];
+        },
         getCurrentStep(state, getters): number {
             const activeGame = state.activeGameId.length > 0
                 && getters.getActiveGame as Game;
@@ -208,10 +222,49 @@ export const store = createStore<State>({
                 }
                 return discardPile.cards[0];
             }
+        },
+        getCardValue(state, getters) {
+            return (cardId: string): number => {
+                const activeGame = state.activeGameId.length > 0
+                    && getters.getActiveGame as Game;
+                if (!activeGame) {
+                    return -1;
+                }
+                const cards: Card[] = getters.getMyHands;
+                const card = cards.find(c => c.id === cardId);
+                if (typeof card === "undefined") {
+                    return -1;
+                }
+                return card.value;
+            }
+        },
+        getCardColor(state, getters) {
+            return (cardId: string): string => {
+                const activeGame = state.activeGameId.length > 0
+                    && getters.getActiveGame as Game;
+                if (!activeGame) {
+                    return "NONE";
+                }
+                const cards: Card[] = getters.getMyHands;
+                const card = cards.find(c => c.id === cardId);
+                if (typeof card === "undefined") {
+                    return "NONE";
+                }
+                return card.color;
+            }
         }
-
     },
     mutations: {
+        abortFulfillment(state) {
+            state.cardRowsForFulfillment = [];
+            state.tempCardsForFulfillment = [];
+        },
+        storeForFulfillment(state, { cardId }) {
+            state.tempCardsForFulfillment.push(cardId);
+        },
+        deselectCard(state, { cardId }) {
+            state.tempCardsForFulfillment = state.tempCardsForFulfillment.filter(s => s !== cardId);
+        },
         updatePlayerName(state, value: string) {
             state.player.name = value;
         },
