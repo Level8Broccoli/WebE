@@ -1,8 +1,9 @@
 <template>
   <main class="the-game">
     <MyHand />
-    <OtherPlayers />
+    <PlayerOverviewList />
     <DrawPile />
+    <NextStep />
   </main>
 </template>
 
@@ -10,14 +11,16 @@
 import { defineComponent } from "vue";
 import DrawPile from "./DrawPile.vue";
 import MyHand from "./MyHand.vue";
-import OtherPlayers from "./PlayerOverviewList.vue";
+import PlayerOverviewList from "./PlayerOverviewList.vue";
+import NextStep from "./NextStep.vue";
 
 export default defineComponent({
   name: "TheGame",
   components: {
     MyHand,
-    OtherPlayers,
+    PlayerOverviewList,
     DrawPile,
+    NextStep,
   },
 });
 </script>

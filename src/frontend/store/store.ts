@@ -170,8 +170,6 @@ export const store = createStore<State>({
             }
         },
         updateGames(state, value: Game[]) {
-            console.log("updateGames", value);
-
             state.games = value;
         },
         addGame(state, value: Game) {
