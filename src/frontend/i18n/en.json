@@ -35,5 +35,13 @@
     "currentStepExplanation3": "Choose one card in your hand to discard.",
     "stepWaiting": "Waiting",
     "pleaseWaitOnPlayer": "Please wait on player",
-    "yourTurn": "It's your turn:"
+    "yourTurn": "It's your turn:",
+    "lvl1": "two runs of 3 cards",
+    "lvl2": "four pairs",
+    "lvl3": "two runs of 4 cards",
+    "lvl4": "a run of 6 cards + a pair",
+    "lvl5": "a run of 7 cards",
+    "lvl6": "a pair + two 3 of a kind",
+    "lvl7": "3 of a kind + 5 cards = colour",
+    "lvl8": "pair + 3 of a kind + 4 of a kind"
 }

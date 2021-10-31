@@ -35,5 +35,13 @@
     "currentStepExplanation3": "Wirf eine Karte aus der Hand ab.",
     "stepWaiting": "Warten",
     "pleaseWaitOnPlayer": "Bitte warte auf Spieler",
-    "yourTurn": "Du bist an der Reihe:"
+    "yourTurn": "Du bist an der Reihe:",
+    "lvl1": "2 Dreierfolgen",
+    "lvl2": "4 Zwillinge",
+    "lvl3": "2 Viererfolgen",
+    "lvl4": "1 Sechserfolge + 1 Zwilling",
+    "lvl5": "1 Siebnerfolge",
+    "lvl6": "1 Zwilling + 2 Drillinge",
+    "lvl7": "1 Drilling + 5 Karten/Farbe",
+    "lvl8": "1 Zwilling + 1 Drilling + 1 Vierling"
 }

@@ -95,6 +95,27 @@ export const store = createStore<State>({
                 (activeGame.state.hands.find(h => h.id === state.player.id) as CardStackOpen).cards ||
                 [];
         },
+        getTranslatedLevels(state, getters): string[] {
+            const activeGame = state.activeGameId.length > 0
+                && getters.getActiveGame as Game;
+            const i18n = getters.i18n;
+
+            if (!activeGame) {
+                return [];
+            }
+            const levels = activeGame.levels;
+            return levels.map(l => i18n["lvl" + (l + 1)]);
+        },
+        myCurrentLevel(state, getters): number {
+            const activeGame = state.activeGameId.length > 0
+                && getters.getActiveGame as Game;
+
+            if (!activeGame) {
+                return -1;
+            }
+            const myCurrentLevel = activeGame.state.playerLevels.find(l => l.playerId === state.player.id)?.currentLevelIndex;
+            return typeof myCurrentLevel === "undefined" ? -1 : myCurrentLevel;
+        },
         aggregateOtherPlayers(state, getters): PlayerOverviewAggregate[] {
             const activeGame = state.activeGameId.length > 0
                 && getters.getActiveGame as Game;
