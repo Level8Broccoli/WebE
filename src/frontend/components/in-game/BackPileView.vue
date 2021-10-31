@@ -1,13 +1,19 @@
 
 <template>
-  <div class="card card-shadow back" v-if="count > 0">
+  <div
+    :class="'card card-shadow back' + (canBeDrawn ? ' interactive' : '')"
+    v-if="count > 0"
+    v-on="canBeDrawn ? { click: drawCard } : {}"
+  >
     {{ count }}
   </div>
   <EmptyPileView v-else />
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { computed, defineComponent } from "vue";
+import { useStore } from "vuex";
+import { key } from "../../store/store";
 import EmptyPileView from "./EmptyPileView.vue";
 
 export default defineComponent({
@@ -17,9 +23,21 @@ export default defineComponent({
   },
   props: {
     count: { type: Number, default: 0 },
+    isDrawPile: { type: Boolean, default: false },
   },
   setup(props) {
-    return { ...props };
+    const store = useStore(key);
+
+    const canBeDrawn = computed(
+      () =>
+        props.isDrawPile &&
+        store.getters.amIActivePlayer &&
+        store.getters.getCurrentStep === 0
+    );
+    const drawCard = (e: Event) => {
+      store.commit("drawCardFromDrawPile", { pileId: "drawPile" });
+    };
+    return { ...props, canBeDrawn, drawCard };
   },
 });
 </script>

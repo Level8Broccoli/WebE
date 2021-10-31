@@ -1,7 +1,7 @@
 <template>
   <main>
     {{ i18n.drawPile }}
-    <BackPileView :count="drawPileCount" />
+    <BackPileView :count="drawPileCount" :isDrawPile="true" />
   </main>
 </template>
 

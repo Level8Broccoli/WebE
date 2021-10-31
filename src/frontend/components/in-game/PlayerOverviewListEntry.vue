@@ -4,10 +4,10 @@
     <p>
       {{ playerName }}
       <span v-if="isActivePlayer">{{ currentStep }}</span>
-      <span v-else>{{i18n.stepWaiting}}</span>
+      <span v-else>{{ i18n.stepWaiting }}</span>
     </p>
     <BackPileView :count="handCount" />
-    <CardView :card="discardPileTop" />
+    <CardView :card="discardPileTop" :isDiscard="true" :owner="playerId" />
   </div>
 </template>
 
@@ -30,10 +30,9 @@ export default defineComponent({
   },
   setup(props) {
     const store = useStore(key);
+    const playerId = computed(() => props.player.playerId);
     const playerName = computed(
-      () =>
-        store.getters.getPlayerName(props.player.playerId) ||
-        props.player.playerId
+      () => store.getters.getPlayerName(playerId.value) || playerId.value
     );
     const isActivePlayer = computed(() => props.player.isActivePlayer);
     const handCount = computed(() => props.player.handCardCount);
@@ -45,6 +44,7 @@ export default defineComponent({
     const discardPileTop = computed(() => props.player.discardPile[0]);
 
     return {
+      playerId,
       playerName,
       isActivePlayer,
       handCount,

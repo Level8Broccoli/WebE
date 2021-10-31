@@ -84,11 +84,6 @@ export type StartMoveResponse = {
   };
 };
 
-export type DrawCardResponse = {
-  timestamp: DateTime;
-  card: Card;
-};
-
 export type UpdateGameBoardResponse = {
   status: StatusCode;
   timestamp: DateTime;

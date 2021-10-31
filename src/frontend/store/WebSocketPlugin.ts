@@ -2,7 +2,7 @@ import { Socket } from "socket.io-client";
 import { Store } from "vuex";
 import { keyValueArrayToMap } from "../../shared/helper/HelperService";
 import { PublicGame, PublicGameState } from "../../shared/model/Game";
-import { ChatRequest, CreateGameRequest, DeleteGameRequest, DiscardCardRequest, EditPlayerNameRequest, JoinGameRequest, LeaveGameRequest, LogoutRequest, RegisterExistingPlayerRequest, RegisterPlayerRequest, StartGameRequest } from "../../shared/model/RequestTypes";
+import { ChatRequest, CreateGameRequest, DeleteGameRequest, DiscardCardRequest, DrawCardRequest, EditPlayerNameRequest, JoinGameRequest, LeaveGameRequest, LogoutRequest, RegisterExistingPlayerRequest, RegisterPlayerRequest, StartGameRequest } from "../../shared/model/RequestTypes";
 import { ChatResponse, CreateGameResponse, DeleteGameResponse, EditPlayerNameResponse, ErrorResponse, JoinGameResponse, LeaveGameResponse, LogoutResponse, RegisterExistingPlayerResponse, RegisterPlayerResponse, StartGameResponse, UpdateGameBoardResponse, UpdateGameListResponse, UpdatePlayerListResponse } from "../../shared/model/ResponseTypes";
 import { State } from "./store";
 
@@ -249,6 +249,24 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
                 player: store.state.player
             }
             socket.emit("discardCard", payload);
+        }
+
+        if (mutation.type === "drawCardFromDrawPile") {
+            const payload: DrawCardRequest = {
+                gameId: store.state.activeGameId,
+                player: store.state.player,
+                pileId: mutation.payload.pileId,
+            }
+            socket.emit("drawCard", payload);
+        }
+
+        if (mutation.type === "drawCard") {
+            const payload: DrawCardRequest = {
+                gameId: store.state.activeGameId,
+                player: store.state.player,
+                pileId: mutation.payload.pileId,
+            }
+            socket.emit("drawCard", payload);
         }
     });
 }

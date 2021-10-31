@@ -181,8 +181,7 @@ io.on("connection", (socket) => {
     api
       .startGame(request)
       .then((response) => {
-        socket.emit("startGame", response);
-        broadcastUpdateGameState(response);
+        broadcastUpdateGameState(response.gameId);
       })
       .catch((error) => {
         const response: ErrorResponse = {
@@ -195,8 +194,8 @@ io.on("connection", (socket) => {
   socket.on("drawCard", (request: DrawCardRequest) => {
     api
       .drawCard(request)
-      .then((responses) => {
-        broadcastUpdateGameState(responses[1]);
+      .then((response) => {
+        broadcastUpdateGameState(response.gameId);
       })
       .catch((error) => {
         const response: ErrorResponse = {
@@ -210,9 +209,7 @@ io.on("connection", (socket) => {
     api
       .discardCard(request)
       .then((response) => {
-        // Send updated Gameboard
-        broadcastUpdateGameState(response);
-        // Check if a Winner exists
+        broadcastUpdateGameState(response.gameId);
       })
       .catch((error) => {
         const response: ErrorResponse = {
@@ -227,8 +224,8 @@ io.on("connection", (socket) => {
   });
 });
 
-function broadcastUpdateGameState(response: StartGameResponse | UpdateGameBoardResponse) {
-  const playerIdList = api.getPlayerIdListFromGame(response.gameId);
+function broadcastUpdateGameState(gameId: string) {
+  const playerIdList = api.getPlayerIdListFromGame(gameId);
   for (const playerId of playerIdList) {
     const socketId = api.getSocketId(playerId);
     io.to(socketId).emit("updateGameList", { gameList: api.getAllGames(playerId) });

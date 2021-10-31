@@ -139,15 +139,20 @@ export function getGameState(
 }
 
 export function pileExists(
-  serverState: ServerState,
-  gameId: string,
+  game: Game,
   pileId: string
 ): boolean {
   return (
-    serverState.games
-      .find((g) => g.id === gameId)!
-      .state!.piles.get(pileId) !== undefined
+    game.state.piles.get(pileId) !== undefined
   );
+}
+
+export function getPile(game: Game, pileId: string): Card[] {
+  const pile = game.state.piles.get(pileId);
+  if (typeof pile === "undefined") {
+    throw new Error("Pile does not exists!");
+  }
+  return pile;
 }
 
 export function isCardOwner(
@@ -179,7 +184,7 @@ export function discardCard(
 
 function createPlayerStartHand(game: Game, playerId: string, numberOfCards: number) {
   for (let i = 0; i < numberOfCards; i++) {
-    drawCard(game, DRAW_PILE, playerId);
+    drawCardFromPile(game, DRAW_PILE, playerId);
   }
 }
 
@@ -191,7 +196,7 @@ function setActivePlayer(game: Game, playerId: string) {
   game.state.activePlayerId = playerId;
 }
 
-function drawCard(game: Game, from: string, to: string) {
+export function drawCardFromPile(game: Game, from: string, to: string) {
   const fromPile = game.state.piles.get(from);
   if (typeof fromPile === "undefined") {
     throw new Error("This pile does not exist.");

@@ -2,10 +2,18 @@
 <template>
   <div
     :class="
-      'card card-shadow color-' + color + (canBeDiscarded ? ' interactive' : '')
+      'card card-shadow color-' +
+      color +
+      (canBeDiscarded || canBeDrawn ? ' interactive' : '')
     "
     v-if="isCard"
-    v-on="canBeDiscarded ? { click: discardCard } : {}"
+    v-on="
+      canBeDiscarded
+        ? { click: discardCard }
+        : canBeDrawn
+        ? { click: drawCard }
+        : {}
+    "
   >
     <header class="top">
       <strong>{{ value }}</strong>
@@ -34,6 +42,8 @@ export default defineComponent({
   props: {
     card: { type: Object as PropType<Card> },
     isHand: { type: Boolean, default: false },
+    isDiscard: { type: Boolean, default: false },
+    owner: { type: String, default: "" },
   },
   setup(props) {
     const store = useStore(key);
@@ -45,15 +55,10 @@ export default defineComponent({
         color: "NONE",
         canBeDiscarded: false,
         discardCard: () => {},
+        canBeDrawn: false,
+        drawCard: () => {},
       };
     }
-    const canBeDiscarded = computed(
-      () =>
-        props.isHand &&
-        store.getters.amIActivePlayer &&
-        store.getters.getCurrentStep === 3
-    );
-
     const color = computed(() => {
       if (typeof card !== "undefined" && "color" in card!.value!) {
         return card!.value!.color;
@@ -61,8 +66,25 @@ export default defineComponent({
       return "NONE";
     });
 
+    const canBeDiscarded = computed(
+      () =>
+        props.isHand &&
+        store.getters.amIActivePlayer &&
+        store.getters.getCurrentStep === 3
+    );
+
     const discardCard = (e: Event) => {
       store.commit("discardCard", { cardId: card!.value!.id! });
+    };
+
+    const canBeDrawn = computed(
+      () =>
+        props.isDiscard &&
+        store.getters.amIActivePlayer &&
+        store.getters.getCurrentStep === 0
+    );
+    const drawCard = (e: Event) => {
+      store.commit("drawCard", { pileId: props.owner });
     };
 
     return {
@@ -71,6 +93,8 @@ export default defineComponent({
       color,
       canBeDiscarded,
       discardCard,
+      canBeDrawn,
+      drawCard,
     };
   },
 });

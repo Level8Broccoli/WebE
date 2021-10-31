@@ -198,6 +198,8 @@ export const store = createStore<State>({
         logout() { /* handled by WebSocketPlugin */ },
         startGame() { /* handled by WebSocketPlugin */ },
         discardCard() { /* handled by WebSocketPlugin */ },
+        drawCardFromDrawPile() { /* handled by WebSocketPlugin */ },
+        drawCard() { /* handled by WebSocketPlugin */ },
         resetState(state) {
             state.player = {
                 name: "",

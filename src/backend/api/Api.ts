@@ -19,9 +19,7 @@ import {
 import {
   ChatResponse,
   CreateGameResponse,
-  DeleteGameResponse,
-  DrawCardResponse,
-  EditPlayerNameResponse,
+  DeleteGameResponse, EditPlayerNameResponse,
   JoinGameResponse,
   LeaveGameResponse,
   LogoutResponse,
@@ -32,11 +30,10 @@ import {
 } from "../../shared/model/ResponseTypes";
 import { ServerState } from "../../shared/model/ServerState";
 import {
-  discardCard,
-  getAllGamesForPlayer,
-  getGame, initGameState, isCardOwner,
+  discardCard, drawCardFromPile, getAllGamesForPlayer,
+  getGame, getPile, initGameState, isCardOwner,
   nextGameStep,
-  nextPlayer, startGameState
+  nextPlayer, pileExists, startGameState
 } from "../services/GameService";
 import {
   addChatMessage, authenticatePlayer, createGame,
@@ -389,7 +386,7 @@ export class Api {
 
   drawCard(
     request: DrawCardRequest
-  ): Promise<[DrawCardResponse, UpdateGameBoardResponse]> {
+  ): Promise<UpdateGameBoardResponse> {
     return new Promise((resolve, reject) => {
       // [Server] Validation (playerId + Secret, player is on move? -> Errorfeedback
       if (!authenticatePlayer(this._serverState.players, request.player)) {
@@ -402,30 +399,31 @@ export class Api {
 
       const game = getGame(this._serverState.games, request.gameId);
 
-      // if (!pileExists(this._serverState, request.gameId, request.pileId)) {
-      //   reject(new Error(StatusCode.PILE_NOT_EXISTS));
-      // }
+      if (!(game.state.activePlayerId === request.player.id)) {
+        reject(new Error(StatusCode.NOT_ACTIVE_PLAYER));
+      }
 
-      // if (!(this.activePlayerInGame(this._serverState, request.gameId) === request.player.id)) {
-      //   reject(new Error(StatusCode.NOT_ACTIVE_PLAYER));
-      // }
+      if (!pileExists(game, request.pileId)) {
+        reject(new Error(StatusCode.PILE_NOT_EXISTS));
+      }
 
-      // const card = drawCard(this._serverState, request.gameId, request.pileId);
-      // const piles = getGameState(this._serverState, request.gameId).piles;
+      const pile = getPile(game, request.pileId);
 
-      // addCardToHand(this._serverState, request.gameId, request.player, card);
+      if (!(pile.length > 0)) {
+        reject(new Error(StatusCode.PILE_EMPTY));
+      }
 
-      // const drawCardResponse = {
-      //   timestamp: DateTime.now(),
-      //   card: card,
-      // };
+      drawCardFromPile(game, request.pileId, request.player.id);
 
-      // const updateGameBoardResponse = {
-      //   timestamp: DateTime.now(),
-      //   piles: toKeyValueArray(piles),
-      // };
+      nextGameStep(game, GameStep.DISCARD);
 
-      // resolve([drawCardResponse, updateGameBoardResponse]);
+      const response: UpdateGameBoardResponse = {
+        status: StatusCode.OK,
+        timestamp: DateTime.now(),
+        gameId: request.gameId,
+      };
+
+      resolve(response);
     });
   }
 
