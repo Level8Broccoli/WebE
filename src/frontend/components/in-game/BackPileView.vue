@@ -16,7 +16,7 @@ export default defineComponent({
     EmptyPileView,
   },
   props: {
-    count: Number,
+    count: { type: Number, default: 0 },
   },
   setup(props) {
     return { ...props };

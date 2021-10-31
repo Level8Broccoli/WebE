@@ -2,7 +2,7 @@
 <template>
   <div :class="'card color-' + color" v-if="isCard">
     <header class="top">
-      <strong>{{ card.value }}</strong>
+      <strong>{{ value }}</strong>
     </header>
     <footer class="bottom">
       <i v-if="color === 'ORANGE'" class="fas fa-circle"></i>
@@ -27,17 +27,17 @@ export default defineComponent({
     card: { type: Object as PropType<Card> },
   },
   setup(props) {
-    if (typeof props.card === "undefined") {
-      return { isCard: false };
+    const card = computed(() => props.card);
+    if (typeof card === "undefined" || typeof card!.value === "undefined") {
+      return { isCard: false, value: 0, color: "NONE" };
     }
     const color = computed(() => {
-      const { card } = props;
-      if ("color" in card) {
-        return card.color;
+      if (typeof card !== "undefined" && "color" in card!.value!) {
+        return card!.value!.color;
       }
       return "NONE";
     });
-    return { isCard: true, ...props, color };
+    return { isCard: true, value: card!.value!.value!, color };
   },
 });
 </script>

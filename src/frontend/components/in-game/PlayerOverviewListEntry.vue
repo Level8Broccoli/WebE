@@ -51,7 +51,8 @@ export default defineComponent({
   grid-template:
     "name name" max-content
     "hand discard" max-content
-    / 1fr 1fr;
+    / max-content max-content;
+  gap: .5rem;
 }
 
 p {
