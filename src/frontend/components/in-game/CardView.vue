@@ -46,6 +46,7 @@ export default defineComponent({
 .card {
   border-radius: 0.375em;
   background-color: #000000;
+  background: linear-gradient(54deg, #000000 0%, #3d1122 100%);
   padding: 0.5rem;
   text-align: center;
   width: 3em;
