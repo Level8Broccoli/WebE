@@ -28,6 +28,9 @@ export default defineComponent({
   setup(props) {
     const store = useStore(key);
 
+    const count = computed(() => props.count);
+    const isDrawPile = computed(() => props.isDrawPile);
+
     const canBeDrawn = computed(
       () =>
         props.isDrawPile &&
@@ -37,7 +40,7 @@ export default defineComponent({
     const drawCard = (e: Event) => {
       store.commit("drawCardFromDrawPile", { pileId: "drawPile" });
     };
-    return { ...props, canBeDrawn, drawCard };
+    return { count, isDrawPile, canBeDrawn, drawCard };
   },
 });
 </script>
