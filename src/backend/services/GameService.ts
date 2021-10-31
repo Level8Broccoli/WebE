@@ -45,7 +45,8 @@ export function initGameState(): GameState {
     piles: [{
       id: DRAW_PILE_ID,
       cards: initialCardSet().sort((a, b) => 0.5 - Math.random())
-    }]
+    }],
+    board: []
   };
 }
 
@@ -204,7 +205,7 @@ export function getAllGamesForPlayer(
   gameList: Game[],
   playerId?: string
 ): Game[] {
-  return gameList.map(({ id, creatorId, players, config, status, chat, levels, state: { activePlayerId, currentStep, playerLevels, hands, piles } }) => {
+  return gameList.map(({ id, creatorId, players, config, status, chat, levels, state: { activePlayerId, currentStep, playerLevels, hands, piles, board } }) => {
     const newHands = (hands as CardStackOpen[]).map(({ id, cards }) => {
       // only show the cards on the requesting player
       // alternativally show the number of cards on all the other players
@@ -241,7 +242,8 @@ export function getAllGamesForPlayer(
       currentStep,
       playerLevels,
       hands: newHands,
-      piles: newPiles
+      piles: newPiles,
+      board
     }
     const newPublicGame: Game = { id, creatorId, players, config, status, levels, chat, state: newPublicGameState };
     return newPublicGame;

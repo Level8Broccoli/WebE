@@ -79,12 +79,20 @@ export type CardStackSecret = {
 
 export type CardStack = CardStackOpen | CardStackSecret;
 
+export enum CardRowType { STREET, SAME_NUMBER, SAME_COLOR };
+
+export type CardRow = {
+  type: CardRowType;
+  cards: Card[];
+}
+
 export type GameState = {
   activePlayerId: string;
   currentStep: GameStep;
   playerLevels: PlayerLevel[];
   hands: CardStack[];
   piles: CardStack[]; // Includes the drawPile and the player's discardPile
+  board: CardRow[];
 };
 
 export type PlayerOverviewAggregate = {
