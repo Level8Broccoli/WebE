@@ -16,7 +16,7 @@
       {{ i18n.playerCountLabel }}:
       <span>{{ game.players.length }} / {{ game.config.maxPlayerCount }}</span>
     </div>
-    <button v-if="joinButton" @click.prevent="joinGame">
+    <button v-if="joinButton || gameInLobby" @click.prevent="joinGame">
       {{ i18n.joinGameButtonLabel }}
       <i class="far fa-long-arrow-right icon-right"></i>
     </button>
@@ -26,7 +26,7 @@
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue";
 import { useStore } from "vuex";
-import { Game } from "../../../shared/model/Game";
+import { Game, GameStatus } from "../../../shared/model/Game";
 import { key } from "../../store/store";
 
 export default defineComponent({
@@ -46,10 +46,14 @@ export default defineComponent({
     const joinGame = (e: Event) => {
       store.commit("joinGame", props.game.id);
     };
+    const gameInLobby = computed(
+      () => props.game.status === GameStatus.IN_LOBBY
+    );
     return {
       i18n,
       creatorName,
       joinGame,
+      gameInLobby,
       ...props,
     };
   },
