@@ -14,6 +14,7 @@ import {
   LogoutRequest,
   RegisterExistingPlayerRequest,
   RegisterPlayerRequest,
+  SkipLevelFulfillStepRequest,
   StartGameRequest
 } from "../../shared/model/RequestTypes";
 import {
@@ -416,7 +417,7 @@ export class Api {
 
       drawCardFromPile(game, request.pileId, request.player.id);
 
-      nextGameStep(game, GameStep.DISCARD);
+      nextGameStep(game, GameStep.FULFILL_LEVEL);
 
       const response: UpdateGameBoardResponse = {
         status: StatusCode.OK,
@@ -473,6 +474,36 @@ export class Api {
 
       resolve(response);
     });
+
+  }
+
+  skipLevelFulfillStep(request: SkipLevelFulfillStepRequest): Promise<UpdateGameBoardResponse> {
+    return new Promise((resolve, reject) => {
+      // [Server] Validation (playerId + Secret, player is on move? -> Errorfeedback
+      if (!authenticatePlayer(this._serverState.players, request.player)) {
+        reject(new Error(StatusCode.PLAYER_INVALID));
+      }
+
+      if (!gameExists(this._serverState.games, request.gameId)) {
+        reject(new Error(StatusCode.GAME_NOT_EXISTS));
+      }
+
+      const game = getGame(this._serverState.games, request.gameId);
+
+      if (!(game.state.activePlayerId === request.player.id)) {
+        reject(new Error(StatusCode.NOT_ACTIVE_PLAYER));
+      }
+
+      nextGameStep(game, GameStep.DISCARD);
+
+      const response: UpdateGameBoardResponse = {
+        status: StatusCode.OK,
+        timestamp: DateTime.now(),
+        gameId: request.gameId,
+      };
+
+      resolve(response);
+    })
   }
 
   getSocketId(playerId: string): string {

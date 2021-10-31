@@ -1,6 +1,6 @@
 import { Socket } from "socket.io-client";
 import { Store } from "vuex";
-import { ChatRequest, CreateGameRequest, DeleteGameRequest, DiscardCardRequest, DrawCardRequest, EditPlayerNameRequest, JoinGameRequest, LeaveGameRequest, LogoutRequest, RegisterExistingPlayerRequest, RegisterPlayerRequest, StartGameRequest } from "../../shared/model/RequestTypes";
+import { ChatRequest, CreateGameRequest, DeleteGameRequest, DiscardCardRequest, DrawCardRequest, EditPlayerNameRequest, JoinGameRequest, LeaveGameRequest, LogoutRequest, RegisterExistingPlayerRequest, RegisterPlayerRequest, SkipLevelFulfillStepRequest, StartGameRequest } from "../../shared/model/RequestTypes";
 import { ChatResponse, CreateGameResponse, DeleteGameResponse, EditPlayerNameResponse, ErrorResponse, JoinGameResponse, LeaveGameResponse, LogoutResponse, RegisterExistingPlayerResponse, RegisterPlayerResponse, StartGameResponse, UpdateGameListResponse, UpdatePlayerListResponse } from "../../shared/model/ResponseTypes";
 import { State } from "./store";
 
@@ -237,6 +237,14 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
                 pileId: mutation.payload.pileId,
             }
             socket.emit("drawCard", payload);
+        }
+
+        if (mutation.type === "skipLevelFulfillStep") {
+            const payload: SkipLevelFulfillStepRequest = {
+                gameId: store.state.activeGameId,
+                player: store.state.player,
+            }
+            socket.emit("skipLevelFulfillStep", payload);
         }
     });
 }

@@ -1,14 +1,18 @@
 <template>
-  <span v-if="isActivePlayer">
+  <div v-if="isActivePlayer">
     {{ i18n.yourTurn }}
     {{ currentStep }}. <br />
     <em> {{ currentStepExplanation }} </em>
-  </span>
-  <span v-else>
+    <br />
+    <button v-if="isInLevelFulfillStep" @click.prevent="skipLevelFulfillStep">
+      Überspringen
+    </button>
+  </div>
+  <div v-else>
     {{ i18n.pleaseWaitOnPlayer }}
     <em>{{ currentPlayerName }}</em>
     ({{ currentStep }})
-  </span>
+  </div>
 </template>
 
 <script lang="ts">
@@ -31,17 +35,27 @@ export default defineComponent({
         store.getters.getCurrentStep
       )
     );
+    const isInLevelFulfillStep = computed(
+      () => isActivePlayer.value && store.getters.getCurrentStep === 1
+    );
     const currentPlayerName = computed(() => {
       const game: Game = store.getters.getActiveGame;
       const activePlayerId = game.state.activePlayerId;
       return store.getters.getPlayerName(activePlayerId) || activePlayerId;
     });
+
+    const skipLevelFulfillStep = (e: Event) => {
+      store.commit("skipLevelFulfillStep");
+    };
+
     return {
       isActivePlayer,
       currentStep,
       currentPlayerName,
       currentStepExplanation,
       i18n,
+      isInLevelFulfillStep,
+      skipLevelFulfillStep,
     };
   },
 });

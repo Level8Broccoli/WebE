@@ -12,6 +12,7 @@ import {
   LogoutRequest,
   RegisterExistingPlayerRequest,
   RegisterPlayerRequest,
+  SkipLevelFulfillStepRequest,
   StartGameRequest
 } from "./shared/model/RequestTypes";
 import { ErrorResponse, StartGameResponse, UpdateGameBoardResponse } from "./shared/model/ResponseTypes";
@@ -207,7 +208,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("discardCard", (request: DiscardCardRequest) => {
-
     api
       .discardCard(request)
       .then((response) => {
@@ -220,6 +220,19 @@ io.on("connection", (socket) => {
         socket.emit("discardCard", response);
       });
   });
+
+  socket.on("skipLevelFulfillStep", (request: SkipLevelFulfillStepRequest) => {
+    api
+    .skipLevelFulfillStep(request).then((response) => {
+      broadcastUpdateGameState(response.gameId);
+    })
+      .catch((error) => {
+        const response: ErrorResponse = {
+          status: error.message,
+        };
+        socket.emit("skipLevelFulfillStep", response);
+      });
+  })
 
   socket.on("disconnect", () => {
     console.log(`Disconnected ${socket.id}`);

@@ -59,3 +59,8 @@ export type DiscardCardRequest = {
   gameId: string;
   cardId: string;
 };
+
+export type SkipLevelFulfillStepRequest = {
+  player: PrivatePlayer;
+  gameId: string;
+}
