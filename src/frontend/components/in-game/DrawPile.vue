@@ -1,6 +1,7 @@
 <template>
   <main>
-    {{ drawPileCount }}
+    {{ i18n.drawPile }}
+    <BackPileView :count="drawPileCount" />
   </main>
 </template>
 
@@ -8,15 +9,18 @@
 import { computed, ComputedRef, defineComponent } from "vue";
 import { useStore } from "vuex";
 import { key } from "../../store/store";
+import BackPileView from "./BackPileView.vue";
 
 export default defineComponent({
   name: "DrawPile",
+  components: { BackPileView },
   setup() {
     const store = useStore(key);
     const drawPileCount: ComputedRef<number> = computed(
       () => store.getters.getDrawPileCount
     );
-    return { drawPileCount };
+    const i18n = computed(() => store.getters.i18n);
+    return { drawPileCount, i18n };
   },
 });
 </script>

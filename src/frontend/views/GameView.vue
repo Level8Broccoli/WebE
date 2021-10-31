@@ -46,5 +46,6 @@ section {
 .left {
   display: grid;
   grid-template-rows: 1fr max-content;
+  gap: 2rem;
 }
 </style>

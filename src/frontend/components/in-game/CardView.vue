@@ -1,6 +1,6 @@
 
 <template>
-  <div :class="'card color-' + color">
+  <div :class="'card color-' + color" v-if="isCard">
     <header class="top">
       <strong>{{ card.value }}</strong>
     </header>
@@ -13,18 +13,23 @@
       <i v-if="color === 'GREEN'" class="fas fa-hexagon"></i>
     </footer>
   </div>
+  <EmptyPileView v-else />
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue";
 import { Card } from "../../../shared/model/Game";
-
+import EmptyPileView from "./EmptyPileView.vue";
 export default defineComponent({
   name: "CardView",
+  components: { EmptyPileView },
   props: {
-    card: { type: Object as PropType<Card>, required: true },
+    card: { type: Object as PropType<Card> },
   },
   setup(props) {
+    if (typeof props.card === "undefined") {
+      return { isCard: false };
+    }
     const color = computed(() => {
       const { card } = props;
       if ("color" in card) {
@@ -32,10 +37,7 @@ export default defineComponent({
       }
       return "NONE";
     });
-    return {
-      ...props,
-      color,
-    };
+    return { isCard: true, ...props, color };
   },
 });
 </script>

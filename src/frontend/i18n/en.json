@@ -22,5 +22,7 @@
     "startGameButton": "Start Game",
     "gameNeedsAtLeastTwoPlayers": "game needs at least 2 player",
     "logout": "Logout",
-    "playerUnknown": "Player unknown"
+    "playerUnknown": "Player unknown",
+    "emptyCardSlot": "empty",
+    "drawPile": "Drawpile"
 }
