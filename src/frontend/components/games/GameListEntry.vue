@@ -16,7 +16,7 @@
       {{ i18n.playerCountLabel }}:
       <span>{{ game.players.length }} / {{ game.config.maxPlayerCount }}</span>
     </div>
-    <button v-if="joinButton || gameInLobby" @click.prevent="joinGame">
+    <button v-if="joinButton && gameInLobby" @click.prevent="joinGame">
       {{ i18n.joinGameButtonLabel }}
       <i class="far fa-long-arrow-right icon-right"></i>
     </button>

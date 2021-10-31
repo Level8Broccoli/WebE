@@ -19,7 +19,7 @@ function initialCardSet(): Card[] {
   const cardset: Card[] = [];
   // 1 - 15 for all colors
   for (const key in Color) {
-    for (let index = 1; index <= 15; index++) {
+    for (let index = 1; index <= 4; index++) {
       const card: NumberCard = {
         id: getUUID(),
         value: index,
