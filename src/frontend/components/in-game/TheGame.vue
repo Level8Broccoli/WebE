@@ -1,6 +1,7 @@
 <template>
   <main>
     <MyHand />
+    <OtherPlayers />
     <h2>Hände:</h2>
     <ul>
       <li v-for="(hand, i) in game.state.hands" :key="i">
@@ -24,11 +25,13 @@ import { useStore } from "vuex";
 import { PublicGame } from "../../../shared/model/Game";
 import { key } from "../../store/store";
 import MyHand from "./MyHand.vue";
+import OtherPlayers from "./OtherPlayers.vue";
 
 export default defineComponent({
   name: "TheGame",
   components: {
     MyHand,
+    OtherPlayers,
   },
   setup() {
     const store = useStore(key);

@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client';
 import { InjectionKey } from 'vue';
 import { createStore, Store } from 'vuex';
-import { Config, Game, GameStatus, LevelSystem, PublicGame } from '../../shared/model/Game';
+import { Card, Config, Game, GameStatus, LevelSystem, OtherPlayerAggregate, PublicGame } from '../../shared/model/Game';
 import { PrivatePlayer, PublicPlayer } from '../../shared/model/Player';
 import { ChatResponse } from '../../shared/model/ResponseTypes';
 import { i18n, Language } from '../i18n/i18n';
@@ -16,7 +16,7 @@ export interface State {
     games: PublicGame[],
     gameInCreation?: Config,
     activeGameId: string,
-    errorLog: String[]
+    errorLog: string[]
 }
 
 export const key: InjectionKey<Store<State>> = Symbol()
@@ -52,7 +52,7 @@ export const store = createStore<State>({
         },
         view: (state, getters) => {
             const activeGame = state.activeGameId.length > 0
-                && getters.getActiveGame as Game;
+                && getters.getActiveGame as PublicGame;
 
             if (state.showRules) {
                 return "rules";
@@ -72,14 +72,39 @@ export const store = createStore<State>({
             return "game-search";
         },
         getPlayerName(state) {
-            return (playerId: String) => {
+            return (playerId: string) => {
                 return state.playerList.find(p => p.id === playerId)?.name;
-            }
+            };
         },
-        getMyHands(state, getters) {
+        getMyHands(state, getters): Card[] {
             const activeGame = state.activeGameId.length > 0
-                && getters.getActiveGame as Game;
-            return activeGame && activeGame.state.hands.get(state.player.id);
+                && getters.getActiveGame as PublicGame;
+            return activeGame && activeGame.state.hands.get(state.player.id) as Card[] || [];
+        },
+        aggregateOtherPlayers(state, getters): OtherPlayerAggregate[] {
+            const activeGame = state.activeGameId.length > 0
+                && getters.getActiveGame as PublicGame;
+
+            if (!activeGame) {
+                return [];
+            }
+            const activePlayerId = activeGame.state.activePlayerId;
+            const playerIdList = activeGame.players;
+            const hands = activeGame.state.hands;
+            const piles = activeGame.state.piles;
+            const aggregate: OtherPlayerAggregate[] = [];
+
+            for (const playerId of playerIdList) {
+                if (playerId !== state.player.id) {
+                    aggregate.push({
+                        playerId,
+                        isActivePlayer: playerId === activePlayerId,
+                        handCardCount: hands.get(playerId) as number,
+                        discardPile: piles.get(playerId) as Card[]
+                    });
+                }
+            }
+            return aggregate;
         }
     },
     mutations: {

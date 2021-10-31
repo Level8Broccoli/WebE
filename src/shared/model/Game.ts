@@ -88,3 +88,10 @@ export type PublicGameTransferState = {
   hands: [string, Card[] | number][];
   piles: [string, Card[] | number][]; // Includes the drawPile and the player's discardPile
 };
+
+export type OtherPlayerAggregate = {
+  playerId: string;
+  isActivePlayer: boolean;
+  handCardCount: number;
+  discardPile: Card[];
+}
