@@ -37,6 +37,7 @@ export type NumberCard = {
 export type SpecialCard = {
   id: string;
   value: 0;
+  color: "NONE";
   type: CardType.JOKER | CardType.SKIP;
 };
 

@@ -230,15 +230,6 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
             socket.emit("discardCard", payload);
         }
 
-        if (mutation.type === "drawCardFromDrawPile") {
-            const payload: DrawCardRequest = {
-                gameId: store.state.activeGameId,
-                player: store.state.player,
-                pileId: mutation.payload.pileId,
-            }
-            socket.emit("drawCard", payload);
-        }
-
         if (mutation.type === "drawCard") {
             const payload: DrawCardRequest = {
                 gameId: store.state.activeGameId,

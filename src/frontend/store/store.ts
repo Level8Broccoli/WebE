@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client';
 import { InjectionKey } from 'vue';
 import { createStore, Store } from 'vuex';
-import { Card, CardStackOpen, CardStackSecret, Config, DRAW_PILE_ID, Game, GameStatus, LevelSystem, PlayerOverviewAggregate } from '../../shared/model/Game';
+import { Card, CardStackOpen, CardStackSecret, CardType, Config, DRAW_PILE_ID, Game, GameStatus, LevelSystem, PlayerOverviewAggregate } from '../../shared/model/Game';
 import { PrivatePlayer, PublicPlayer } from '../../shared/model/Player';
 import { ChatResponse } from '../../shared/model/ResponseTypes';
 import { i18n, Language } from '../i18n/i18n';
@@ -154,7 +154,31 @@ export const store = createStore<State>({
             }
 
             return activeGame.state.currentStep;
+        },
+        getTopOfDiscardPile(state, getters) {
+            return (playerId: string) => {
+                const emptyCard: Card = {
+                    id: "NONE",
+                    color: "NONE",
+                    value: -1,
+                    type: CardType.NUMBER
+                };
+
+                const activeGame = state.activeGameId.length > 0
+                    && getters.getActiveGame as Game;
+                if (!activeGame) {
+                    return emptyCard;
+                }
+                const piles = activeGame.state.piles;
+                const discardPile = (piles.find(p => p.id === playerId) as CardStackOpen);
+
+                if (discardPile.cards.length === 0) {
+                    return emptyCard;
+                }
+                return discardPile.cards[0];
+            }
         }
+
     },
     mutations: {
         updatePlayerName(state, value: string) {

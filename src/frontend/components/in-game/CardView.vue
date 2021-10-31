@@ -64,7 +64,11 @@ export default defineComponent({
         store.getters.getCurrentStep === 0
     );
     const drawCard = (e: Event) => {
-      store.commit("drawCard", { pileId: props.owner });
+      store.commit("drawCard", {
+        pileId: props.owner,
+        cardId: props.id,
+        cardValue: props.value,
+      });
     };
 
     return {

@@ -38,7 +38,7 @@ export default defineComponent({
         store.getters.getCurrentStep === 0
     );
     const drawCard = (e: Event) => {
-      store.commit("drawCardFromDrawPile", { pileId: "drawPile" });
+      store.commit("drawCard", { pileId: "drawPile" });
     };
     return { count, isDrawPile, canBeDrawn, drawCard };
   },

@@ -19,7 +19,7 @@ function initialCardSet(): Card[] {
   const cardset: Card[] = [];
   // 1 - 15 for all colors
   for (const key in Color) {
-    for (let index = 1; index <= 4; index++) {
+    for (let index = 1; index <= 15; index++) {
       const card: NumberCard = {
         id: getUUID(),
         value: index,
@@ -210,7 +210,7 @@ export function getAllGamesForPlayer(
       }
       return {
         id,
-        cards
+        cards: cards[0] ? [cards[0]] : cards // hack: only send the top card of each discard pile, because I couldn't figure out how VueJS handles list manipulation correctly
       }
     });
 

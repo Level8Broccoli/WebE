@@ -192,7 +192,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("drawCard", (request: DrawCardRequest) => {
-    console.log("receive drawCard");
 
     api
       .drawCard(request)
@@ -208,7 +207,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("discardCard", (request: DiscardCardRequest) => {
-    console.log("receive discardCard");
 
     api
       .discardCard(request)

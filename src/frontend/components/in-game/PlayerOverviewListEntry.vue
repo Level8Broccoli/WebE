@@ -8,21 +8,25 @@
     </p>
     <BackPileView :count="handCount" />
     <CardView
-      v-if="discardPile[0] !== null && discardPile[0] !== undefined"
-      :id="discardPile[0].id"
-      :color="'color' in discardPile[0] ? discardPile[0].color : 'NONE'"
-      :value="discardPile[0].value"
+      v-for="card in discardPile"
+      :key="card.id"
+      :id="card.id"
+      :color="card.color"
+      :value="card.value"
       :isDiscard="true"
       :owner="playerId"
     />
-    <EmptyPileView v-else />
+    <EmptyPileView v-if="discardPile.length === 0" />
   </div>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue";
 import { useStore } from "vuex";
-import { PlayerOverviewAggregate } from "../../../shared/model/Game";
+import {
+  NumberCard,
+  PlayerOverviewAggregate,
+} from "../../../shared/model/Game";
 import { key } from "../../store/store";
 import BackPileView from "./BackPileView.vue";
 import CardView from "./CardView.vue";
@@ -51,7 +55,6 @@ export default defineComponent({
       store.getters.translateCurrentStep(props.player.currentStep)
     );
     const discardPile = computed(() => props.player.discardPile);
-
     return {
       playerId,
       playerName,
