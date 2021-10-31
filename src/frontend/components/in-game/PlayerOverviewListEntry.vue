@@ -8,7 +8,7 @@
     </p>
     <BackPileView :count="handCount" />
     <CardView
-      v-if="discardPile[0] !== null"
+      v-if="discardPile[0] !== null && discardPile[0] !== undefined"
       :id="discardPile[0].id"
       :color="discardPile[0].color"
       :value="discardPile[0].value"

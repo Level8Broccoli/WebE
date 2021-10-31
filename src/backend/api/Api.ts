@@ -129,7 +129,7 @@ export class Api {
       }
 
       // [Server] Edit player name
-      registerExistingPlayer(this._serverState.players, request.player, socketId);
+      this._serverState.players = registerExistingPlayer(this._serverState.players, request.player, socketId);
 
       // [Server] Get all games
       // [Server] and send response of type: registerPlayer

@@ -192,6 +192,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("drawCard", (request: DrawCardRequest) => {
+    console.log("receive drawCard");
+
     api
       .drawCard(request)
       .then((response) => {
@@ -206,6 +208,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("discardCard", (request: DiscardCardRequest) => {
+    console.log("receive discardCard");
+
     api
       .discardCard(request)
       .then((response) => {
@@ -228,6 +232,7 @@ function broadcastUpdateGameState(gameId: string) {
   const playerIdList = api.getPlayerIdListFromGame(gameId);
   for (const playerId of playerIdList) {
     const socketId = api.getSocketId(playerId);
+    console.log("broadcast update to", playerId, socketId);
     io.to(socketId).emit("updateGameList", { gameList: api.getAllGames(playerId) });
   }
 }

@@ -19,11 +19,15 @@ export function removePlayerFromPlayerList(playerIdList: FullPlayer[], playerId:
   playerIdList = playerIdList.filter(p => p.id !== playerId);
 }
 
-export function registerExistingPlayer(playerIdList: FullPlayer[], player: PrivatePlayer, socketId: string) {
-  playerIdList = playerIdList.map((p) =>
-    p.id === player.id && p.secret === player.secret
-      ? { ...p, socketId: socketId }
-      : p
+export function registerExistingPlayer(playerIdList: FullPlayer[], player: PrivatePlayer, newSocketId: string): FullPlayer[] {
+  return playerIdList.map(({ id, name, secret, socketId }) => {
+    if (id === player.id && secret === player.secret) {
+      return { id, name, secret, socketId: newSocketId };
+    }
+    else {
+      return { id, name, secret, socketId };
+    }
+  }
   );
 }
 

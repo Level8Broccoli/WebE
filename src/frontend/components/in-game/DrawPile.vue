@@ -16,9 +16,9 @@ export default defineComponent({
   components: { BackPileView },
   setup() {
     const store = useStore(key);
-    const drawPileCount: ComputedRef<number> = computed(
-      () => store.getters.getDrawPileCount
-    );
+    const drawPileCount: ComputedRef<number> = computed(() => {
+      return store.getters.getDrawPileCount;
+    });
     const i18n = computed(() => store.getters.i18n);
     return { drawPileCount, i18n };
   },

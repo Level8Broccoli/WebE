@@ -1,8 +1,7 @@
 import { Socket } from "socket.io-client";
 import { Store } from "vuex";
-import { Game, GameState } from "../../shared/model/Game";
 import { ChatRequest, CreateGameRequest, DeleteGameRequest, DiscardCardRequest, DrawCardRequest, EditPlayerNameRequest, JoinGameRequest, LeaveGameRequest, LogoutRequest, RegisterExistingPlayerRequest, RegisterPlayerRequest, StartGameRequest } from "../../shared/model/RequestTypes";
-import { ChatResponse, CreateGameResponse, DeleteGameResponse, EditPlayerNameResponse, ErrorResponse, JoinGameResponse, LeaveGameResponse, LogoutResponse, RegisterExistingPlayerResponse, RegisterPlayerResponse, StartGameResponse, UpdateGameBoardResponse, UpdateGameListResponse, UpdatePlayerListResponse } from "../../shared/model/ResponseTypes";
+import { ChatResponse, CreateGameResponse, DeleteGameResponse, EditPlayerNameResponse, ErrorResponse, JoinGameResponse, LeaveGameResponse, LogoutResponse, RegisterExistingPlayerResponse, RegisterPlayerResponse, StartGameResponse, UpdateGameListResponse, UpdatePlayerListResponse } from "../../shared/model/ResponseTypes";
 import { State } from "./store";
 
 export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
