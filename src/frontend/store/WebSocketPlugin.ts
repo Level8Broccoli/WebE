@@ -1,7 +1,6 @@
 import { Socket } from "socket.io-client";
 import { Store } from "vuex";
-import { keyValueArrayToMap } from "../../shared/helper/HelperService";
-import { PublicGame, PublicGameState } from "../../shared/model/Game";
+import { Game, GameState } from "../../shared/model/Game";
 import { ChatRequest, CreateGameRequest, DeleteGameRequest, DiscardCardRequest, DrawCardRequest, EditPlayerNameRequest, JoinGameRequest, LeaveGameRequest, LogoutRequest, RegisterExistingPlayerRequest, RegisterPlayerRequest, StartGameRequest } from "../../shared/model/RequestTypes";
 import { ChatResponse, CreateGameResponse, DeleteGameResponse, EditPlayerNameResponse, ErrorResponse, JoinGameResponse, LeaveGameResponse, LogoutResponse, RegisterExistingPlayerResponse, RegisterPlayerResponse, StartGameResponse, UpdateGameBoardResponse, UpdateGameListResponse, UpdatePlayerListResponse } from "../../shared/model/ResponseTypes";
 import { State } from "./store";
@@ -49,16 +48,7 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
 
     socket.on("updateGameList", (res: UpdateGameListResponse | ErrorResponse) => {
         if ("gameList" in res) {
-            const parsedGameList: PublicGame[] = res.gameList.map(({ id, creatorId, players, config, status, chat, state: { activePlayerId, currentStep, hands, piles } }) => {
-                const parsedState: PublicGameState = {
-                    activePlayerId,
-                    currentStep,
-                    hands: keyValueArrayToMap(hands),
-                    piles: keyValueArrayToMap(piles),
-                }
-                return { id, creatorId, players, config, status, chat, state: parsedState };
-            });
-            store.commit("updateGames", parsedGameList);
+            store.commit("updateGames", res.gameList);
         } else {
             console.error(res.status);
             store.commit("addToErrorLog", res.status);
@@ -67,18 +57,8 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
 
     socket.on("registerExistingPlayer", (res: RegisterExistingPlayerResponse | ErrorResponse) => {
         if ("player" in res) {
-            const parsedGameList: PublicGame[] = res.games.map(({ id, creatorId, players, config, status, chat, state: { activePlayerId, currentStep, hands, piles } }) => {
-                const parsedState: PublicGameState = {
-                    activePlayerId,
-                    currentStep,
-                    hands: keyValueArrayToMap(hands),
-                    piles: keyValueArrayToMap(piles),
-                }
-                return { id, creatorId, players, config, status, chat, state: parsedState };
-            });
-
             store.commit("updatePlayer", res.player);
-            store.commit("updateGames", parsedGameList);
+            store.commit("updateGames", res.games);
             store.commit("activateGame", res.activeGameId);
             localStorage.setItem('player-credentials', JSON.stringify(res.player));
         } else {

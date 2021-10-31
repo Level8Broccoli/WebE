@@ -26,13 +26,13 @@
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue";
 import { useStore } from "vuex";
-import { PublicGame } from "../../../shared/model/Game";
+import { Game } from "../../../shared/model/Game";
 import { key } from "../../store/store";
 
 export default defineComponent({
   name: "GameListEntry",
   props: {
-    game: { type: Object as PropType<PublicGame>, required: true },
+    game: { type: Object as PropType<Game>, required: true },
     joinButton: { type: Boolean, default: true },
   },
   setup(props) {

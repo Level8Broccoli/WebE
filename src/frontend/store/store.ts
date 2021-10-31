@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client';
 import { InjectionKey } from 'vue';
 import { createStore, Store } from 'vuex';
-import { Card, Config, Game, GameStatus, LevelSystem, PlayerOverviewAggregate, PublicGame } from '../../shared/model/Game';
+import { Card, CardStackOpen, CardStackSecret, Config, DRAW_PILE_ID, Game, GameStatus, LevelSystem, PlayerOverviewAggregate } from '../../shared/model/Game';
 import { PrivatePlayer, PublicPlayer } from '../../shared/model/Player';
 import { ChatResponse } from '../../shared/model/ResponseTypes';
 import { i18n, Language } from '../i18n/i18n';
@@ -13,7 +13,7 @@ export interface State {
     showRules: Boolean,
     player: PrivatePlayer,
     playerList: PublicPlayer[],
-    games: PublicGame[],
+    games: Game[],
     gameInCreation?: Config,
     activeGameId: string,
     errorLog: string[]
@@ -52,7 +52,7 @@ export const store = createStore<State>({
         },
         view: (state, getters) => {
             const activeGame = state.activeGameId.length > 0
-                && getters.getActiveGame as PublicGame;
+                && getters.getActiveGame as Game;
             if (state.showRules) {
                 return "rules";
             }
@@ -83,13 +83,15 @@ export const store = createStore<State>({
         },
         getMyHands(state, getters): Card[] {
             const activeGame = state.activeGameId.length > 0
-                && getters.getActiveGame as PublicGame;
+                && getters.getActiveGame as Game;
 
-            return activeGame && activeGame.state.hands.get(state.player.id) as Card[] || [];
+            return activeGame &&
+                (activeGame.state.hands.find(h => h.id === state.player.id) as CardStackOpen).cards ||
+                [];
         },
         aggregateOtherPlayers(state, getters): PlayerOverviewAggregate[] {
             const activeGame = state.activeGameId.length > 0
-                && getters.getActiveGame as PublicGame;
+                && getters.getActiveGame as Game;
 
             if (!activeGame) {
                 return [];
@@ -107,16 +109,16 @@ export const store = createStore<State>({
                         playerId,
                         isActivePlayer: playerId === activePlayerId,
                         currentStep,
-                        handCardCount: hands.get(playerId) as number,
-                        discardPile: piles.get(playerId) as Card[]
+                        handCardCount: (hands.find(h => h.id === playerId) as CardStackSecret).count,
+                        discardPile: (piles.find(p => p.id === playerId) as CardStackOpen).cards
                     });
                 } else {
                     aggregate.push({
                         playerId,
                         isActivePlayer: playerId === activePlayerId,
                         currentStep,
-                        handCardCount: (hands.get(playerId) as Card[]).length,
-                        discardPile: piles.get(playerId) as Card[]
+                        handCardCount: (hands.find(h => h.id === playerId) as CardStackOpen).cards.length,
+                        discardPile: (piles.find(p => p.id === playerId) as CardStackOpen).cards
                     });
                 }
             }
@@ -124,24 +126,23 @@ export const store = createStore<State>({
         },
         getDrawPileCount(state, getters): number {
             const activeGame = state.activeGameId.length > 0
-                && getters.getActiveGame as PublicGame;
+                && getters.getActiveGame as Game;
             if (!activeGame) {
                 return 0;
             }
-            return activeGame.state.piles.get("drawPile") as number;
+            return (activeGame.state.piles.find(p => p.id === DRAW_PILE_ID) as CardStackSecret).count;
         },
         amIActivePlayer(state, getters): boolean {
             const activeGame = state.activeGameId.length > 0
-                && getters.getActiveGame as PublicGame;
+                && getters.getActiveGame as Game;
             if (!activeGame) {
                 return false;
             }
-
             return activeGame.state.activePlayerId === state.player.id;
         },
         getCurrentStep(state, getters): number {
             const activeGame = state.activeGameId.length > 0
-                && getters.getActiveGame as PublicGame;
+                && getters.getActiveGame as Game;
             if (!activeGame) {
                 return -1;
             }
@@ -169,6 +170,8 @@ export const store = createStore<State>({
             }
         },
         updateGames(state, value: Game[]) {
+            console.log("updateGames", value);
+
             state.games = value;
         },
         addGame(state, value: Game) {

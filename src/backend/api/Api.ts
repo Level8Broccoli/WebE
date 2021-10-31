@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 import { StatusCode } from "../../shared/api/StatusCode";
-import { GameStatus, GameStep, LevelSystem, PublicGameTransfer } from "../../shared/model/Game";
+import { Game, GameStatus, GameStep, LevelSystem } from "../../shared/model/Game";
 import { FullPlayer, PublicPlayer } from "../../shared/model/Player";
 import {
   ChatRequest,
@@ -487,7 +487,7 @@ export class Api {
     return getAllRegisteredPlayers(this._serverState.players);
   }
 
-  getAllGames(playerId?: string): PublicGameTransfer[] {
+  getAllGames(playerId?: string): Game[] {
     return getAllGamesForPlayer(this._serverState.games, playerId)
   }
 }

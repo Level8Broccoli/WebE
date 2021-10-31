@@ -1,17 +1,19 @@
-import { toKeyValueArray } from "../../shared/helper/HelperService";
 import {
   Card,
+  CardStackOpen,
   CardType,
-  Color, Game, GameState, GameStatus, GameStep, NumberCard, PublicGameTransfer,
-  PublicGameTransferState,
-  SpecialCard
+  Color,
+  DRAW_PILE_ID,
+  Game,
+  GameState,
+  GameStatus,
+  GameStep,
+  NumberCard
 } from "../../shared/model/Game";
-import { PrivatePlayer } from "../../shared/model/Player";
 import { ServerState } from "../../shared/model/ServerState";
 import { getUUID } from "./TokenGeneratorService";
 
 const HAND_SIZE_START = 10;
-const DRAW_PILE = "drawPile";
 
 function initialCardSet(): Card[] {
   const cardset: Card[] = [];
@@ -54,11 +56,11 @@ export function initGameState(): GameState {
   return {
     activePlayerId: "",
     currentStep: GameStep.DISCARD,
-    hands: new Map(),
-    piles: new Map().set(
-      DRAW_PILE,
-      initialCardSet().sort((a, b) => 0.5 - Math.random())
-    ),
+    hands: [],
+    piles: [{
+      id: DRAW_PILE_ID,
+      cards: initialCardSet().sort((a, b) => 0.5 - Math.random())
+    }]
   };
 }
 
@@ -110,15 +112,15 @@ export function startGameState(
 //     .pop()!;
 // }
 
-export function addCardToHand(
-  serverState: ServerState,
-  gameId: string,
-  player: PrivatePlayer,
-  card: Card
-) {
-  const state = serverState.games.find((g) => g.id === gameId)!.state!;
-  state.hands.set(player.id, state.hands.get(player.id)!.concat(card));
-}
+// export function addCardToHand(
+//   serverState: ServerState,
+//   gameId: string,
+//   player: PrivatePlayer,
+//   card: Card
+// ) {
+//   const state = serverState.games.find((g) => g.id === gameId)!.state!;
+//   state.hands.set(player.id, state.hands.get(player.id)!.concat(card));
+// }
 
 export function getGame(
   gameList: Game[],
@@ -142,17 +144,29 @@ export function pileExists(
   game: Game,
   pileId: string
 ): boolean {
-  return (
-    game.state.piles.get(pileId) !== undefined
-  );
+  return !!game.state.piles.find(p => p.id === pileId);
+}
+
+export function handExists(
+  game: Game,
+  playerId: string
+): boolean {
+  return !!game.state.hands.find(p => p.id === playerId);
 }
 
 export function getPile(game: Game, pileId: string): Card[] {
-  const pile = game.state.piles.get(pileId);
+  const pile = game.state.piles.find(p => p.id === pileId);
   if (typeof pile === "undefined") {
     throw new Error("Pile does not exists!");
   }
-  return pile;
+  return (pile as CardStackOpen).cards;
+}
+export function getHand(game: Game, playerId: string): Card[] {
+  const hand = game.state.hands.find(h => h.id === playerId);
+  if (typeof hand === "undefined") {
+    throw new Error("Pile does not exists!");
+  }
+  return (hand as CardStackOpen).cards;
 }
 
 export function isCardOwner(
@@ -160,9 +174,11 @@ export function isCardOwner(
   playerId: string,
   cardId: string
 ): boolean {
-  return game.state.hands.get(playerId)!
-    .find((c) => c.id === cardId) !== undefined
-
+  const hand = game.state.hands.find(h => h.id === playerId);
+  if (typeof hand === "undefined") {
+    throw new Error("Hand does not exists!");
+  }
+  return !!((hand as CardStackOpen).cards.find((c) => c.id === cardId))
 }
 
 export function discardCard(
@@ -171,25 +187,32 @@ export function discardCard(
   cardId: string
 ) {
   // remove the card from the hand
-  const hands = game!.state.hands;
-  const card = hands.get(playerId)!.find(c => c.id === cardId);
-  hands.set(
-    playerId,
-    hands.get(playerId)!.filter((c) => c.id !== cardId)
-  );
+  const state = game.state;
+  const card = (state.hands.find(h => h.id === playerId) as CardStackOpen).cards.find(c => c.id === cardId);
+  state.hands = state.hands.map(h => {
+    return {
+      id: h.id,
+      cards: (h as CardStackOpen).cards.filter(c => c.id !== cardId)
+    }
+  })
   // then add it to the players discard pile
-  const pile = game!.state.piles.get(playerId);
-  pile!.unshift(card!);
+  const pile = getPile(game, playerId);
+  pile.unshift(card!);
 }
 
 function createPlayerStartHand(game: Game, playerId: string, numberOfCards: number) {
   for (let i = 0; i < numberOfCards; i++) {
-    drawCardFromPile(game, DRAW_PILE, playerId);
+    drawCardFromPile(game, DRAW_PILE_ID
+      , playerId);
   }
 }
 
 function createEmptyDiscardPile(game: Game, playerId: string) {
-  game.state.piles.set(playerId, []);
+  const pile: CardStackOpen = {
+    id: playerId,
+    cards: []
+  };
+  game.state.piles.push(pile);
 }
 
 function setActivePlayer(game: Game, playerId: string) {
@@ -197,57 +220,65 @@ function setActivePlayer(game: Game, playerId: string) {
 }
 
 export function drawCardFromPile(game: Game, from: string, to: string) {
-  const fromPile = game.state.piles.get(from);
-  if (typeof fromPile === "undefined") {
-    throw new Error("This pile does not exist.");
-  }
+  const fromPile = getPile(game, from);
   const nextCard = fromPile.shift();
   if (typeof nextCard === "undefined") {
     throw new Error("This pile is empty.");
   }
-  if (typeof game.state.hands.get(to) === "undefined") {
-    game.state.hands.set(to, []);
+  if (!(handExists(game, to))) {
+    const newHand: CardStackOpen = {
+      id: to,
+      cards: []
+    }
+    game.state.hands.push(newHand);
   }
-  const toHand = game.state.hands.get(to)!;
+  const toHand = getHand(game, to);
   toHand.push(nextCard);
 }
 
 export function getAllGamesForPlayer(
   gameList: Game[],
   playerId?: string
-): PublicGameTransfer[] {
+): Game[] {
   return gameList.map(({ id, creatorId, players, config, status, chat, state: { activePlayerId, currentStep, hands, piles } }) => {
-    const handKeys = Array.from(hands.keys());
-    const newHands = new Map<string, Card[] | number>();
-    handKeys.forEach(key => {
+    const newHands = (hands as CardStackOpen[]).map(({ id, cards }) => {
       // only show the cards on the requesting player
       // alternativally show the number of cards on all the other players
-      if (key === playerId) {
-        newHands.set(key, hands.get(key)!);
-      } else {
-        newHands.set(key, hands.get(key)!.length);
+      if (id === playerId) {
+        return {
+          id,
+          cards
+        }
+      }
+      return {
+        id,
+        count: cards.length
       }
     });
 
-    const pileKeys = Array.from(piles.keys());
-    const newPiles = new Map<string, Card[] | number>();
-    pileKeys.forEach(key => {
+    const newPiles = (piles as CardStackOpen[]).map(({ id, cards }) => {
       // only show the cards on the requesting player
       // alternativally show the number of cards on all the other players
-      if (key === DRAW_PILE) {
-        newPiles.set(key, piles.get(key)!.length);
-      } else {
-        newPiles.set(key, piles.get(key)!);
+      if (id === DRAW_PILE_ID
+      ) {
+        return {
+          id,
+          count: cards.length
+        }
+      }
+      return {
+        id,
+        cards
       }
     });
 
-    const newPublicGameState: PublicGameTransferState = {
+    const newPublicGameState: GameState = {
       activePlayerId,
       currentStep,
-      hands: toKeyValueArray(newHands),
-      piles: toKeyValueArray(newPiles)
+      hands: newHands,
+      piles: newPiles
     }
-    const newPublicGame: PublicGameTransfer = { id, creatorId, players, config, status, chat, state: newPublicGameState };
+    const newPublicGame: Game = { id, creatorId, players, config, status, chat, state: newPublicGameState };
     return newPublicGame;
   });
 }
