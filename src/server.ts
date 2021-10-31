@@ -16,7 +16,7 @@ import {
   RegisterPlayerRequest,
   StartGameRequest
 } from "./shared/model/RequestTypes";
-import { ErrorResponse } from "./shared/model/ResponseTypes";
+import { ErrorResponse, StartGameResponse } from "./shared/model/ResponseTypes";
 
 const PORT = process.env.PORT ? Number(process.env.PORT) : 3030;
 const serverState = {
@@ -184,11 +184,7 @@ io.on("connection", (socket) => {
       .startGame(request)
       .then((response) => {
         socket.emit("startGame", response);
-        const playerIdList = api.getPlayerIdListFromGame(response.gameId);
-        for (const playerId of playerIdList) {
-          const socketId = api.getSocketId(playerId);
-          io.to(socketId).emit("updateGameList", { gameList: getAllGames(serverState, playerId) });
-        }
+        broadcastUpdateGameState(response);
       })
       .catch((error) => {
         const response: ErrorResponse = {
@@ -219,13 +215,14 @@ io.on("connection", (socket) => {
       .then((response) => {
         // Send updated Gameboard
         io.in(request.gameId).emit("updateGameBoard", response);
+        broadcastUpdateGameState(response);
         // Check if a Winner exists
       })
       .catch((error) => {
         const response: ErrorResponse = {
           status: error.message,
         };
-        socket.emit("startGame", response);
+        socket.emit("discardCard", response);
       });
   });
 
@@ -233,3 +230,11 @@ io.on("connection", (socket) => {
     console.log(`Disconnected ${socket.id}`);
   });
 });
+
+function broadcastUpdateGameState(response: StartGameResponse) {
+  const playerIdList = api.getPlayerIdListFromGame(response.gameId);
+  for (const playerId of playerIdList) {
+    const socketId = api.getSocketId(playerId);
+    io.to(socketId).emit("updateGameList", { gameList: getAllGames(serverState, playerId) });
+  }
+}

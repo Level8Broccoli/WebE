@@ -90,6 +90,7 @@ export type DrawCardResponse = {
 };
 
 export type UpdateGameBoardResponse = {
+  status: StatusCode;
   timestamp: DateTime;
-  piles: Array<[string, Card[]]>; // Map<string, Card> as array;
+  gameId: string;
 };

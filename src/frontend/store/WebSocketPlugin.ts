@@ -2,7 +2,7 @@ import { Socket } from "socket.io-client";
 import { Store } from "vuex";
 import { keyValueArrayToMap } from "../../shared/helper/HelperService";
 import { PublicGame, PublicGameState } from "../../shared/model/Game";
-import { ChatRequest, CreateGameRequest, DeleteGameRequest, EditPlayerNameRequest, JoinGameRequest, LeaveGameRequest, LogoutRequest, RegisterExistingPlayerRequest, RegisterPlayerRequest, StartGameRequest } from "../../shared/model/RequestTypes";
+import { ChatRequest, CreateGameRequest, DeleteGameRequest, DiscardCardRequest, EditPlayerNameRequest, JoinGameRequest, LeaveGameRequest, LogoutRequest, RegisterExistingPlayerRequest, RegisterPlayerRequest, StartGameRequest } from "../../shared/model/RequestTypes";
 import { ChatResponse, CreateGameResponse, DeleteGameResponse, EditPlayerNameResponse, ErrorResponse, JoinGameResponse, LeaveGameResponse, LogoutResponse, RegisterExistingPlayerResponse, RegisterPlayerResponse, StartGameResponse, UpdateGameListResponse, UpdatePlayerListResponse } from "../../shared/model/ResponseTypes";
 import { State } from "./store";
 
@@ -160,6 +160,11 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
         }
     });
 
+    socket.on("discardCard", (res: ErrorResponse) => {
+        console.error(res.status);
+        store.commit("addToErrorLog", res.status);
+    })
+
     store.subscribe((mutation, state) => {
         if (mutation.type === "registerPlayer") {
             const payload: RegisterPlayerRequest = { playerName: state.player.name };
@@ -235,6 +240,15 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
                 player: store.state.player
             }
             socket.emit("startGame", payload);
+        }
+
+        if (mutation.type === "discardCard") {
+            const payload: DiscardCardRequest = {
+                cardId: mutation.payload.cardId,
+                gameId: store.state.activeGameId,
+                player: store.state.player
+            }
+            socket.emit("discardCard", payload);
         }
     });
 }

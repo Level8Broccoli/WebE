@@ -129,6 +129,24 @@ export const store = createStore<State>({
                 return 0;
             }
             return activeGame.state.piles.get("drawPile") as number;
+        },
+        amIActivePlayer(state, getters): boolean {
+            const activeGame = state.activeGameId.length > 0
+                && getters.getActiveGame as PublicGame;
+            if (!activeGame) {
+                return false;
+            }
+
+            return activeGame.state.activePlayerId === state.player.id;
+        },
+        getCurrentStep(state, getters): number {
+            const activeGame = state.activeGameId.length > 0
+                && getters.getActiveGame as PublicGame;
+            if (!activeGame) {
+                return -1;
+            }
+
+            return activeGame.state.currentStep;
         }
     },
     mutations: {
@@ -179,6 +197,7 @@ export const store = createStore<State>({
         registerExistingPlayer() { /* handled by WebSocketPlugin */ },
         logout() { /* handled by WebSocketPlugin */ },
         startGame() { /* handled by WebSocketPlugin */ },
+        discardCard() { /* handled by WebSocketPlugin */ },
         resetState(state) {
             state.player = {
                 name: "",

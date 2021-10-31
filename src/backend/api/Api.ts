@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
 import { StatusCode } from "../../shared/api/StatusCode";
 import { toKeyValueArray } from "../../shared/helper/HelperService";
-import { GameStatus, LevelSystem } from "../../shared/model/Game";
+import { GameStatus, GameStep, LevelSystem } from "../../shared/model/Game";
 import { FullPlayer } from "../../shared/model/Player";
 import {
   ChatRequest,
@@ -37,6 +37,8 @@ import {
   getAllGames,
   getGame,
   getGameState, getPlayerIdList, initGameState, isCardOwner,
+  nextGameStep,
+  nextPlayer,
   pileExists,
   startGameState
 } from "../services/GameService";
@@ -439,7 +441,7 @@ export class Api {
           this._serverState,
           request.gameId,
           request.player,
-          request.card
+          request.cardId
         )
       ) {
         reject(new Error(StatusCode.PLAYER_NOT_CARD_OWNER));
@@ -449,14 +451,17 @@ export class Api {
         this._serverState,
         request.gameId,
         request.player,
-        request.card
+        request.cardId
       );
 
-      const piles = getGameState(this._serverState, request.gameId).piles;
+      nextPlayer(this._serverState, request.gameId);
+
+      nextGameStep(this._serverState, request.gameId, GameStep.DRAW);
 
       const response: UpdateGameBoardResponse = {
+        status: StatusCode.OK,
         timestamp: DateTime.now(),
-        piles: toKeyValueArray(piles),
+        gameId: request.gameId,
       };
 
       resolve(response);

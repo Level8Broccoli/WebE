@@ -2,7 +2,7 @@
   <main class="my-hand">
     <ul role="list">
       <li v-for="(card, i) in myHands" :key="i">
-        <CardView :card="card" />
+        <CardView :card="card" :isHand="true" />
       </li>
     </ul>
   </main>

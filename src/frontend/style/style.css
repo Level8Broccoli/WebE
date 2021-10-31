@@ -179,3 +179,20 @@ hr {
   );
   margin-block: 2rem;
 }
+
+.card-shadow {
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.interactive {
+  cursor: pointer;
+  box-shadow: rgba(255, 100, 100, 0.4) 0px 0px 0px 2px,
+  rgba(255, 100, 100, 0.65) 0px 4px 6px -1px,
+  rgba(255, 100, 100, 0.08) 0px 1px 0px inset;
+}
+
+.interactive:hover {
+  box-shadow: rgba(250, 255, 0, 0.4) 0px 0px 0px 2px,
+    rgba(250, 255, 0, 0.65) 0px 4px 6px -1px,
+    rgba(250, 255, 0, 0.08) 0px 1px 0px inset;
+}

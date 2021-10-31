@@ -57,5 +57,5 @@ export type DrawCardRequest = {
 export type DiscardCardRequest = {
   player: PrivatePlayer;
   gameId: string;
-  card: Card;
+  cardId: string;
 };

@@ -8,6 +8,7 @@ import {
 } from "../../shared/model/Game";
 import { PrivatePlayer } from "../../shared/model/Player";
 import { ServerState } from "../../shared/model/ServerState";
+import { getUUID } from "./TokenGeneratorService";
 
 const HAND_SIZE_START = 10;
 const DRAW_PILE = "drawPile";
@@ -18,6 +19,7 @@ function initialCardSet(): Card[] {
   for (const key in Color) {
     for (let index = 1; index <= 15; index++) {
       const card: NumberCard = {
+        id: getUUID(),
         value: index,
         color: key,
         type: CardType.NUMBER,
@@ -164,13 +166,13 @@ export function isCardOwner(
   serverState: ServerState,
   gameId: string,
   player: PrivatePlayer,
-  card: Card
+  cardId: string
 ): boolean {
   return (
     serverState.games
       .find((g) => g.id === gameId)!
       .state!.hands.get(player.id)!
-      .find((c) => c === card) !== undefined
+      .find((c) => c.id === cardId) !== undefined
   );
 }
 
@@ -178,22 +180,19 @@ export function discardCard(
   serverState: ServerState,
   gameId: string,
   player: PrivatePlayer,
-  card: Card
+  cardId: string
 ) {
+  const game = serverState.games.find((g) => g.id === gameId);
   // remove the card from the hand
-  const hands = serverState.games.find((g) => g.id === gameId)!.state!.hands;
+  const hands = game!.state.hands;
+  const card = hands.get(player.id)!.find(c => c.id === cardId);
   hands.set(
     player.id,
-    hands.get(player.id)!.filter((c) => c === card)
+    hands.get(player.id)!.filter((c) => c.id !== cardId)
   );
   // then add it to the players discard pile
-  const pile = serverState.games
-    .find((g) => g.id === gameId)!
-    .state!.piles!.get(player.id);
-  pile!.push(card);
-  serverState.games
-    .find((g) => g.id === gameId)!
-    .state!.piles!.set(player.id, pile!);
+  const pile = game!.state.piles.get(player.id);
+  pile!.unshift(card!);
 }
 
 function createPlayerStartHand(game: Game, playerId: string, numberOfCards: number) {
@@ -268,4 +267,20 @@ export function getAllGames(
 
 export function getPlayerIdList(serverState: ServerState, gameId: string): string[] {
   return serverState.games.find(g => g.id === gameId)!.players;
+}
+
+export function nextPlayer(serverState: ServerState, gameId: string): void {
+  const game = serverState.games.find(g => g.id === gameId)!;
+  const activePlayerId = game.state.activePlayerId;
+  const playerIdList = game.players;
+  const numberOfPlayers = game.players.length;
+  const activePlayerIndex = playerIdList.indexOf(activePlayerId);
+  const nextPlayerIndex = (activePlayerIndex + 1) % numberOfPlayers;
+
+  game.state.activePlayerId = playerIdList[nextPlayerIndex];
+}
+
+export function nextGameStep(serverState: ServerState, gameId: string, gameStep: GameStep): void {
+  const game = serverState.games.find(g => g.id === gameId)!;
+  game.state.currentStep = gameStep;
 }

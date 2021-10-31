@@ -1,6 +1,6 @@
 
 <template>
-  <div class="card back" v-if="count > 0">
+  <div class="card card-shadow back" v-if="count > 0">
     {{ count }}
   </div>
   <EmptyPileView v-else />

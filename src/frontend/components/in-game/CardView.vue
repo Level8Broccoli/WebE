@@ -1,6 +1,12 @@
 
 <template>
-  <div :class="'card color-' + color" v-if="isCard">
+  <div
+    :class="
+      'card card-shadow color-' + color + (canBeDiscarded ? ' interactive' : '')
+    "
+    v-if="isCard"
+    v-on="canBeDiscarded ? { click: discardCard } : {}"
+  >
     <header class="top">
       <strong>{{ value }}</strong>
     </header>
@@ -18,26 +24,54 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue";
+import { useStore } from "vuex";
 import { Card } from "../../../shared/model/Game";
+import { key } from "../../store/store";
 import EmptyPileView from "./EmptyPileView.vue";
 export default defineComponent({
   name: "CardView",
   components: { EmptyPileView },
   props: {
     card: { type: Object as PropType<Card> },
+    isHand: { type: Boolean, default: false },
   },
   setup(props) {
+    const store = useStore(key);
     const card = computed(() => props.card);
     if (typeof card === "undefined" || typeof card!.value === "undefined") {
-      return { isCard: false, value: 0, color: "NONE" };
+      return {
+        isCard: false,
+        value: 0,
+        color: "NONE",
+        canBeDiscarded: false,
+        discardCard: () => {},
+      };
     }
+    const canBeDiscarded = computed(
+      () =>
+        props.isHand &&
+        store.getters.amIActivePlayer &&
+        store.getters.getCurrentStep === 3
+    );
+
     const color = computed(() => {
       if (typeof card !== "undefined" && "color" in card!.value!) {
         return card!.value!.color;
       }
       return "NONE";
     });
-    return { isCard: true, value: card!.value!.value!, color };
+
+    const discardCard = (e: Event) => {
+      store.commit("discardCard", { cardId: card!.value!.id! });
+    };
+
+    return {
+      isCard: true,
+      value: card!.value!.value!,
+      color,
+      canBeDiscarded,
+      discardCard,
+    };
   },
 });
 </script>

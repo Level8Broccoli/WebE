@@ -46,12 +46,14 @@ export enum LevelSystem {
 export type Card = NumberCard | SpecialCard;
 
 export type NumberCard = {
+  id: string;
   value: number;
   color: string;
   type: CardType.NUMBER;
 };
 
 export type SpecialCard = {
+  id: string;
   value: 0;
   type: CardType.JOKER | CardType.SKIP;
 };
