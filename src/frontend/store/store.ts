@@ -102,6 +102,13 @@ export const store = createStore<State>({
                         handCardCount: hands.get(playerId) as number,
                         discardPile: piles.get(playerId) as Card[]
                     });
+                } else {
+                    aggregate.push({
+                        playerId,
+                        isActivePlayer: playerId === activePlayerId,
+                        handCardCount: (hands.get(playerId) as Card[]).length,
+                        discardPile: piles.get(playerId) as Card[]
+                    });
                 }
             }
             return aggregate;
@@ -109,11 +116,9 @@ export const store = createStore<State>({
         getDrawPileCount(state, getters): number {
             const activeGame = state.activeGameId.length > 0
                 && getters.getActiveGame as PublicGame;
-
             if (!activeGame) {
                 return 0;
             }
-
             return activeGame.state.piles.get("drawPile") as number;
         }
     },
