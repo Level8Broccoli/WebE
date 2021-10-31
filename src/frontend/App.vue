@@ -9,7 +9,6 @@
     <GameCreateView v-if="view === 'game-in-creation'" />
     <GameLobbyView v-if="view === 'game-in-lobby'" />
     <GameView v-if="view === 'game-in-progress'" />
-    {{ view }}
   </main>
 </template>
 
