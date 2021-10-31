@@ -14,7 +14,7 @@ import {
   RegisterPlayerRequest,
   StartGameRequest
 } from "./shared/model/RequestTypes";
-import { ErrorResponse, StartGameResponse } from "./shared/model/ResponseTypes";
+import { ErrorResponse, StartGameResponse, UpdateGameBoardResponse } from "./shared/model/ResponseTypes";
 
 const PORT = process.env.PORT ? Number(process.env.PORT) : 3030;
 const serverState = {
@@ -196,8 +196,7 @@ io.on("connection", (socket) => {
     api
       .drawCard(request)
       .then((responses) => {
-        socket.emit("drawCard", responses[0]);
-        io.in(request.gameId).emit("updateGameBoard", responses[1]);
+        broadcastUpdateGameState(responses[1]);
       })
       .catch((error) => {
         const response: ErrorResponse = {
@@ -212,7 +211,6 @@ io.on("connection", (socket) => {
       .discardCard(request)
       .then((response) => {
         // Send updated Gameboard
-        io.in(request.gameId).emit("updateGameBoard", response);
         broadcastUpdateGameState(response);
         // Check if a Winner exists
       })
@@ -229,7 +227,7 @@ io.on("connection", (socket) => {
   });
 });
 
-function broadcastUpdateGameState(response: StartGameResponse) {
+function broadcastUpdateGameState(response: StartGameResponse | UpdateGameBoardResponse) {
   const playerIdList = api.getPlayerIdListFromGame(response.gameId);
   for (const playerId of playerIdList) {
     const socketId = api.getSocketId(playerId);

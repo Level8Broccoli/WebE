@@ -1,7 +1,7 @@
 <template>
   <main class="my-hand">
     <ul role="list">
-      <li v-for="(card, i) in myHands" :key="i">
+      <li v-for="(card) in myHands" :key="card.id">
         <CardView :card="card" :isHand="true" />
       </li>
     </ul>
