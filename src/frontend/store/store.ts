@@ -105,6 +105,16 @@ export const store = createStore<State>({
                 }
             }
             return aggregate;
+        },
+        getDrawPileCount(state, getters): number {
+            const activeGame = state.activeGameId.length > 0
+                && getters.getActiveGame as PublicGame;
+
+            if (!activeGame) {
+                return 0;
+            }
+
+            return activeGame.state.piles.get("drawPile") as number;
         }
     },
     mutations: {
