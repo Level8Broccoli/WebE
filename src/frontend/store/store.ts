@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client';
 import { InjectionKey } from 'vue';
 import { createStore, Store } from 'vuex';
-import { Card, Config, Game, GameStatus, LevelSystem, OtherPlayerAggregate, PublicGame } from '../../shared/model/Game';
+import { Card, Config, Game, GameStatus, LevelSystem, PlayerOverviewAggregate, PublicGame } from '../../shared/model/Game';
 import { PrivatePlayer, PublicPlayer } from '../../shared/model/Player';
 import { ChatResponse } from '../../shared/model/ResponseTypes';
 import { i18n, Language } from '../i18n/i18n';
@@ -81,7 +81,7 @@ export const store = createStore<State>({
 
             return activeGame && activeGame.state.hands.get(state.player.id) as Card[] || [];
         },
-        aggregateOtherPlayers(state, getters): OtherPlayerAggregate[] {
+        aggregateOtherPlayers(state, getters): PlayerOverviewAggregate[] {
             const activeGame = state.activeGameId.length > 0
                 && getters.getActiveGame as PublicGame;
 
@@ -92,7 +92,7 @@ export const store = createStore<State>({
             const playerIdList = activeGame.players;
             const hands = activeGame.state.hands;
             const piles = activeGame.state.piles;
-            const aggregate: OtherPlayerAggregate[] = [];
+            const aggregate: PlayerOverviewAggregate[] = [];
 
             for (const playerId of playerIdList) {
                 if (playerId !== state.player.id) {

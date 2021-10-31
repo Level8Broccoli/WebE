@@ -10,7 +10,7 @@
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue";
 import { useStore } from "vuex";
-import { OtherPlayerAggregate } from "../../../shared/model/Game";
+import { PlayerOverviewAggregate } from "../../../shared/model/Game";
 import { key } from "../../store/store";
 import BackPileView from "./BackPileView.vue";
 import CardView from "./CardView.vue";
@@ -20,7 +20,7 @@ export default defineComponent({
   components: { CardView, BackPileView },
   props: {
     player: {
-      type: Object as PropType<OtherPlayerAggregate>,
+      type: Object as PropType<PlayerOverviewAggregate>,
       required: true,
     },
   },

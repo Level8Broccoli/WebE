@@ -94,7 +94,7 @@ export type PublicGameTransferState = {
   piles: [string, Card[] | number][]; // Includes the drawPile and the player's discardPile
 };
 
-export type OtherPlayerAggregate = {
+export type PlayerOverviewAggregate = {
   playerId: string;
   isActivePlayer: boolean;
   handCardCount: number;
