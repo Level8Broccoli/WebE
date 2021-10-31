@@ -34,6 +34,7 @@ import {
 import { ServerState } from "../../shared/model/ServerState";
 import {
   discardCard,
+  getAllGames,
   getGame,
   getGameState, getPlayerIdList, initGameState, isCardOwner,
   pileExists,
@@ -79,7 +80,7 @@ export class Api {
         status: StatusCode.OK,
         timestamp: DateTime.now(),
         player: player,
-        games: this._serverState.games,
+        games: getAllGames(this._serverState, player.id),
       };
 
       resolve(response);
@@ -141,7 +142,7 @@ export class Api {
         status: StatusCode.OK,
         timestamp: DateTime.now(),
         player: request.player,
-        games: this._serverState.games,
+        games: getAllGames(this._serverState, request.player.id),
         activeGameId: getActiveGame(this._serverState.games, request.player.id)?.id || "",
       };
 

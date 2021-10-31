@@ -53,7 +53,6 @@ export const store = createStore<State>({
         view: (state, getters) => {
             const activeGame = state.activeGameId.length > 0
                 && getters.getActiveGame as PublicGame;
-
             if (state.showRules) {
                 return "rules";
             }
@@ -79,6 +78,7 @@ export const store = createStore<State>({
         getMyHands(state, getters): Card[] {
             const activeGame = state.activeGameId.length > 0
                 && getters.getActiveGame as PublicGame;
+
             return activeGame && activeGame.state.hands.get(state.player.id) as Card[] || [];
         },
         aggregateOtherPlayers(state, getters): OtherPlayerAggregate[] {

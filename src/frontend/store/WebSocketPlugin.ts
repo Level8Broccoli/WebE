@@ -66,8 +66,17 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
 
     socket.on("registerExistingPlayer", (res: RegisterExistingPlayerResponse | ErrorResponse) => {
         if ("player" in res) {
+            const parsedGameList: PublicGame[] = res.games.map(({ id, creatorId, players, config, status, chat, state: { activePlayerId, hands, piles } }) => {
+                const parsedState: PublicGameState = {
+                    activePlayerId,
+                    hands: keyValueArrayToMap(hands),
+                    piles: keyValueArrayToMap(piles),
+                }
+                return { id, creatorId, players, config, status, chat, state: parsedState };
+            });
+
             store.commit("updatePlayer", res.player);
-            store.commit("updateGames", res.games);
+            store.commit("updateGames", parsedGameList);
             store.commit("activateGame", res.activeGameId);
             localStorage.setItem('player-credentials', JSON.stringify(res.player));
         } else {
