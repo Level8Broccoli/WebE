@@ -10,7 +10,7 @@
     <CardView
       v-if="discardPile[0] !== null && discardPile[0] !== undefined"
       :id="discardPile[0].id"
-      :color="discardPile[0].color"
+      :color="'color' in discardPile[0] ? discardPile[0].color : 'NONE'"
       :value="discardPile[0].value"
       :isDiscard="true"
       :owner="playerId"

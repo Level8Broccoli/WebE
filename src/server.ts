@@ -232,7 +232,6 @@ function broadcastUpdateGameState(gameId: string) {
   const playerIdList = api.getPlayerIdListFromGame(gameId);
   for (const playerId of playerIdList) {
     const socketId = api.getSocketId(playerId);
-    console.log("broadcast update to", playerId, socketId);
     io.to(socketId).emit("updateGameList", { gameList: api.getAllGames(playerId) });
   }
 }

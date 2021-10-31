@@ -3,7 +3,7 @@
     <ul role="list">
       <li v-for="card in myHands" :key="card.id">
         <CardView
-          :color="card.color"
+          :color="'color' in card ? card.color : 'NONE'"
           :id="card.id"
           :value="card.value"
           :isHand="true"
