@@ -2,7 +2,7 @@ import { toKeyValueArray } from "../../shared/helper/HelperService";
 import {
   Card,
   CardType,
-  Color, Game, GameState, GameStatus, NumberCard, PublicGameTransfer,
+  Color, Game, GameState, GameStatus, GameStep, NumberCard, PublicGameTransfer,
   PublicGameTransferState,
   SpecialCard
 } from "../../shared/model/Game";
@@ -64,6 +64,7 @@ export function initGameState(): GameState {
   // Init state with a full randomly sorted draw pile
   return {
     activePlayerId: "",
+    currentStep: GameStep.DISCARD,
     hands: new Map(),
     piles: new Map().set(
       DRAW_PILE,
@@ -229,7 +230,7 @@ export function getAllGames(
   serverState: ServerState,
   playerId?: string
 ): PublicGameTransfer[] {
-  return serverState.games.map(({ id, creatorId, players, config, status, chat, state: { activePlayerId, hands, piles } }) => {
+  return serverState.games.map(({ id, creatorId, players, config, status, chat, state: { activePlayerId, currentStep, hands, piles } }) => {
     const handKeys = Array.from(hands.keys());
     const newHands = new Map<string, Card[] | number>();
     handKeys.forEach(key => {
@@ -256,6 +257,7 @@ export function getAllGames(
 
     const newPublicGameState: PublicGameTransferState = {
       activePlayerId,
+      currentStep,
       hands: toKeyValueArray(newHands),
       piles: toKeyValueArray(newPiles)
     }

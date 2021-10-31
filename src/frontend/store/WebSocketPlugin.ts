@@ -49,9 +49,10 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
 
     socket.on("updateGameList", (res: UpdateGameListResponse | ErrorResponse) => {
         if ("gameList" in res) {
-            const parsedGameList: PublicGame[] = res.gameList.map(({ id, creatorId, players, config, status, chat, state: { activePlayerId, hands, piles } }) => {
+            const parsedGameList: PublicGame[] = res.gameList.map(({ id, creatorId, players, config, status, chat, state: { activePlayerId, currentStep, hands, piles } }) => {
                 const parsedState: PublicGameState = {
                     activePlayerId,
+                    currentStep,
                     hands: keyValueArrayToMap(hands),
                     piles: keyValueArrayToMap(piles),
                 }
@@ -66,9 +67,10 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
 
     socket.on("registerExistingPlayer", (res: RegisterExistingPlayerResponse | ErrorResponse) => {
         if ("player" in res) {
-            const parsedGameList: PublicGame[] = res.games.map(({ id, creatorId, players, config, status, chat, state: { activePlayerId, hands, piles } }) => {
+            const parsedGameList: PublicGame[] = res.games.map(({ id, creatorId, players, config, status, chat, state: { activePlayerId, currentStep, hands, piles } }) => {
                 const parsedState: PublicGameState = {
                     activePlayerId,
+                    currentStep,
                     hands: keyValueArrayToMap(hands),
                     piles: keyValueArrayToMap(piles),
                 }

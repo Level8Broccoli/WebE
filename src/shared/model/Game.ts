@@ -71,20 +71,25 @@ export enum CardType {
   SKIP = "SKIP",
 }
 
+export enum GameStep { DRAW, FULFIL_LEVEL, PLAY, DISCARD }
+
 export type GameState = {
   activePlayerId: string;
+  currentStep: GameStep;
   hands: Map<string, Card[]>;
   piles: Map<string, Card[]>; // Includes the drawPile and the player's discardPile
 };
 
 export type PublicGameState = {
   activePlayerId: string;
+  currentStep: GameStep;
   hands: Map<string, Card[] | number>;
   piles: Map<string, Card[] | number>; // Includes the drawPile and the player's discardPile
 };
 
 export type PublicGameTransferState = {
   activePlayerId: string;
+  currentStep: GameStep;
   hands: [string, Card[] | number][];
   piles: [string, Card[] | number][]; // Includes the drawPile and the player's discardPile
 };
