@@ -139,6 +139,7 @@ export default defineComponent({
     const finishFulfillment = () => {
       fulfillLevelCounter.value = 0;
       fulfillLevelMode.value = false;
+      store.commit("nextFulfillmentPart", currentFulfillLevelPart.value.type);
       store.commit("finishFulfillment");
     };
     const isLastPart = computed(
