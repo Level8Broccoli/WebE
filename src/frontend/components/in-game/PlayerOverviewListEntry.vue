@@ -11,11 +11,9 @@
     </p>
     <BackPileView :count="handCount" />
     <CardView
-      v-for="card in discardPile"
-      :key="card.id"
-      :id="card.id"
-      :color="card.color"
-      :value="card.value"
+      v-for="cardId in discardPile"
+      :key="cardId"
+      :id="cardId"
       :isDiscard="true"
       :owner="playerId"
     />

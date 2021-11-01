@@ -19,10 +19,10 @@ export default defineComponent({
     const store = useStore(key);
     const playerName = computed(() => store.state.player.name);
     const isEdit = ref(false);
-    const switchToEdit = (e: Event) => {
+    const switchToEdit = () => {
       isEdit.value = true;
     };
-    const sendUpdate = (e: Event) => {
+    const sendUpdate = () => {
       isEdit.value = false;
       store.commit("editPlayerName");
     };

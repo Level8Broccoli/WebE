@@ -13,7 +13,7 @@ export default defineComponent({
   name: "RulesSwitcher",
   setup() {
     const store = useStore(key);
-    const switchRules = (e: Event) => {
+    const switchRules = () => {
       store.commit("switchRules");
     };
     const rulesMenuLabel = computed(() => store.getters.i18n.rulesMenuLabel);

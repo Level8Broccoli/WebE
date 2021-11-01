@@ -91,12 +91,12 @@ export const store = createStore<State>({
                 return i18n["currentStepExplanation" + String(step)];
             }
         },
-        getMyHands(state, getters): Card[] {
+        getMyHands(state, getters): string[] {
             const activeGame = state.activeGameId.length > 0
                 && getters.getActiveGame as Game;
 
             return activeGame &&
-                (activeGame.state.hands.find(h => h.id === state.player.id) as CardStackOpen).cards ||
+                (activeGame.state.hands.find(h => h.id === state.player.id) as CardStackOpen).cardIds ||
                 [];
         },
         getTranslatedLevels(state, getters): string[] {
@@ -148,7 +148,7 @@ export const store = createStore<State>({
                         hasAchievedLevel: typeof hasAchievedLevel === "undefined" ? false : hasAchievedLevel,
                         currentStep,
                         handCardCount: (hands.find(h => h.id === playerId) as CardStackSecret).count,
-                        discardPile: (piles.find(p => p.id === playerId) as CardStackOpen).cards
+                        discardPile: (piles.find(p => p.id === playerId) as CardStackOpen).cardIds
                     });
                 } else {
                     aggregate.push({
@@ -158,8 +158,8 @@ export const store = createStore<State>({
                         maxLevelCount,
                         hasAchievedLevel: typeof hasAchievedLevel === "undefined" ? false : hasAchievedLevel,
                         currentStep,
-                        handCardCount: (hands.find(h => h.id === playerId) as CardStackOpen).cards.length,
-                        discardPile: (piles.find(p => p.id === playerId) as CardStackOpen).cards
+                        handCardCount: (hands.find(h => h.id === playerId) as CardStackOpen).cardIds.length,
+                        discardPile: (piles.find(p => p.id === playerId) as CardStackOpen).cardIds
                     });
                 }
             }
@@ -200,27 +200,24 @@ export const store = createStore<State>({
 
             return activeGame.state.currentStep;
         },
-        getTopOfDiscardPile(state, getters) {
-            return (playerId: string) => {
-                const emptyCard: Card = {
-                    id: "NONE",
-                    color: "NONE",
-                    value: -1,
-                    type: CardType.NUMBER
-                };
-
+        getCardById(state, getters) {
+            return (cardId: string): Card => {
                 const activeGame = state.activeGameId.length > 0
                     && getters.getActiveGame as Game;
+                const missingCard: Card = {
+                    id: "CARD-NOT-FOUND",
+                    color: "NONE",
+                    type: CardType.NUMBER,
+                    value: -1
+                };
                 if (!activeGame) {
-                    return emptyCard;
+                    return missingCard;
                 }
-                const piles = activeGame.state.piles;
-                const discardPile = (piles.find(p => p.id === playerId) as CardStackOpen);
-
-                if (discardPile.cards.length === 0) {
-                    return emptyCard;
+                const card = activeGame.cards.find(c => c.id === cardId);
+                if (typeof card === "undefined") {
+                    return missingCard;
                 }
-                return discardPile.cards[0];
+                return card;
             }
         },
         getCardValue(state, getters) {
@@ -230,11 +227,7 @@ export const store = createStore<State>({
                 if (!activeGame) {
                     return -1;
                 }
-                const cards: Card[] = getters.getMyHands;
-                const card = cards.find(c => c.id === cardId);
-                if (typeof card === "undefined") {
-                    return -1;
-                }
+                const card: Card = getters.getCardById(cardId);
                 return card.value;
             }
         },
@@ -245,11 +238,7 @@ export const store = createStore<State>({
                 if (!activeGame) {
                     return "NONE";
                 }
-                const cards: Card[] = getters.getMyHands;
-                const card = cards.find(c => c.id === cardId);
-                if (typeof card === "undefined") {
-                    return "NONE";
-                }
+                const card: Card = getters.getCardById(cardId);
                 return card.color;
             }
         }
@@ -257,6 +246,10 @@ export const store = createStore<State>({
     mutations: {
         abortFulfillment(state) {
             state.cardRowsForFulfillment = [];
+            state.tempCardsForFulfillment = [];
+        },
+        nextFulfillmentPart(state) {
+            state.cardRowsForFulfillment.push(state.tempCardsForFulfillment);
             state.tempCardsForFulfillment = [];
         },
         storeForFulfillment(state, { cardId }) {
@@ -316,6 +309,7 @@ export const store = createStore<State>({
         skipLevelFulfillStep() { /* handled by WebSocketPlugin */ },
         drawCardFromDrawPile() { /* handled by WebSocketPlugin */ },
         drawCard() { /* handled by WebSocketPlugin */ },
+        finishFulfillment() { /* handled by WebSocketPlugin */ },
         resetState(state) {
             state.player = {
                 name: "",

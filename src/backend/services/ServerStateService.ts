@@ -1,5 +1,5 @@
 import { ChatMessage } from "../../shared/model/Chat";
-import { Game } from "../../shared/model/Game";
+import { CardRowType, DRAW_PILE_ID, Game, GameRules } from "../../shared/model/Game";
 import { FullPlayer, PrivatePlayer, PublicPlayer } from "../../shared/model/Player";
 import { ServerState } from "../../shared/model/ServerState";
 
@@ -44,6 +44,13 @@ export function editPlayerName(
 
 export function createGame(gameList: Game[], game: Game) {
   gameList.push(game);
+}
+export function fillDrawPile(game: Game) {
+  const cards = game.cards;
+  game.state.piles.push({
+    id: DRAW_PILE_ID,
+    cardIds: cards.sort((a, b) => 0.5 - Math.random()).map(c => c.id)
+  })
 }
 
 export function authenticatePlayer(
@@ -154,4 +161,83 @@ export function getAllRegisteredPlayers(
   return playerList.map(({ id, name }) => {
     return { id, name }
   });
+}
+
+export function isLevelValid(
+  game: Game,
+  playerId: string,
+  cardIdList: string[][]
+): boolean {
+  const playerLevel = game.state.playerLevels.find(l => l.playerId === playerId)?.currentLevelIndex;
+  if (typeof playerLevel === 'undefined') {
+    throw new Error("Player not found!");
+  }
+  const allCards = game.cards;
+  const gameRules = GameRules[playerLevel];
+  if (gameRules.length !== cardIdList.length) {
+    return false;
+  }
+  for (let i = 0; i < gameRules.length; i++) {
+    const rulePart = gameRules[i];
+    const cardIds = cardIdList[i];
+    if (cardIds.length !== rulePart.count) {
+      return false;
+    }
+    if (rulePart.type === CardRowType.STREET) {
+      const cardValues: number[] = [];
+      for (const cardId of cardIds) {
+        const cardValue = allCards.find(c => c.id === cardId)?.value;
+        if (typeof cardValue === "undefined") {
+          return false;
+        }
+        cardValues.push(cardValue);
+      }
+      cardValues.sort();
+      for (let i = 0; i < cardValues.length - 1; i++) {
+        const curr = cardValues[i];
+        const next = cardValues[i + 1];
+        if (curr + 1 !== next) {
+          return false;
+        }
+      }
+    }
+    if (rulePart.type === CardRowType.SAME_NUMBER) {
+      const cardValues: number[] = [];
+      for (const cardId of cardIds) {
+        const cardValue = allCards.find(c => c.id === cardId)?.value;
+        if (typeof cardValue === "undefined") {
+          return false;
+        }
+        cardValues.push(cardValue);
+      }
+      for (let i = 0; i < cardValues.length - 1; i++) {
+        const curr = cardValues[i];
+        const next = cardValues[i + 1];
+        if (curr !== next) {
+          return false;
+        }
+      }
+    }
+    if (rulePart.type === CardRowType.SAME_COLOR) {
+      const cardColors: string[] = [];
+      for (const cardId of cardIds) {
+        const cardValue = allCards.find(c => c.id === cardId)?.color;
+        if (typeof cardValue === "undefined") {
+          return false;
+        }
+        cardColors.push(cardValue);
+      }
+      for (let i = 0; i < cardColors.length - 1; i++) {
+        const curr = cardColors[i];
+        const next = cardColors[i + 1];
+        if (curr !== next) {
+          return false;
+        }
+        if (curr === "NONE") {
+          return false;
+        }
+      }
+    }
+  }
+  return true;
 }

@@ -72,20 +72,20 @@ export default defineComponent({
     const levelCount = computed(() => currentConfig.value.levelCount);
     const levelSystem = computed(() => currentConfig.value.levelSystem);
 
-    const finalizeGameCreation = (e: Event) => {
+    const finalizeGameCreation = () => {
       store.commit("finalizeGameCreation");
     };
-    const abort = (e: Event) => {
+    const abort = () => {
       store.commit("abortGameInCreation");
     };
 
-    const changeToLevelSystemNormal = (e: Event) => {
+    const changeToLevelSystemNormal = () => {
       store.commit("updateGameInCreation", {
         ...currentConfig.value,
         levelSystem: LevelSystem.NORMAL,
       });
     };
-    const changeToLevelSystemRandom = (e: Event) => {
+    const changeToLevelSystemRandom = () => {
       store.commit("updateGameInCreation", {
         ...currentConfig.value,
         levelSystem: LevelSystem.RANDOM,

@@ -7,6 +7,7 @@ import {
   DiscardCardRequest,
   DrawCardRequest,
   EditPlayerNameRequest,
+  FinishFulfillmentRequest,
   JoinGameRequest,
   LeaveGameRequest,
   LogoutRequest,
@@ -223,14 +224,29 @@ io.on("connection", (socket) => {
 
   socket.on("skipLevelFulfillStep", (request: SkipLevelFulfillStepRequest) => {
     api
-    .skipLevelFulfillStep(request).then((response) => {
-      broadcastUpdateGameState(response.gameId);
-    })
+      .skipLevelFulfillStep(request)
+      .then((response) => {
+        broadcastUpdateGameState(response.gameId);
+      })
       .catch((error) => {
         const response: ErrorResponse = {
           status: error.message,
         };
         socket.emit("skipLevelFulfillStep", response);
+      });
+  })
+
+  socket.on("finishFulfillment", (request: FinishFulfillmentRequest) => {
+    api
+      .finishFulfillment(request)
+      .then((response) => {
+        broadcastUpdateGameState(response.gameId);
+      })
+      .catch((error) => {
+        const response: ErrorResponse = {
+          status: error.message,
+        };
+        socket.emit("finishFulfillment", response);
       });
   })
 

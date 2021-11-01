@@ -11,7 +11,7 @@ export default defineComponent({
   name: "Logout",
   setup() {
     const store = useStore(key);
-    const logout = (e: Event) => {
+    const logout = () => {
       store.commit("logout");
     };
     const i18n = computed(() => store.getters.i18n);

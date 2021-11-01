@@ -14,7 +14,7 @@ export default defineComponent({
   name: "CreateGameButton",
   setup() {
     const store = useStore(key);
-    const createNewGame = (e: Event) => {
+    const createNewGame = () => {
       store.commit("initNewGame");
     };
     const i18n = computed(() => store.getters.i18n);

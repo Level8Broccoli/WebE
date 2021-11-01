@@ -31,7 +31,7 @@ export default defineComponent({
     const language = computed(() => store.state.language);
     const isEnglish = computed(() => language.value == Language.ENGLISH);
     const i18n = computed(() => store.getters.i18n);
-    const closeRules = (e: Event) => {
+    const closeRules = () => {
       store.commit("switchRules");
     };
     return {

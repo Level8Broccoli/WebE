@@ -27,7 +27,7 @@ export default defineComponent({
     const updatePlayerName = (e: any) => {
       store.commit("updatePlayerName", e.target.value);
     };
-    const register = (e: Event) => {
+    const register = () => {
       store.commit("registerPlayer");
     };
     const i18n = computed(() => store.getters.i18n);

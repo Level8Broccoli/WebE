@@ -17,7 +17,7 @@ import { getUUID } from "./TokenGeneratorService";
 
 const HAND_SIZE_START = 10;
 
-function initialCardSet(): Card[] {
+export function initialCardSet(): Card[] {
   const cardset: Card[] = [];
   // 1 - 15 for all colors
   for (const key in Color) {
@@ -42,10 +42,7 @@ export function initGameState(): GameState {
     currentStep: GameStep.DISCARD,
     playerLevels: [],
     hands: [],
-    piles: [{
-      id: DRAW_PILE_ID,
-      cards: initialCardSet().sort((a, b) => 0.5 - Math.random())
-    }],
+    piles: [],
     board: []
   };
 }
@@ -102,19 +99,19 @@ export function handExists(
   return !!game.state.hands.find(p => p.id === playerId);
 }
 
-export function getPile(game: Game, pileId: string): Card[] {
+export function getPile(game: Game, pileId: string): string[] {
   const pile = game.state.piles.find(p => p.id === pileId);
   if (typeof pile === "undefined") {
     throw new Error("Pile does not exists!");
   }
-  return (pile as CardStackOpen).cards;
+  return (pile as CardStackOpen).cardIds;
 }
-export function getHand(game: Game, playerId: string): Card[] {
+export function getHand(game: Game, playerId: string): string[] {
   const hand = game.state.hands.find(h => h.id === playerId);
   if (typeof hand === "undefined") {
     throw new Error("Pile does not exists!");
   }
-  return (hand as CardStackOpen).cards;
+  return (hand as CardStackOpen).cardIds;
 }
 
 export function isCardOwner(
@@ -126,7 +123,7 @@ export function isCardOwner(
   if (typeof hand === "undefined") {
     throw new Error("Hand does not exists!");
   }
-  return !!((hand as CardStackOpen).cards.find((c) => c.id === cardId))
+  return !!((hand as CardStackOpen).cardIds.find((id) => id === cardId))
 }
 
 export function discardCard(
@@ -136,11 +133,11 @@ export function discardCard(
 ) {
   // remove the card from the hand
   const state = game.state;
-  const card = (state.hands.find(h => h.id === playerId) as CardStackOpen).cards.find(c => c.id === cardId);
+  const card = (state.hands.find(h => h.id === playerId) as CardStackOpen).cardIds.find(id => id === cardId);
   state.hands = state.hands.map(h => {
     return {
       id: h.id,
-      cards: (h as CardStackOpen).cards.filter(c => c.id !== cardId)
+      cardIds: (h as CardStackOpen).cardIds.filter(id => id !== cardId)
     }
   })
   // then add it to the players discard pile
@@ -158,7 +155,7 @@ function createPlayerStartHand(game: Game, playerId: string, numberOfCards: numb
 function createEmptyDiscardPile(game: Game, playerId: string) {
   const pile: CardStackOpen = {
     id: playerId,
-    cards: []
+    cardIds: []
   };
   game.state.piles.push(pile);
 }
@@ -193,7 +190,7 @@ export function drawCardFromPile(game: Game, from: string, to: string) {
   if (!(handExists(game, to))) {
     const newHand: CardStackOpen = {
       id: to,
-      cards: []
+      cardIds: []
     }
     game.state.hands.push(newHand);
   }
@@ -205,35 +202,35 @@ export function getAllGamesForPlayer(
   gameList: Game[],
   playerId?: string
 ): Game[] {
-  return gameList.map(({ id, creatorId, players, config, status, chat, levels, state: { activePlayerId, currentStep, playerLevels, hands, piles, board } }) => {
-    const newHands = (hands as CardStackOpen[]).map(({ id, cards }) => {
+  return gameList.map(({ id, creatorId, players, config, status, chat, levels, cards, state: { activePlayerId, currentStep, playerLevels, hands, piles, board } }) => {
+    const newHands = (hands as CardStackOpen[]).map(({ id, cardIds }) => {
       // only show the cards on the requesting player
       // alternativally show the number of cards on all the other players
       if (id === playerId) {
         return {
           id,
-          cards
+          cardIds
         }
       }
       return {
         id,
-        count: cards.length
+        count: cardIds.length
       }
     });
 
-    const newPiles = (piles as CardStackOpen[]).map(({ id, cards }) => {
+    const newPiles = (piles as CardStackOpen[]).map(({ id, cardIds }) => {
       // only show the cards on the requesting player
       // alternativally show the number of cards on all the other players
       if (id === DRAW_PILE_ID
       ) {
         return {
           id,
-          count: cards.length
+          count: cardIds.length
         }
       }
       return {
         id,
-        cards: cards[0] ? [cards[0]] : cards // hack: only send the top card of each discard pile, because I couldn't figure out how VueJS handles list manipulation correctly
+        cardIds: cardIds[0] ? [cardIds[0]] : cardIds // hack: only send the top card of each discard pile, because I couldn't figure out how VueJS handles list manipulation correctly
       }
     });
 
@@ -245,7 +242,7 @@ export function getAllGamesForPlayer(
       piles: newPiles,
       board
     }
-    const newPublicGame: Game = { id, creatorId, players, config, status, levels, chat, state: newPublicGameState };
+    const newPublicGame: Game = { id, creatorId, players, config, status, levels, cards, chat, state: newPublicGameState };
     return newPublicGame;
   });
 }

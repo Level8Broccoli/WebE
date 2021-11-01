@@ -43,7 +43,7 @@ export default defineComponent({
         store.getters.getPlayerName(props.game.creatorId) ||
         props.game.creatorId
     );
-    const joinGame = (e: Event) => {
+    const joinGame = () => {
       store.commit("joinGame", props.game.id);
     };
     const gameInLobby = computed(

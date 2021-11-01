@@ -15,7 +15,7 @@ export default defineComponent({
     const store = useStore(key);
     const language = computed(() => store.state.language);
     const isEnglish = computed(() => language.value == Language.ENGLISH);
-    const switchLanguage = (e: Event) => {
+    const switchLanguage = () => {
       store.commit("switchLanguage");
     };
 

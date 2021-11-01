@@ -35,15 +35,15 @@ export default defineComponent({
     );
     const gameIsValid = computed(() => game.value.players.length > 1);
 
-    const abort = (e: Event) => {
+    const abort = () => {
       store.commit("leaveGame");
     };
 
-    const deleteGame = (e: Event) => {
+    const deleteGame = () => {
       store.commit("deleteGame");
     };
 
-    const startGame = (e: Event) => {
+    const startGame = () => {
       store.commit("startGame");
     };
 

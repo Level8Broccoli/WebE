@@ -11,6 +11,7 @@ export type Game = {
   config: Config;
   status: GameStatus;
   chat: ChatMessage[];
+  cards: Card[];
   levels: GameLevel[];
   state: GameState;
 };
@@ -69,7 +70,7 @@ export enum GameStep { DRAW, FULFILL_LEVEL, PLAY, DISCARD }
 
 export type CardStackOpen = {
   id: string;
-  cards: Card[];
+  cardIds: string[];
 }
 
 export type CardStackSecret = {
@@ -83,7 +84,7 @@ export enum CardRowType { STREET, SAME_NUMBER, SAME_COLOR };
 
 export type CardRow = {
   type: CardRowType;
-  cards: Card[];
+  cardIds: string[];
 }
 
 export type GameState = {
@@ -103,7 +104,7 @@ export type PlayerOverviewAggregate = {
   maxLevelCount: number;
   hasAchievedLevel: boolean;
   handCardCount: number;
-  discardPile: Card[];
+  discardPile: string[];
 }
 
 export type GameRule = {

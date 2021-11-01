@@ -9,6 +9,7 @@ import {
   DiscardCardRequest,
   DrawCardRequest,
   EditPlayerNameRequest,
+  FinishFulfillmentRequest,
   JoinGameRequest,
   LeaveGameRequest,
   LogoutRequest,
@@ -32,13 +33,13 @@ import {
 import { ServerState } from "../../shared/model/ServerState";
 import {
   discardCard, drawCardFromPile, getAllGamesForPlayer,
-  getGame, getPile, initGameState, isCardOwner,
+  getGame, getPile, initGameState, initialCardSet, isCardOwner,
   nextGameStep,
   nextPlayer, pileExists, startGameState
 } from "../services/GameService";
 import {
   addChatMessage, authenticatePlayer, createGame,
-  deleteGame, deleteOwnGame, editPlayerName, freeSpaceInGame, gameExists, getActiveGameId, getAllRegisteredPlayers, isCreator, isPlayerCountValid, joinGame,
+  deleteGame, deleteOwnGame, editPlayerName, fillDrawPile, freeSpaceInGame, gameExists, getActiveGameId, getAllRegisteredPlayers, isCreator, isLevelValid, isPlayerCountValid, joinGame,
   leaveGame, playerInGame, playerToSocketId, registerExistingPlayer, registerPlayer, removePlayerFromJoinedGame, removePlayerFromPlayerList
 } from "../services/ServerStateService";
 import { getSecret, getUUID } from "../services/TokenGeneratorService";
@@ -214,9 +215,12 @@ export class Api {
         players: [request.player.id],
         chat: [],
         status: GameStatus.IN_LOBBY,
+        cards: initialCardSet(),
         levels: [],
         state: initGameState(),
       };
+
+      fillDrawPile(game);
 
       createGame(this._serverState.games, game);
 
@@ -492,6 +496,52 @@ export class Api {
 
       if (!(game.state.activePlayerId === request.player.id)) {
         reject(new Error(StatusCode.NOT_ACTIVE_PLAYER));
+      }
+
+      nextGameStep(game, GameStep.DISCARD);
+
+      const response: UpdateGameBoardResponse = {
+        status: StatusCode.OK,
+        timestamp: DateTime.now(),
+        gameId: request.gameId,
+      };
+
+      resolve(response);
+    })
+  }
+
+  finishFulfillment(request: FinishFulfillmentRequest): Promise<UpdateGameBoardResponse> {
+    return new Promise((resolve, reject) => {
+
+      // [Server] Validation (playerId + Secret, player is on move? -> Errorfeedback
+      if (!authenticatePlayer(this._serverState.players, request.player)) {
+        reject(new Error(StatusCode.PLAYER_INVALID));
+      }
+
+      if (!gameExists(this._serverState.games, request.gameId)) {
+        reject(new Error(StatusCode.GAME_NOT_EXISTS));
+      }
+
+      const game = getGame(this._serverState.games, request.gameId);
+
+      if (!(game.state.activePlayerId === request.player.id)) {
+        reject(new Error(StatusCode.NOT_ACTIVE_PLAYER));
+      }
+
+      for (const cardId of request.cardIdList.flat()) {
+        if (
+          !isCardOwner(
+            game,
+            request.player.id,
+            cardId
+          )
+        ) {
+          reject(new Error(StatusCode.PLAYER_NOT_CARD_OWNER));
+        }
+      }
+
+      if (!(isLevelValid(game, request.player.id, request.cardIdList))) {
+        reject(new Error(StatusCode.NOT_VALID_CARDS_FOR_LEVEL));
       }
 
       nextGameStep(game, GameStep.DISCARD);

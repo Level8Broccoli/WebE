@@ -21,7 +21,7 @@ export default defineComponent({
     const isCreator = computed(
       () => game.value.creatorId === store.state.player.id
     );
-    const deleteGame = (e: Event) => {
+    const deleteGame = () => {
       store.commit("deleteGame");
     };
     return {

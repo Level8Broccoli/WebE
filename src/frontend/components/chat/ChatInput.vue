@@ -20,7 +20,7 @@ export default defineComponent({
     const updateMessage = (e: any) => {
       message.value = e.target.value;
     };
-    const sendChatMessage = (e: Event) => {
+    const sendChatMessage = () => {
       store.commit("sendChatMessage", message.value);
       message.value = "";
     };

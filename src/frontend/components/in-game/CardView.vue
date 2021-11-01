@@ -3,7 +3,7 @@
   <div
     :class="
       'card card-shadow color-' +
-      color +
+      card.color +
       (isAlreadyInFulfillment ? ' already-selected' : '') +
       (isAlreadySelected ? ' currently-selected' : '') +
       (canBeDiscarded || canBeDrawn || isInFulfillmentMode
@@ -23,29 +23,28 @@
     "
   >
     <header class="top">
-      <strong>{{ value }}</strong>
+      <strong>{{ card.value }}</strong>
     </header>
     <footer class="bottom">
-      <i v-if="color === 'ORANGE'" class="fas fa-circle"></i>
-      <i v-if="color === 'BLUE'" class="fas fa-square"></i>
-      <i v-if="color === 'RED'" class="fas fa-triangle"></i>
-      <i v-if="color === 'VIOLET'" class="fas fa-star"></i>
-      <i v-if="color === 'YELLOW'" class="fas fa-atom-alt"></i>
-      <i v-if="color === 'GREEN'" class="fas fa-hexagon"></i>
+      <i v-if="card.color === 'ORANGE'" class="fas fa-circle"></i>
+      <i v-if="card.color === 'BLUE'" class="fas fa-square"></i>
+      <i v-if="card.color === 'RED'" class="fas fa-triangle"></i>
+      <i v-if="card.color === 'VIOLET'" class="fas fa-star"></i>
+      <i v-if="card.color === 'YELLOW'" class="fas fa-atom-alt"></i>
+      <i v-if="card.color === 'GREEN'" class="fas fa-hexagon"></i>
     </footer>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "vue";
+import { computed, ComputedRef, defineComponent } from "vue";
 import { useStore } from "vuex";
+import { Card } from "../../../shared/model/Game";
 import { key } from "../../store/store";
 
 export default defineComponent({
   name: "CardView",
   props: {
-    value: { type: Number, required: true },
-    color: { type: String, required: true },
     id: { type: String, required: true },
     isHand: { type: Boolean, default: false },
     isDiscard: { type: Boolean, default: false },
@@ -60,7 +59,7 @@ export default defineComponent({
         store.getters.amIActivePlayer &&
         store.getters.getCurrentStep === 3
     );
-    const discardCard = (e: Event) => {
+    const discardCard = () => {
       store.commit("discardCard", { cardId: props.id });
     };
     const canBeDrawn = computed(
@@ -69,11 +68,9 @@ export default defineComponent({
         store.getters.amIActivePlayer &&
         store.getters.getCurrentStep === 0
     );
-    const drawCard = (e: Event) => {
+    const drawCard = () => {
       store.commit("drawCard", {
         pileId: props.owner,
-        cardId: props.id,
-        cardValue: props.value,
       });
     };
     const isAlreadySelected = computed(() => {
@@ -104,9 +101,11 @@ export default defineComponent({
     const deselectCard = () => {
       store.commit("deselectCard", { cardId: props.id });
     };
+    const card: ComputedRef<Card> = computed(() =>
+      store.getters.getCardById(props.id)
+    );
     return {
-      value: props.value,
-      color: props.color,
+      card,
       canBeDiscarded,
       discardCard,
       canBeDrawn,

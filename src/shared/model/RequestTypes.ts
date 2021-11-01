@@ -64,3 +64,9 @@ export type SkipLevelFulfillStepRequest = {
   player: PrivatePlayer;
   gameId: string;
 }
+
+export type FinishFulfillmentRequest = {
+  player: PrivatePlayer;
+  gameId: string;
+  cardIdList: string[][];
+}
