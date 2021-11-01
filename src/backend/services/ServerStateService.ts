@@ -1,5 +1,5 @@
 import { ChatMessage } from "../../shared/model/Chat";
-import { CardRowType, DRAW_PILE_ID, Game, GameRules } from "../../shared/model/Game";
+import { CardRow, CardRowType, DRAW_PILE_ID, Game, GameRules } from "../../shared/model/Game";
 import { FullPlayer, PrivatePlayer, PublicPlayer } from "../../shared/model/Player";
 import { ServerState } from "../../shared/model/ServerState";
 
@@ -166,7 +166,7 @@ export function getAllRegisteredPlayers(
 export function isLevelValid(
   game: Game,
   playerId: string,
-  cardIdList: string[][]
+  cardRows: CardRow[]
 ): boolean {
   const playerLevel = game.state.playerLevels.find(l => l.playerId === playerId)?.currentLevelIndex;
   if (typeof playerLevel === 'undefined') {
@@ -174,13 +174,16 @@ export function isLevelValid(
   }
   const allCards = game.cards;
   const gameRules = GameRules[playerLevel];
-  if (gameRules.length !== cardIdList.length) {
+  if (gameRules.length !== cardRows.length) {
     return false;
   }
   for (let i = 0; i < gameRules.length; i++) {
     const rulePart = gameRules[i];
-    const cardIds = cardIdList[i];
+    const cardIds = cardRows[i].cardIds;
     if (cardIds.length !== rulePart.count) {
+      return false;
+    }
+    if (rulePart.type !== cardRows[i].type) {
       return false;
     }
     if (rulePart.type === CardRowType.STREET) {
@@ -192,7 +195,7 @@ export function isLevelValid(
         }
         cardValues.push(cardValue);
       }
-      cardValues.sort();
+      cardValues.sort((a, b) => a - b);
       for (let i = 0; i < cardValues.length - 1; i++) {
         const curr = cardValues[i];
         const next = cardValues[i + 1];

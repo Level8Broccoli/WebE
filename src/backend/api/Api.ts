@@ -34,6 +34,8 @@ import { ServerState } from "../../shared/model/ServerState";
 import {
   discardCard, drawCardFromPile, getAllGamesForPlayer,
   getGame, getPile, initGameState, initialCardSet, isCardOwner,
+  markPlayerLevelFulfilled,
+  moveCardsFromHandToBoard,
   nextGameStep,
   nextPlayer, pileExists, startGameState
 } from "../services/GameService";
@@ -528,7 +530,9 @@ export class Api {
         reject(new Error(StatusCode.NOT_ACTIVE_PLAYER));
       }
 
-      for (const cardId of request.cardIdList.flat()) {
+      const cardIds: string[][] = [];
+      request.level.forEach(cr => cardIds.push(cr.cardIds));
+      for (const cardId of cardIds.flat()) {
         if (
           !isCardOwner(
             game,
@@ -540,9 +544,13 @@ export class Api {
         }
       }
 
-      if (!(isLevelValid(game, request.player.id, request.cardIdList))) {
+      if (!(isLevelValid(game, request.player.id, request.level))) {
         reject(new Error(StatusCode.NOT_VALID_CARDS_FOR_LEVEL));
       }
+
+      moveCardsFromHandToBoard(game.state, request.player.id, request.level);
+
+      markPlayerLevelFulfilled(game.state, request.player.id);
 
       nextGameStep(game, GameStep.DISCARD);
 

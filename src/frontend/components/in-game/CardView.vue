@@ -82,8 +82,8 @@ export default defineComponent({
     });
     const isAlreadyInFulfillment = computed(() => {
       const prepared = store.state.cardRowsForFulfillment;
-      for (const cardIdList of prepared) {
-        if (cardIdList.find((s) => s === props.id) !== undefined) {
+      for (const row of prepared) {
+        if (row.cardIds.find(id => id === props.id) !== undefined) {
           return true;
         }
       }

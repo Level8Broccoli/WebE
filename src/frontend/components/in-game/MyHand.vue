@@ -85,7 +85,7 @@ export default defineComponent({
           const cardValue: number = store.getters.getCardValue(cardId);
           cardValues.push(cardValue);
         }
-        cardValues.sort();
+        cardValues.sort((a, b) => a - b);
         for (let i = 0; i < cardValues.length - 1; i++) {
           const curr = cardValues[i];
           const next = cardValues[i + 1];
@@ -134,7 +134,7 @@ export default defineComponent({
     };
     const nextFulfillmentPart = () => {
       fulfillLevelCounter.value = fulfillLevelCounter.value + 1;
-      store.commit("nextFulfillmentPart");
+      store.commit("nextFulfillmentPart", currentFulfillLevelPart.value.type);
     };
     const finishFulfillment = () => {
       fulfillLevelCounter.value = 0;

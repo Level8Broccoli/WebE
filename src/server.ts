@@ -16,7 +16,7 @@ import {
   SkipLevelFulfillStepRequest,
   StartGameRequest
 } from "./shared/model/RequestTypes";
-import { ErrorResponse, StartGameResponse, UpdateGameBoardResponse } from "./shared/model/ResponseTypes";
+import { ErrorResponse } from "./shared/model/ResponseTypes";
 
 const PORT = process.env.PORT ? Number(process.env.PORT) : 3030;
 const serverState = {
@@ -240,6 +240,7 @@ io.on("connection", (socket) => {
     api
       .finishFulfillment(request)
       .then((response) => {
+        socket.emit("finishFulfillment", response);
         broadcastUpdateGameState(response.gameId);
       })
       .catch((error) => {

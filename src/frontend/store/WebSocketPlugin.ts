@@ -1,7 +1,7 @@
 import { Socket } from "socket.io-client";
 import { Store } from "vuex";
 import { ChatRequest, CreateGameRequest, DeleteGameRequest, DiscardCardRequest, DrawCardRequest, EditPlayerNameRequest, FinishFulfillmentRequest, JoinGameRequest, LeaveGameRequest, LogoutRequest, RegisterExistingPlayerRequest, RegisterPlayerRequest, SkipLevelFulfillStepRequest, StartGameRequest } from "../../shared/model/RequestTypes";
-import { ChatResponse, CreateGameResponse, DeleteGameResponse, EditPlayerNameResponse, ErrorResponse, JoinGameResponse, LeaveGameResponse, LogoutResponse, RegisterExistingPlayerResponse, RegisterPlayerResponse, StartGameResponse, UpdateGameListResponse, UpdatePlayerListResponse } from "../../shared/model/ResponseTypes";
+import { ChatResponse, CreateGameResponse, DeleteGameResponse, EditPlayerNameResponse, ErrorResponse, JoinGameResponse, LeaveGameResponse, LogoutResponse, RegisterExistingPlayerResponse, RegisterPlayerResponse, StartGameResponse, UpdateGameBoardResponse, UpdateGameListResponse, UpdatePlayerListResponse } from "../../shared/model/ResponseTypes";
 import { State } from "./store";
 
 export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
@@ -144,6 +144,15 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
         store.commit("addToErrorLog", res.status);
     })
 
+    socket.on("finishFulfillment", (res: UpdateGameBoardResponse | ErrorResponse) => {
+        if ("gameId" in res) {
+            store.commit("abortFulfillment");
+        } else {
+            console.error(res.status);
+            store.commit("addToErrorLog", res.status);
+        }
+    })
+
     store.subscribe((mutation, state) => {
         if (mutation.type === "registerPlayer") {
             const payload: RegisterPlayerRequest = { playerName: state.player.name };
@@ -251,7 +260,7 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
             const payload: FinishFulfillmentRequest = {
                 gameId: store.state.activeGameId,
                 player: store.state.player,
-                cardIdList: store.state.cardRowsForFulfillment,
+                level: store.state.cardRowsForFulfillment,
             }
             socket.emit("finishFulfillment", payload);
         }

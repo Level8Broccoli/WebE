@@ -1,5 +1,6 @@
 import {
   Card,
+  CardRow,
   CardStackOpen,
   CardType,
   Color,
@@ -39,7 +40,7 @@ export function initGameState(): GameState {
   // Init state with a full randomly sorted draw pile
   return {
     activePlayerId: "",
-    currentStep: GameStep.DISCARD,
+    currentStep: GameStep.DRAW,
     playerLevels: [],
     hands: [],
     piles: [],
@@ -247,6 +248,22 @@ export function getAllGamesForPlayer(
   });
 }
 
+export function moveCardsFromHandToBoard(gameState: GameState, playerId: string, cardRows: CardRow[]) {
+  gameState.board.push(...cardRows);
+  gameState.hands = gameState.hands.map(h => {
+    if (h.id === playerId) {
+      const cardsToRemove: string[][] = [];
+      cardRows.forEach(cr => cardsToRemove.push(cr.cardIds));
+
+      return {
+        cardIds: (h as CardStackOpen).cardIds.filter(id => !(cardsToRemove.flat().includes(id))),
+        id: h.id
+      }
+    }
+    return h
+  })
+}
+
 
 export function nextPlayer(game: Game) {
   const activePlayerId = game.state.activePlayerId;
@@ -260,4 +277,12 @@ export function nextPlayer(game: Game) {
 
 export function nextGameStep(game: Game, gameStep: GameStep) {
   game.state.currentStep = gameStep;
+}
+
+export function markPlayerLevelFulfilled(gameState: GameState, playerId: string) {
+  const player = gameState.playerLevels.find(pl => pl.playerId === playerId);
+  if (typeof player === "undefined") {
+    throw new Error("Player not found!");
+  }
+  player.hasAchievedLevel = true;
 }

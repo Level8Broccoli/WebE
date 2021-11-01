@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client';
 import { InjectionKey } from 'vue';
 import { createStore, Store } from 'vuex';
-import { Card, CardStackOpen, CardStackSecret, CardType, Color, Config, DRAW_PILE_ID, Game, GameRule, GameRules, GameStatus, LevelSystem, PlayerOverviewAggregate } from '../../shared/model/Game';
+import { Card, CardRow, CardRowType, CardStackOpen, CardStackSecret, CardType, Color, Config, DRAW_PILE_ID, Game, GameRule, GameRules, GameStatus, LevelSystem, PlayerOverviewAggregate } from '../../shared/model/Game';
 import { PrivatePlayer, PublicPlayer } from '../../shared/model/Player';
 import { ChatResponse } from '../../shared/model/ResponseTypes';
 import { i18n, Language } from '../i18n/i18n';
@@ -17,7 +17,7 @@ export interface State {
     gameInCreation?: Config,
     activeGameId: string,
     tempCardsForFulfillment: string[],
-    cardRowsForFulfillment: string[][],
+    cardRowsForFulfillment: CardRow[],
     errorLog: string[]
 }
 
@@ -248,8 +248,11 @@ export const store = createStore<State>({
             state.cardRowsForFulfillment = [];
             state.tempCardsForFulfillment = [];
         },
-        nextFulfillmentPart(state) {
-            state.cardRowsForFulfillment.push(state.tempCardsForFulfillment);
+        nextFulfillmentPart(state, type: CardRowType) {
+            state.cardRowsForFulfillment.push({
+                type,
+                cardIds: state.tempCardsForFulfillment
+            });
             state.tempCardsForFulfillment = [];
         },
         storeForFulfillment(state, { cardId }) {
