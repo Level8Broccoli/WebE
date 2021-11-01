@@ -3,6 +3,7 @@
     <MyHand />
     <PlayerOverviewList />
     <DrawPile />
+    <GameBoard />
     <NextStep />
     <ShowLevels />
   </main>
@@ -15,6 +16,7 @@ import MyHand from "./MyHand.vue";
 import PlayerOverviewList from "./PlayerOverviewList.vue";
 import NextStep from "./NextStep.vue";
 import ShowLevels from "./ShowLevels.vue";
+import GameBoard from "./GameBoard.vue";
 
 export default defineComponent({
   name: "TheGame",
@@ -24,6 +26,7 @@ export default defineComponent({
     DrawPile,
     NextStep,
     ShowLevels,
+    GameBoard,
   },
 });
 </script>

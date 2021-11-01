@@ -120,6 +120,15 @@ export const store = createStore<State>({
             const myCurrentLevel = activeGame.state.playerLevels.find(l => l.playerId === state.player.id)?.currentLevelIndex;
             return typeof myCurrentLevel === "undefined" ? -1 : myCurrentLevel;
         },
+        getGameBoard(state, getters): CardRow[] {
+            const activeGame = state.activeGameId.length > 0
+                && getters.getActiveGame as Game;
+
+            if (!activeGame) {
+                return [];
+            }
+            return activeGame.state.board;
+        },
         aggregateOtherPlayers(state, getters): PlayerOverviewAggregate[] {
             const activeGame = state.activeGameId.length > 0
                 && getters.getActiveGame as Game;

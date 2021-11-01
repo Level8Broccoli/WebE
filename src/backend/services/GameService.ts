@@ -1,6 +1,7 @@
 import {
   Card,
   CardRow,
+  CardStack,
   CardStackOpen,
   CardType,
   Color,
@@ -66,6 +67,8 @@ export function startGameState(
   setupGameLevels(game);
 
   setActivePlayer(game, playerIdList[0]);
+
+  revealOneCardToDiscard(game.state.piles, playerIdList[playerIdList.length - 1])
 }
 
 export function getGame(
@@ -163,6 +166,21 @@ function createEmptyDiscardPile(game: Game, playerId: string) {
 
 function setActivePlayer(game: Game, playerId: string) {
   game.state.activePlayerId = playerId;
+}
+
+function revealOneCardToDiscard(cardPiles: CardStack[], playerId: string) {
+  const drawPile = cardPiles.find(p => p.id === DRAW_PILE_ID);
+  if (typeof drawPile === "undefined" || "count" in drawPile) {
+    throw new Error("Draw Pile not found!");
+  }
+  const firstCard = drawPile.cardIds[0];
+
+  drawPile.cardIds = drawPile.cardIds.filter(id => id !== firstCard);
+  const playerDiscardPile = cardPiles.find(p => p.id === playerId);
+  if (typeof playerDiscardPile === "undefined" || "count" in playerDiscardPile) {
+    throw new Error("Player Pile not found!");
+  }
+  playerDiscardPile.cardIds = [...playerDiscardPile.cardIds, firstCard];
 }
 
 function setupGameLevels(game: Game) {
