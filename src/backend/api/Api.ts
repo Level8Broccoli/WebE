@@ -548,7 +548,7 @@ export class Api {
         reject(new Error(StatusCode.NOT_VALID_CARDS_FOR_LEVEL));
       }
 
-      moveCardsFromHandToBoard(game.state, request.player.id, request.level);
+      moveCardsFromHandToBoard(game, request.player.id, request.level);
 
       markPlayerLevelFulfilled(game.state, request.player.id);
 

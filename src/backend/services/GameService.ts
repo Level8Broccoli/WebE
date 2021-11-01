@@ -1,6 +1,7 @@
 import {
   Card,
   CardRow,
+  CardRowType,
   CardStack,
   CardStackOpen,
   CardType,
@@ -266,9 +267,21 @@ export function getAllGamesForPlayer(
   });
 }
 
-export function moveCardsFromHandToBoard(gameState: GameState, playerId: string, cardRows: CardRow[]) {
-  gameState.board.push(...cardRows);
-  gameState.hands = gameState.hands.map(h => {
+export function moveCardsFromHandToBoard(game: Game, playerId: string, cardRows: CardRow[]) {
+  const sortedCardRows = cardRows.map(({ type, cardIds }) => {
+    if (type === CardRowType.STREET) {
+      const cards: Card[] = [];
+      for (const cardId of cardIds) {
+        const card = getCardById(game.cards, cardId);
+        cards.push(card);
+      }
+      cards.sort((a, b) => a.value - b.value);
+      return { type, cardIds: cards.map(c => c.id) };
+    }
+    return { type, cardIds };
+  });
+  game.state.board.push(...sortedCardRows);
+  game.state.hands = game.state.hands.map(h => {
     if (h.id === playerId) {
       const cardsToRemove: string[][] = [];
       cardRows.forEach(cr => cardsToRemove.push(cr.cardIds));
@@ -303,4 +316,11 @@ export function markPlayerLevelFulfilled(gameState: GameState, playerId: string)
     throw new Error("Player not found!");
   }
   player.hasAchievedLevel = true;
+}
+function getCardById(cards: Card[], cardId: string): Card {
+  const card = cards.find(c => c.id === cardId);
+  if (typeof card === "undefined") {
+    throw new Error("Card not found!");
+  }
+  return card;
 }
