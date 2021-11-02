@@ -34,5 +34,4 @@ const firstCard: ComputedRef<Card> = computed(() =>
 const lastCard: ComputedRef<Card> = computed(() =>
     store.getters.getCardById(row.cardIds[row.cardIds.length - 1])
 );
-
 </script>

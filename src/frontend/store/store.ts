@@ -319,6 +319,7 @@ export const store = createStore<State>({
         startGame() { /* handled by WebSocketPlugin */ },
         discardCard() { /* handled by WebSocketPlugin */ },
         skipLevelFulfillStep() { /* handled by WebSocketPlugin */ },
+        skipPlayCardsStep() { /* handled by WebSocketPlugin */ },
         drawCardFromDrawPile() { /* handled by WebSocketPlugin */ },
         drawCard() { /* handled by WebSocketPlugin */ },
         finishFulfillment() { /* handled by WebSocketPlugin */ },

@@ -1,6 +1,6 @@
 import { Socket } from "socket.io-client";
 import { Store } from "vuex";
-import { ChatRequest, CreateGameRequest, DeleteGameRequest, DiscardCardRequest, DrawCardRequest, EditPlayerNameRequest, FinishFulfillmentRequest, JoinGameRequest, LeaveGameRequest, LogoutRequest, RegisterExistingPlayerRequest, RegisterPlayerRequest, SkipLevelFulfillStepRequest, StartGameRequest } from "../../shared/model/RequestTypes";
+import { ChatRequest, CreateGameRequest, DeleteGameRequest, DiscardCardRequest, DrawCardRequest, EditPlayerNameRequest, FinishFulfillmentRequest, JoinGameRequest, LeaveGameRequest, LogoutRequest, RegisterExistingPlayerRequest, RegisterPlayerRequest, SkipLevelFulfillStepRequest, SkipPlayCardsStepRequest, StartGameRequest } from "../../shared/model/RequestTypes";
 import { ChatResponse, CreateGameResponse, DeleteGameResponse, EditPlayerNameResponse, ErrorResponse, JoinGameResponse, LeaveGameResponse, LogoutResponse, RegisterExistingPlayerResponse, RegisterPlayerResponse, StartGameResponse, UpdateGameBoardResponse, UpdateGameListResponse, UpdatePlayerListResponse } from "../../shared/model/ResponseTypes";
 import { State } from "./store";
 
@@ -144,6 +144,16 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
         store.commit("addToErrorLog", res.status);
     })
 
+    socket.on("skipLevelFulfillStep", (res: ErrorResponse) => {
+        console.error(res.status);
+        store.commit("addToErrorLog", res.status);
+    })
+
+    socket.on("skipPlayCardsStep", (res: ErrorResponse) => {
+        console.error(res.status);
+        store.commit("addToErrorLog", res.status);
+    })
+
     socket.on("finishFulfillment", (res: UpdateGameBoardResponse | ErrorResponse) => {
         if ("gameId" in res) {
             store.commit("abortFulfillment");
@@ -254,6 +264,14 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
                 player: store.state.player,
             }
             socket.emit("skipLevelFulfillStep", payload);
+        }
+
+        if (mutation.type === "skipPlayCardsStep") {
+            const payload: SkipPlayCardsStepRequest = {
+                gameId: store.state.activeGameId,
+                player: store.state.player,
+            }
+            socket.emit("skipPlayCardsStep", payload);
         }
 
         if (mutation.type === "finishFulfillment") {

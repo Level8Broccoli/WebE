@@ -16,6 +16,7 @@ import {
   RegisterExistingPlayerRequest,
   RegisterPlayerRequest,
   SkipLevelFulfillStepRequest,
+  SkipPlayCardsStepRequest,
   StartGameRequest
 } from "../../shared/model/RequestTypes";
 import {
@@ -488,6 +489,36 @@ export class Api {
   }
 
   skipLevelFulfillStep(request: SkipLevelFulfillStepRequest): Promise<UpdateGameBoardResponse> {
+    return new Promise((resolve, reject) => {
+      // [Server] Validation (playerId + Secret, player is on move? -> Errorfeedback
+      if (!authenticatePlayer(this._serverState.players, request.player)) {
+        reject(new Error(StatusCode.PLAYER_INVALID));
+      }
+
+      if (!gameExists(this._serverState.games, request.gameId)) {
+        reject(new Error(StatusCode.GAME_NOT_EXISTS));
+      }
+
+      const game = getGame(this._serverState.games, request.gameId);
+
+      if (!(game.state.activePlayerId === request.player.id)) {
+        reject(new Error(StatusCode.NOT_ACTIVE_PLAYER));
+      }
+
+      // TODO: Check id Level achieved
+      nextGameStep(game, GameStep.PLAY);
+
+      const response: UpdateGameBoardResponse = {
+        status: StatusCode.OK,
+        timestamp: DateTime.now(),
+        gameId: request.gameId,
+      };
+
+      resolve(response);
+    })
+  }
+
+  skipPlayCardsStep(request: SkipPlayCardsStepRequest): Promise<UpdateGameBoardResponse> {
     return new Promise((resolve, reject) => {
       // [Server] Validation (playerId + Secret, player is on move? -> Errorfeedback
       if (!authenticatePlayer(this._serverState.players, request.player)) {

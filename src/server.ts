@@ -14,6 +14,7 @@ import {
   RegisterExistingPlayerRequest,
   RegisterPlayerRequest,
   SkipLevelFulfillStepRequest,
+  SkipPlayCardsStepRequest,
   StartGameRequest
 } from "./shared/model/RequestTypes";
 import { ErrorResponse } from "./shared/model/ResponseTypes";
@@ -233,6 +234,20 @@ io.on("connection", (socket) => {
           status: error.message,
         };
         socket.emit("skipLevelFulfillStep", response);
+      });
+  })
+
+  socket.on("skipPlayCardsStep", (request: SkipPlayCardsStepRequest) => {
+    api
+      .skipPlayCardsStep(request)
+      .then((response) => {
+        broadcastUpdateGameState(response.gameId);
+      })
+      .catch((error) => {
+        const response: ErrorResponse = {
+          status: error.message,
+        };
+        socket.emit("skipPlayCardsStep", response);
       });
   })
 
