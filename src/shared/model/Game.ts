@@ -80,7 +80,11 @@ export type CardStackSecret = {
 
 export type CardStack = CardStackOpen | CardStackSecret;
 
-export enum CardRowType { STREET, SAME_NUMBER, SAME_COLOR };
+export enum CardRowType {
+  STREET = "STREET",
+  SAME_NUMBER = "SAME_NUMBER",
+  SAME_COLOR = "SAME_COLOR"
+};
 
 export type CardRow = {
   type: CardRowType;

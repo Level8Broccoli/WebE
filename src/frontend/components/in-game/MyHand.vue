@@ -65,6 +65,9 @@ export default defineComponent({
     );
     const isActivePlayer = computed(() => store.getters.amIActivePlayer);
     const skipLevelFulfillStep = () => {
+      fulfillLevelCounter.value = 0;
+      fulfillLevelMode.value = false;
+      store.commit("abortFulfillment");
       store.commit("skipLevelFulfillStep");
     };
     const isInLevelFulfillStep = computed(
@@ -133,13 +136,13 @@ export default defineComponent({
       store.commit("abortFulfillment");
     };
     const nextFulfillmentPart = () => {
-      fulfillLevelCounter.value = fulfillLevelCounter.value + 1;
       store.commit("nextFulfillmentPart", currentFulfillLevelPart.value.type);
+      fulfillLevelCounter.value = fulfillLevelCounter.value + 1;
     };
     const finishFulfillment = () => {
+      store.commit("nextFulfillmentPart", currentFulfillLevelPart.value.type);
       fulfillLevelCounter.value = 0;
       fulfillLevelMode.value = false;
-      store.commit("nextFulfillmentPart", currentFulfillLevelPart.value.type);
       store.commit("finishFulfillment");
     };
     const isLastPart = computed(
