@@ -1,7 +1,16 @@
 <template>
   <main class="my-hand">
+    <button @click.prevent="switchSorting" v-if="sorting === 'COLOR'">
+      <i class="fas fa-sort-shapes-up-alt"></i>
+    </button>
+    <button @click.prevent="switchSorting" v-if="sorting === 'NUMBER'">
+      <i class="fas fa-sort-numeric-up-alt"></i>
+    </button>
+    <button @click.prevent="switchSorting" v-if="sorting === 'NONE'">
+      <i class="fas fa-sort-alt"></i>
+    </button>
     <ul role="list">
-      <li v-for="cardId in myHands" :key="cardId">
+      <li v-for="cardId in myHand" :key="cardId">
         <CardView
           :id="cardId"
           :isHand="true"
@@ -43,7 +52,7 @@
 <script lang="ts">
 import { computed, ComputedRef, defineComponent, ref } from "vue";
 import { useStore } from "vuex";
-import { CardRowType, GameRule } from "../../../shared/model/Game";
+import { Card, CardRowType, GameRule } from "../../../shared/model/Game";
 import { key } from "../../store/store";
 import CardView from "./CardView.vue";
 
@@ -52,11 +61,43 @@ export default defineComponent({
   components: { CardView },
   setup() {
     const store = useStore(key);
-    const myHands: ComputedRef<string[]> = computed(
-      () => store.getters.getMyHands
-    );
+    enum Sorting {
+      NONE = "NONE",
+      COLOR = "COLOR",
+      NUMBER = "NUMBER",
+    }
+    const sorting = ref(Sorting.NONE);
+    const myHand: ComputedRef<string[]> = computed(() => {
+      const myHand: string[] = store.getters.getMyHands;
+      if (sorting.value === Sorting.NONE) {
+        return myHand;
+      } else {
+        const cards: Card[] = myHand.map((id) => store.getters.getCardById(id));
+        if (sorting.value === Sorting.COLOR) {
+          return cards
+            .sort((a, b) =>
+              a.color === b.color
+                ? a.value - b.value
+                : a.color.localeCompare(b.color)
+            )
+            .map((c) => c.id);
+        } else {
+          return cards.sort((a, b) => a.value - b.value).map((c) => c.id);
+        }
+      }
+      return myHand;
+    });
     const fulfillLevelMode = ref(false);
     const fulfillLevelCounter = ref(0);
+    const switchSorting = () => {
+      const newValue =
+        sorting.value === Sorting.NONE
+          ? Sorting.COLOR
+          : sorting.value === Sorting.COLOR
+          ? Sorting.NUMBER
+          : Sorting.NONE;
+      sorting.value = newValue;
+    };
     const currentLevelRules: ComputedRef<GameRule[]> = computed(
       () => store.getters.getCurrentLevelRules
     );
@@ -149,7 +190,7 @@ export default defineComponent({
       () => fulfillLevelCounter.value + 1 === currentLevelRules.value.length
     );
     return {
-      myHands,
+      myHand,
       isInLevelFulfillStep,
       skipLevelFulfillStep,
       startFulfillingLevel,
@@ -160,6 +201,8 @@ export default defineComponent({
       nextFulfillmentPart,
       isLastPart,
       finishFulfillment,
+      switchSorting,
+      sorting,
     };
   },
 });
