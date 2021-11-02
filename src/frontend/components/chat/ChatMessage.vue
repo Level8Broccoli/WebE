@@ -7,49 +7,39 @@
   </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { DateTime } from "luxon";
-import { computed, defineComponent, PropType } from "vue";
+import { computed, PropType } from "vue";
 import { useStore } from "vuex";
 import { ChatMessage } from "../../../shared/model/Chat";
 import { Language } from "../../i18n/i18n";
 import { key } from "../../store/store";
 
-export default defineComponent({
-  name: "ChatMessage",
-  props: {
-    message: { type: Object as PropType<ChatMessage>, required: true },
-  },
-  setup(props) {
-    const store = useStore(key);
-    const i18n = computed(() => store.getters.i18n);
-    const authorName = computed(
-      () =>
-        store.getters.getPlayerName(props.message.playerId) ||
-        i18n.value.playerUnknown
-    );
-    const isMyMessage = computed(
-      () => props.message.playerId === store.state.player.id
-    );
+type Props = {
+  message: ChatMessage;
+};
+const props = defineProps<Props>();
 
-    const message = computed(() => props.message.message);
+const store = useStore(key);
+const i18n = computed(() => store.getters.i18n);
+const authorName = computed(
+  () =>
+    store.getters.getPlayerName(props.message.playerId) ||
+    i18n.value.playerUnknown
+);
+const isMyMessage = computed(
+  () => props.message.playerId === store.state.player.id
+);
 
-    const language = computed(() => store.state.language);
+const message = computed(() => props.message.message);
 
-    const timestamp = computed(() => {
-      const locale = language.value === Language.GERMAN ? "de" : "en";
-      return DateTime.fromISO(props.message.timestamp.toString())
-        .setLocale(locale)
-        .toLocaleString(DateTime.DATETIME_SHORT);
-    });
+const language = computed(() => store.state.language);
 
-    return {
-      message,
-      authorName,
-      isMyMessage,
-      timestamp,
-    };
-  },
+const timestamp = computed(() => {
+  const locale = language.value === Language.GERMAN ? "de" : "en";
+  return DateTime.fromISO(props.message.timestamp.toString())
+    .setLocale(locale)
+    .toLocaleString(DateTime.DATETIME_SHORT);
 });
 </script>
 

@@ -13,33 +13,20 @@
   </header>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent } from "vue";
+<script setup lang="ts">
+import { computed } from "vue";
 import { useStore } from "vuex";
 import { key } from "../../store/store";
 import ConnectionDisplay from "../header/ConnectionDisplay.vue";
 import LanguageSwitcher from "../header/LanguageSwitcher.vue";
-import RulesSwitcher from "../header/RulesSwitcher.vue";
-import PlayerName from "../header/PlayerName.vue";
 import Logout from "../header/Logout.vue";
+import PlayerName from "../header/PlayerName.vue";
+import RulesSwitcher from "../header/RulesSwitcher.vue";
 
-export default defineComponent({
-  name: "Header",
-  components: {
-    ConnectionDisplay,
-    LanguageSwitcher,
-    PlayerName,
-    RulesSwitcher,
-    Logout,
-  },
-  setup() {
-    const store = useStore(key);
-    const playerIsRegistered = computed(
-      () => store.state.player.secret.length > 0
-    );
-    return { playerIsRegistered };
-  },
-});
+const store = useStore(key);
+const playerIsRegistered = computed(
+  () => store.state.player.secret.length > 0
+);
 </script>
 
 <style scoped>

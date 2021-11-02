@@ -11,32 +11,21 @@
   </aside>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent } from "vue";
+<script setup lang="ts">
+import { computed } from "vue";
 import { useStore } from "vuex";
 import { key } from "../../store/store";
 import PlayerListEntry from "./PlayerListEntry.vue";
 
-export default defineComponent({
-  name: "PlayerList",
-  components: { PlayerListEntry },
-  setup() {
-    const store = useStore(key);
-    const game = computed(() => store.getters.getActiveGame);
-    const playerCount = computed(() => game.value.config.maxPlayerCount);
-    const playerList = computed(() => game.value.players);
-    const creatorId = computed(() => game.value.creatorId);
+const store = useStore(key);
+const game = computed(() => store.getters.getActiveGame);
+const playerCount = computed(() => game.value.config.maxPlayerCount);
+const playerList = computed(() => game.value.players);
+const creatorId = computed(() => game.value.creatorId);
 
-    const emptySlots = computed(
-      () => playerCount.value - playerList.value.length
-    );
-    return {
-      playerList,
-      emptySlots,
-      creatorId,
-    };
-  },
-});
+const emptySlots = computed(
+  () => playerCount.value - playerList.value.length
+);
 </script>
 
 <style scoped>

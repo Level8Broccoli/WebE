@@ -5,15 +5,9 @@
   </section>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
 import Title from "../components/Title.vue";
 import RegisterPlayerName from "../components/RegisterPlayerName.vue";
-
-export default defineComponent({
-  name: "StartView",
-  components: { Title, RegisterPlayerName },
-});
 </script>
 
 <style scoped>

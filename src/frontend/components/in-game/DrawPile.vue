@@ -5,22 +5,15 @@
   </main>
 </template>
 
-<script lang="ts">
-import { computed, ComputedRef, defineComponent } from "vue";
+<script setup lang="ts">
+import { computed, ComputedRef } from "vue";
 import { useStore } from "vuex";
 import { key } from "../../store/store";
 import BackPileView from "./BackPileView.vue";
 
-export default defineComponent({
-  name: "DrawPile",
-  components: { BackPileView },
-  setup() {
-    const store = useStore(key);
-    const drawPileCount: ComputedRef<number> = computed(() => {
-      return store.getters.getDrawPileCount;
-    });
-    const i18n = computed(() => store.getters.i18n);
-    return { drawPileCount, i18n };
-  },
+const store = useStore(key);
+const drawPileCount: ComputedRef<number> = computed(() => {
+  return store.getters.getDrawPileCount;
 });
+const i18n = computed(() => store.getters.i18n);
 </script>

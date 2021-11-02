@@ -9,17 +9,10 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
 import { useStore } from "vuex";
 import { key } from "../store/store";
 
-export default defineComponent({
-  name: "ErrorOutput",
-  setup() {
-    const store = useStore(key);
-    const errorLog = store.state.errorLog;
-    return { errorLog };
-  },
-});
+const store = useStore(key);
+const errorLog = store.state.errorLog;
 </script>

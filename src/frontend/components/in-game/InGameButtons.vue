@@ -7,30 +7,21 @@
   </footer>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent } from "vue";
+<script setup lang="ts">
+import { computed, ComputedRef } from "vue";
 import { useStore } from "vuex";
+import { Game } from "../../../shared/model/Game";
 import { key } from "../../store/store";
 
-export default defineComponent({
-  name: "InGameButtons",
-  setup() {
-    const store = useStore(key);
-    const i18n = computed(() => store.getters.i18n);
-    const game = computed(() => store.getters.getActiveGame);
-    const isCreator = computed(
-      () => game.value.creatorId === store.state.player.id
-    );
-    const deleteGame = () => {
-      store.commit("deleteGame");
-    };
-    return {
-      i18n,
-      isCreator,
-      deleteGame,
-    };
-  },
-});
+const store = useStore(key);
+const i18n = computed(() => store.getters.i18n);
+const game: ComputedRef<Game> = computed(() => store.getters.getActiveGame);
+const isCreator = computed(
+  () => game.value.creatorId === store.state.player.id
+);
+const deleteGame = () => {
+  store.commit("deleteGame");
+};
 </script>
 
 <style scoped>

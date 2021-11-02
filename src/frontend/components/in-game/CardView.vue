@@ -14,12 +14,12 @@
       canBeDiscarded
         ? { click: discardCard }
         : canBeDrawn
-        ? { click: drawCard }
-        : isInFulfillmentMode
-        ? { click: chooseForFulfillment }
-        : isAlreadySelected
-        ? { click: deselectCard }
-        : {}
+          ? { click: drawCard }
+          : isInFulfillmentMode
+            ? { click: chooseForFulfillment }
+            : isAlreadySelected
+              ? { click: deselectCard }
+              : {}
     "
   >
     <header class="top">
@@ -36,88 +36,77 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, ComputedRef, defineComponent } from "vue";
+<script setup lang="ts">
+import { computed, ComputedRef } from "vue";
 import { useStore } from "vuex";
 import { Card } from "../../../shared/model/Game";
 import { key } from "../../store/store";
 
-export default defineComponent({
-  name: "CardView",
-  props: {
-    id: { type: String, required: true },
-    isHand: { type: Boolean, default: false },
-    isDiscard: { type: Boolean, default: false },
-    isInFulfillmentMode: { type: Boolean, default: false },
-    owner: { type: String, default: "" },
-  },
-  setup(props) {
-    const store = useStore(key);
-    const canBeDiscarded = computed(
-      () =>
-        props.isHand &&
-        store.getters.amIActivePlayer &&
-        store.getters.getCurrentStep === 3
-    );
-    const discardCard = () => {
-      store.commit("discardCard", { cardId: props.id });
-    };
-    const canBeDrawn = computed(
-      () =>
-        props.isDiscard &&
-        store.getters.amIActivePlayer &&
-        store.getters.getCurrentStep === 0
-    );
-    const drawCard = () => {
-      store.commit("drawCard", {
-        pileId: props.owner,
-      });
-    };
-    const isAlreadySelected = computed(() => {
-      const temp = store.state.tempCardsForFulfillment;
-      if (temp.find((s) => s === props.id) !== undefined) {
-        return true;
-      }
-      return false;
-    });
-    const isAlreadyInFulfillment = computed(() => {
-      const prepared = store.state.cardRowsForFulfillment;
-      for (const row of prepared) {
-        if (row.cardIds.find(id => id === props.id) !== undefined) {
-          return true;
-        }
-      }
-      return false;
-    });
-    const isInFulfillmentMode = computed(
-      () =>
-        props.isInFulfillmentMode &&
-        !isAlreadyInFulfillment.value &&
-        !isAlreadySelected.value
-    );
-    const chooseForFulfillment = () => {
-      store.commit("storeForFulfillment", { cardId: props.id });
-    };
-    const deselectCard = () => {
-      store.commit("deselectCard", { cardId: props.id });
-    };
-    const card: ComputedRef<Card> = computed(() =>
-      store.getters.getCardById(props.id)
-    );
-    return {
-      card,
-      canBeDiscarded,
-      discardCard,
-      canBeDrawn,
-      drawCard,
-      isInFulfillmentMode,
-      chooseForFulfillment,
-      isAlreadyInFulfillment,
-      isAlreadySelected,
-      deselectCard,
-    };
-  },
+type Props = {
+  id: string;
+  isHand?: boolean;
+  isDiscard?: boolean;
+  isInFulfillmentMode?: boolean;
+  owner?: string;
+}
+const props = withDefaults(defineProps<Props>(), {
+  isHand: false,
+  isDiscard: false,
+  isInFulfillmentMode: false,
+  owner: "",
+})
+const store = useStore(key);
+const canBeDiscarded = computed(
+  () =>
+    props.isHand &&
+    store.getters.amIActivePlayer &&
+    store.getters.getCurrentStep === 3
+);
+const discardCard = () => {
+  store.commit("discardCard", { cardId: props.id });
+};
+const canBeDrawn = computed(
+  () =>
+    props.isDiscard &&
+    store.getters.amIActivePlayer &&
+    store.getters.getCurrentStep === 0
+);
+const drawCard = () => {
+  store.commit("drawCard", {
+    pileId: props.owner,
+  });
+};
+const isAlreadySelected = computed(() => {
+  const temp = store.state.tempCardsForFulfillment;
+  if (temp.find((s) => s === props.id) !== undefined) {
+    return true;
+  }
+  return false;
 });
+const isAlreadyInFulfillment = computed(() => {
+  const prepared = store.state.cardRowsForFulfillment;
+  for (const row of prepared) {
+    if (row.cardIds.find(id => id === props.id) !== undefined) {
+      return true;
+    }
+  }
+  return false;
+});
+const isInFulfillmentMode = computed(
+  () =>
+    props.isInFulfillmentMode &&
+    !isAlreadyInFulfillment.value &&
+    !isAlreadySelected.value
+);
+const chooseForFulfillment = () => {
+  store.commit("storeForFulfillment", { cardId: props.id });
+};
+const deselectCard = () => {
+  store.commit("deselectCard", { cardId: props.id });
+};
+const card: ComputedRef<Card> = computed(() =>
+  store.getters.getCardById(props.id)
+);
 </script>
 
 <style scoped>

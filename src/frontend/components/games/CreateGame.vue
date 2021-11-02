@@ -53,71 +53,50 @@
   </form>
 </template>
 
-<script lang="ts">
-import { computed, ComputedRef, defineComponent } from "vue";
+<script setup lang="ts">
+import { computed, ComputedRef } from "vue";
 import { useStore } from "vuex";
 import { Config, LevelSystem } from "../../../shared/model/Game";
 import { key } from "../../store/store";
 
-export default defineComponent({
-  name: "CreateGame",
-  setup() {
-    const store = useStore(key);
-    const i18n = computed(() => store.getters.i18n);
-
-    const currentConfig: ComputedRef<Config> = computed(
-      () => store.state.gameInCreation!
-    );
-    const maxPlayerCount = computed(() => currentConfig.value.maxPlayerCount);
-    const levelCount = computed(() => currentConfig.value.levelCount);
-    const levelSystem = computed(() => currentConfig.value.levelSystem);
-
-    const finalizeGameCreation = () => {
-      store.commit("finalizeGameCreation");
-    };
-    const abort = () => {
-      store.commit("abortGameInCreation");
-    };
-
-    const changeToLevelSystemNormal = () => {
-      store.commit("updateGameInCreation", {
-        ...currentConfig.value,
-        levelSystem: LevelSystem.NORMAL,
-      });
-    };
-    const changeToLevelSystemRandom = () => {
-      store.commit("updateGameInCreation", {
-        ...currentConfig.value,
-        levelSystem: LevelSystem.RANDOM,
-      });
-    };
-    const updateMaxPlayerCount = (e: any) => {
-      store.commit("updateGameInCreation", {
-        ...currentConfig.value,
-        maxPlayerCount: Number(e.target.value),
-      });
-    };
-    const updateLevelCount = (e: any) => {
-      store.commit("updateGameInCreation", {
-        ...currentConfig.value,
-        levelCount: Number(e.target.value),
-      });
-    };
-
-    return {
-      maxPlayerCount,
-      levelCount,
-      levelSystem,
-      finalizeGameCreation,
-      abort,
-      changeToLevelSystemNormal,
-      changeToLevelSystemRandom,
-      updateMaxPlayerCount,
-      updateLevelCount,
-      i18n,
-    };
-  },
-});
+const store = useStore(key);
+const i18n = computed(() => store.getters.i18n);
+const currentConfig: ComputedRef<Config> = computed(
+  () => store.state.gameInCreation!
+);
+const maxPlayerCount = computed(() => currentConfig.value.maxPlayerCount);
+const levelCount = computed(() => currentConfig.value.levelCount);
+const levelSystem = computed(() => currentConfig.value.levelSystem);
+const finalizeGameCreation = () => {
+  store.commit("finalizeGameCreation");
+};
+const abort = () => {
+  store.commit("abortGameInCreation");
+};
+const changeToLevelSystemNormal = () => {
+  store.commit("updateGameInCreation", {
+    ...currentConfig.value,
+    levelSystem: LevelSystem.NORMAL,
+  });
+};
+const changeToLevelSystemRandom = () => {
+  store.commit("updateGameInCreation", {
+    ...currentConfig.value,
+    levelSystem: LevelSystem.RANDOM,
+  });
+};
+const updateMaxPlayerCount = (e: Event) => {
+  store.commit("updateGameInCreation", {
+    ...currentConfig.value,
+    maxPlayerCount: Number((e.target as HTMLInputElement).value),
+  });
+};
+const updateLevelCount = (e: Event) => {
+  store.commit("updateGameInCreation", {
+    ...currentConfig.value,
+    levelCount: Number((e.target as HTMLInputElement).value),
+  });
+};
 </script>
 
 <style scoped>

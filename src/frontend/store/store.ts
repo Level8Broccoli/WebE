@@ -75,18 +75,18 @@ export const store = createStore<State>({
             return "game-search";
         },
         getPlayerName(state) {
-            return (playerId: string) => {
-                return state.playerList.find(p => p.id === playerId)?.name;
+            return (playerId: string): string => {
+                return state.playerList.find(p => p.id === playerId)?.name || "";
             };
         },
         translateCurrentStep(_, getters) {
-            return (step: number) => {
+            return (step: number): string => {
                 const i18n = getters.i18n;
                 return i18n["currentStep" + String(step)];
             }
         },
         translateCurrentStepExplanation(_, getters) {
-            return (step: number) => {
+            return (step: number): string => {
                 const i18n = getters.i18n;
                 return i18n["currentStepExplanation" + String(step)];
             }
@@ -366,7 +366,6 @@ export const store = createStore<State>({
         addChatMessage(state, value: ChatResponse) {
             const activeGame = state.games.find(g => g.id === state.activeGameId);
             activeGame?.chat.push(value);
-
         }
     },
     plugins: [WebSocketPlugin(socket)]

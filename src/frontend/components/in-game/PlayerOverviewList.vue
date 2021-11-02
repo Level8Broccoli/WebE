@@ -12,24 +12,17 @@
   </main>
 </template>
 
-<script lang="ts">
-import { computed, ComputedRef, defineComponent } from "vue";
+<script setup lang="ts">
+import { computed, ComputedRef } from "vue";
 import { useStore } from "vuex";
 import { PlayerOverviewAggregate } from "../../../shared/model/Game";
 import { key } from "../../store/store";
 import PlayerOverviewListEntry from "./PlayerOverviewListEntry.vue";
 
-export default defineComponent({
-  name: "PlayerOverviewList",
-  components: { PlayerOverviewListEntry },
-  setup() {
-    const store = useStore(key);
-    const otherPlayers: ComputedRef<PlayerOverviewAggregate[]> = computed(
-      () => store.getters.aggregateOtherPlayers
-    );
-    return { otherPlayers };
-  },
-});
+const store = useStore(key);
+const otherPlayers: ComputedRef<PlayerOverviewAggregate[]> = computed(
+  () => store.getters.aggregateOtherPlayers
+);
 </script>
 
 <style scoped>

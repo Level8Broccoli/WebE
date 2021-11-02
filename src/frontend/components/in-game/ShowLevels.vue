@@ -4,37 +4,23 @@
       v-for="(level, i) in levels"
       :key="i"
       :class="i === myCurrentLevel ? 'current-level' : ''"
-    >
-      {{ level }}
-    </li>
+    >{{ level }}</li>
   </ul>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent } from "vue";
+<script setup lang="ts">
+import { computed, ComputedRef } from "vue";
 import { useStore } from "vuex";
 import { key } from "../../store/store";
 
-export default defineComponent({
-  name: "ShowLevels",
-  setup() {
-    const store = useStore(key);
-    const i18n = computed(() => store.getters.i18n);
-    const levels = computed(() => store.getters.getTranslatedLevels);
-    const myCurrentLevel = computed(() => store.getters.myCurrentLevel);
-
-    return {
-      i18n,
-      levels,
-      myCurrentLevel,
-    };
-  },
-});
+const store = useStore(key);
+const levels: ComputedRef<string[]> = computed(() => store.getters.getTranslatedLevels);
+const myCurrentLevel: ComputedRef<number> = computed(() => store.getters.myCurrentLevel);
 </script>
 
 <style scoped>
 ul {
-    padding: 0;
+  padding: 0;
 }
 .current-level {
   color: #241e92;

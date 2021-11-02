@@ -19,44 +19,30 @@
   </footer>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent } from "vue";
+<script setup lang="ts">
+import { computed } from "vue";
 import { useStore } from "vuex";
 import { key } from "../../store/store";
 
-export default defineComponent({
-  name: "LobbyButtons",
-  setup() {
-    const store = useStore(key);
-    const i18n = computed(() => store.getters.i18n);
-    const game = computed(() => store.getters.getActiveGame);
-    const isCreator = computed(
-      () => game.value.creatorId === store.state.player.id
-    );
-    const gameIsValid = computed(() => game.value.players.length > 1);
+const store = useStore(key);
+const i18n = computed(() => store.getters.i18n);
+const game = computed(() => store.getters.getActiveGame);
+const isCreator = computed(
+  () => game.value.creatorId === store.state.player.id
+);
+const gameIsValid = computed(() => game.value.players.length > 1);
 
-    const abort = () => {
-      store.commit("leaveGame");
-    };
+const abort = () => {
+  store.commit("leaveGame");
+};
 
-    const deleteGame = () => {
-      store.commit("deleteGame");
-    };
+const deleteGame = () => {
+  store.commit("deleteGame");
+};
 
-    const startGame = () => {
-      store.commit("startGame");
-    };
-
-    return {
-      i18n,
-      isCreator,
-      gameIsValid,
-      abort,
-      deleteGame,
-      startGame,
-    };
-  },
-});
+const startGame = () => {
+  store.commit("startGame");
+};
 </script>
 
 <style scoped>

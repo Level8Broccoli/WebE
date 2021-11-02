@@ -1,23 +1,17 @@
 <template>
   <header>
     <h1>Level <span>8</span> Game</h1>
-    <small>{{authors}}</small>
+    <small>{{ i18n.authors }}</small>
   </header>
 </template>
 
-<script>
-import { computed, defineComponent } from "vue";
+<script setup lang="ts">
+import { computed } from "vue";
 import { useStore } from "vuex";
 import { key } from "../store/store";
 
-export default defineComponent({
-  name: "Title",
-  setup() {
-    const store = useStore(key);
-    const authors = computed(()=> store.getters.i18n.authors);
-    return { authors };
-  },
-});
+const store = useStore(key);
+const i18n = computed(() => store.getters.i18n);
 </script>
 
 

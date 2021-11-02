@@ -9,35 +9,25 @@
   </aside>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { DateTime } from "luxon";
-import { computed, ComputedRef, defineComponent } from "vue";
+import { computed, ComputedRef } from "vue";
 import { useStore } from "vuex";
 import { Game } from "../../../shared/model/Game";
 import { key } from "../../store/store";
 import ChatInput from "./ChatInput.vue";
 import ChatMessage from "./ChatMessage.vue";
 
-export default defineComponent({
-  name: "Chat",
-  components: { ChatInput, ChatMessage },
-  setup() {
-    const store = useStore(key);
-    const i18n = computed(() => store.getters.i18n);
-    const game: ComputedRef<Game> = computed(() => store.getters.getActiveGame);
-    const messageList = computed(() =>
-      [...game.value.chat].sort((a, b) => {
-        const aa = DateTime.fromISO(a.timestamp.toString());
-        const bb = DateTime.fromISO(b.timestamp.toString());
-        return bb.toMillis() - aa.toMillis();
-      })
-    );
-    return {
-      i18n,
-      messageList,
-    };
-  },
-});
+const store = useStore(key);
+const i18n = computed(() => store.getters.i18n);
+const game: ComputedRef<Game> = computed(() => store.getters.getActiveGame);
+const messageList = computed(() =>
+  [...game.value.chat].sort((a, b) => {
+    const aa = DateTime.fromISO(a.timestamp.toString());
+    const bb = DateTime.fromISO(b.timestamp.toString());
+    return bb.toMillis() - aa.toMillis();
+  })
+);
 </script>
 
 <style scoped>

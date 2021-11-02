@@ -12,24 +12,17 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, ComputedRef, defineComponent } from "vue";
+<script setup lang="ts">
+import { computed, ComputedRef } from "vue";
 import { useStore } from "vuex";
 import { CardRow } from "../../../shared/model/Game";
 import { key } from "../../store/store";
 import CardView from "./CardView.vue";
 
-export default defineComponent({
-  name: "GameBoard",
-  components: { CardView },
-  setup() {
-    const store = useStore(key);
-    const cardRows: ComputedRef<CardRow[]> = computed(
-      () => store.getters.getGameBoard
-    );
-    return { cardRows };
-  },
-});
+const store = useStore(key);
+const cardRows: ComputedRef<CardRow[]> = computed(
+  () => store.getters.getGameBoard
+);
 </script>
 
 <style scoped>

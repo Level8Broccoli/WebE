@@ -23,41 +23,31 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, PropType } from "vue";
+<script setup lang="ts">
+import { computed, ComputedRef } from "vue";
 import { useStore } from "vuex";
 import { Game, GameStatus } from "../../../shared/model/Game";
 import { key } from "../../store/store";
 
-export default defineComponent({
-  name: "GameListEntry",
-  props: {
-    game: { type: Object as PropType<Game>, required: true },
-    joinButton: { type: Boolean, default: true },
-  },
-  setup(props) {
-    const store = useStore(key);
-    const i18n = computed(() => store.getters.i18n);
-    const creatorName = computed(
-      () =>
-        store.getters.getPlayerName(props.game.creatorId) ||
-        props.game.creatorId
-    );
-    const joinGame = () => {
-      store.commit("joinGame", props.game.id);
-    };
-    const gameInLobby = computed(
-      () => props.game.status === GameStatus.IN_LOBBY
-    );
-    return {
-      i18n,
-      creatorName,
-      joinGame,
-      gameInLobby,
-      ...props,
-    };
-  },
+type Props = {
+  game: Game;
+  joinButton?: boolean;
+};
+
+const props = withDefaults(defineProps<Props>(), {
+  joinButton: true,
 });
+
+const store = useStore(key);
+const i18n = computed(() => store.getters.i18n);
+const creatorName: ComputedRef<string> = computed(
+  () =>
+    store.getters.getPlayerName(props.game.creatorId) || props.game.creatorId
+);
+const joinGame = () => {
+  store.commit("joinGame", props.game.id);
+};
+const gameInLobby = computed(() => props.game.status === GameStatus.IN_LOBBY);
 </script>
 
 <style scoped>

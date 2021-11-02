@@ -14,31 +14,20 @@
   </form>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent } from "vue";
+<script setup lang="ts">
+import { computed } from "vue";
 import { useStore } from "vuex";
 import { key } from "../store/store";
 
-export default defineComponent({
-  name: "PlayerName",
-  setup() {
-    const store = useStore(key);
-    const playerName = computed(() => store.state.player.name);
-    const updatePlayerName = (e: any) => {
-      store.commit("updatePlayerName", e.target.value);
-    };
-    const register = () => {
-      store.commit("registerPlayer");
-    };
-    const i18n = computed(() => store.getters.i18n);
-    return {
-      playerName,
-      updatePlayerName,
-      register,
-      i18n,
-    };
-  },
-});
+const store = useStore(key);
+const playerName = computed(() => store.state.player.name);
+const updatePlayerName = (e: Event) => {
+  store.commit("updatePlayerName", (e.target as HTMLInputElement).value);
+};
+const register = () => {
+  store.commit("registerPlayer");
+};
+const i18n = computed(() => store.getters.i18n);
 </script>
 
 <style scoped>

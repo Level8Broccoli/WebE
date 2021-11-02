@@ -18,29 +18,19 @@
   </section>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent } from "vue";
+<script setup lang="ts">
+import { computed } from "vue";
 import { useStore } from "vuex";
 import { Language } from "../i18n/i18n";
 import { key } from "../store/store";
 
-export default defineComponent({
-  name: "RulesView",
-  setup() {
-    const store = useStore(key);
-    const language = computed(() => store.state.language);
-    const isEnglish = computed(() => language.value == Language.ENGLISH);
-    const i18n = computed(() => store.getters.i18n);
-    const closeRules = () => {
-      store.commit("switchRules");
-    };
-    return {
-      isEnglish,
-      closeRules,
-      i18n,
-    };
-  },
-});
+const store = useStore(key);
+const language = computed(() => store.state.language);
+const isEnglish = computed(() => language.value == Language.ENGLISH);
+const i18n = computed(() => store.getters.i18n);
+const closeRules = () => {
+  store.commit("switchRules");
+};
 </script>
 
 <style scoped>
