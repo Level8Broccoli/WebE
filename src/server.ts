@@ -256,6 +256,7 @@ io.on("connection", (socket) => {
     api
       .playCard(request)
       .then((response) => {
+        socket.emit("playCard", response);
         broadcastUpdateGameState(response.gameId);
       })
       .catch((error) => {

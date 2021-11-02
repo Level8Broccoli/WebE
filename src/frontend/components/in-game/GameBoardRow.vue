@@ -39,11 +39,11 @@ type Props = {
 }
 const props = defineProps<Props>();
 
-const row = props.row;
+const row = computed(() => props.row);
 const firstCard: ComputedRef<Card> = computed(() =>
-    store.getters.getCardById(row.cardIds[0])
+    store.getters.getCardById(row.value.cardIds[0])
 );
 const lastCard: ComputedRef<Card> = computed(() =>
-    store.getters.getCardById(row.cardIds[row.cardIds.length - 1])
+    store.getters.getCardById(row.value.cardIds[row.value.cardIds.length - 1])
 );
 </script>

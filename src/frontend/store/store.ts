@@ -269,7 +269,7 @@ export const store = createStore<State>({
         storeForFulfillment(state, { cardId }) {
             state.tempCardsForFulfillment.push(cardId);
         },
-        abordPlayCardStep(state) {
+        abortPlayCardStep(state) {
             state.tempCardIdForPlay = "";
         },
         chooseForPlay(state, { cardId }) {

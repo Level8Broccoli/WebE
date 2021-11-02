@@ -93,7 +93,7 @@ const skipLevelFulfillStep = () => {
   store.commit("skipLevelFulfillStep");
 };
 const skipPlayCardsStep = () => {
-  store.commit("abordPlayCardStep");
+  store.commit("abortPlayCardStep");
   store.commit("skipPlayCardsStep");
 };
 const isInLevelFulfillStep: ComputedRef<boolean> = computed(

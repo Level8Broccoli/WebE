@@ -49,7 +49,6 @@ const isValidPlay = computed(() => {
 
 const playCard = () => {
     store.commit("playCard", props.cardRowId)
-    store.commit("abordPlayCardStep")
 }
 </script>
 

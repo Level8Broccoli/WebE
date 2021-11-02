@@ -154,9 +154,13 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
         store.commit("addToErrorLog", res.status);
     })
 
-    socket.on("playCard", (res: ErrorResponse) => {
-        console.error(res.status);
-        store.commit("addToErrorLog", res.status);
+    socket.on("playCard", (res: UpdateGameBoardResponse | ErrorResponse) => {
+        if ("gameId" in res) {
+            store.commit("abortPlayCardStep");
+        } else {
+            console.error(res.status);
+            store.commit("addToErrorLog", res.status);
+        }
     })
 
     socket.on("finishFulfillment", (res: UpdateGameBoardResponse | ErrorResponse) => {
