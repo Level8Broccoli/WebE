@@ -425,7 +425,7 @@ export class Api {
       drawCardFromPile(game, request.pileId, request.player.id);
 
       if (hasAlreadyFulfilledLevel(game.state.playerLevels, request.player.id)) {
-        nextGameStep(game, GameStep.DISCARD);
+        nextGameStep(game, GameStep.PLAY);
       } else {
         nextGameStep(game, GameStep.FULFILL_LEVEL);
       }
@@ -505,8 +505,11 @@ export class Api {
         reject(new Error(StatusCode.NOT_ACTIVE_PLAYER));
       }
 
-      // TODO: Check id Level achieved
-      nextGameStep(game, GameStep.PLAY);
+      if (hasAlreadyFulfilledLevel(game.state.playerLevels, request.player.id)) {
+        nextGameStep(game, GameStep.PLAY);
+      } else {
+        nextGameStep(game, GameStep.DISCARD);
+      }
 
       const response: UpdateGameBoardResponse = {
         status: StatusCode.OK,
@@ -587,7 +590,7 @@ export class Api {
 
       markPlayerLevelFulfilled(game.state, request.player.id);
 
-      nextGameStep(game, GameStep.DISCARD);
+      nextGameStep(game, GameStep.PLAY);
 
       const response: UpdateGameBoardResponse = {
         status: StatusCode.OK,
