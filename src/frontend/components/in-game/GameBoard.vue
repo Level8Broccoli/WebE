@@ -2,11 +2,7 @@
   <div>
     <ul role="list">
       <li v-for="(row, i) in cardRows" :key="i">
-        <ul role="list">
-          <li v-for="cardId in row.cardIds" :key="cardId">
-            <CardView :id="cardId" />
-          </li>
-        </ul>
+        <GameBoardRow :row="row" />
       </li>
     </ul>
   </div>
@@ -17,7 +13,7 @@ import { computed, ComputedRef } from "vue";
 import { useStore } from "vuex";
 import { CardRow } from "../../../shared/model/Game";
 import { key } from "../../store/store";
-import CardView from "./CardView.vue";
+import GameBoardRow from "./GameBoardRow.vue";
 
 const store = useStore(key);
 const cardRows: ComputedRef<CardRow[]> = computed(
