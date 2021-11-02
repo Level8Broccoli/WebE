@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client';
 import { InjectionKey } from 'vue';
 import { createStore, Store } from 'vuex';
-import { Card, CardRow, CardRowType, CardStackOpen, CardStackSecret, CardType, Color, Config, DRAW_PILE_ID, Game, GameRule, GameRules, GameStatus, LevelSystem, PlayerOverviewAggregate } from '../../shared/model/Game';
+import { Card, CardRow, CardRowType, CardStackOpen, CardStackSecret, CardType, Config, DRAW_PILE_ID, Game, GameRule, GameRules, GameStatus, LevelSystem, PlayerOverviewAggregate } from '../../shared/model/Game';
 import { PrivatePlayer, PublicPlayer } from '../../shared/model/Player';
 import { ChatResponse } from '../../shared/model/ResponseTypes';
 import { i18n, Language } from '../i18n/i18n';
@@ -16,6 +16,7 @@ export interface State {
     games: Game[],
     gameInCreation?: Config,
     activeGameId: string,
+    tempCardIdForPlay: string,
     tempCardsForFulfillment: string[],
     cardRowsForFulfillment: CardRow[],
     errorLog: string[]
@@ -39,6 +40,7 @@ export const store = createStore<State>({
         games: [],
         gameInCreation: undefined,
         activeGameId: "",
+        tempCardIdForPlay: "",
         tempCardsForFulfillment: [],
         cardRowsForFulfillment: [],
         errorLog: [],
@@ -267,8 +269,15 @@ export const store = createStore<State>({
         storeForFulfillment(state, { cardId }) {
             state.tempCardsForFulfillment.push(cardId);
         },
+        abordPlayCardStep(state) {
+            state.tempCardIdForPlay = "";
+        },
+        chooseForPlay(state, { cardId }) {
+            state.tempCardIdForPlay = cardId;
+        },
         deselectCard(state, { cardId }) {
             state.tempCardsForFulfillment = state.tempCardsForFulfillment.filter(s => s !== cardId);
+            state.tempCardIdForPlay = "";
         },
         updatePlayerName(state, value: string) {
             state.player.name = value;

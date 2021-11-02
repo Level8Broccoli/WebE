@@ -6,7 +6,7 @@
       card.color +
       (isAlreadyInFulfillment ? ' already-selected' : '') +
       (isAlreadySelected ? ' currently-selected' : '') +
-      (canBeDiscarded || canBeDrawn || isInFulfillmentMode
+      (canBeDiscarded || canBeDrawn || isInFulfillmentMode || canBePlayed
         ? ' interactive'
         : '')
     "
@@ -19,7 +19,9 @@
             ? { click: chooseForFulfillment }
             : isAlreadySelected
               ? { click: deselectCard }
-              : {}
+              : canBePlayed
+                ? { click: chooseForPlay }
+                : {}
     "
   >
     <header class="top">
@@ -62,6 +64,13 @@ const canBeDiscarded = computed(
     store.getters.amIActivePlayer &&
     store.getters.getCurrentStep === 3
 );
+const canBePlayed = computed(
+  () =>
+    props.isHand &&
+    store.getters.amIActivePlayer &&
+    store.getters.getCurrentStep === 2 &&
+    store.state.tempCardIdForPlay === ""
+);
 const discardCard = () => {
   store.commit("discardCard", { cardId: props.id });
 };
@@ -79,6 +88,9 @@ const drawCard = () => {
 const isAlreadySelected = computed(() => {
   const temp = store.state.tempCardsForFulfillment;
   if (temp.find((s) => s === props.id) !== undefined) {
+    return true;
+  }
+  if (store.state.tempCardIdForPlay === props.id) {
     return true;
   }
   return false;
@@ -107,6 +119,9 @@ const deselectCard = () => {
 const card: ComputedRef<Card> = computed(() =>
   store.getters.getCardById(props.id)
 );
+const chooseForPlay = () => {
+  store.commit("chooseForPlay", { cardId: props.id });
+}
 </script>
 
 <style scoped>

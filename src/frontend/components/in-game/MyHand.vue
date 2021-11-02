@@ -30,6 +30,7 @@
     >Finish Fulfillment</button>
     <button v-if="fulfillLevelMode && !valid" class="is-disabled">noch nicht valide</button>
     <button v-if="isInLevelFulfillStep" @click.prevent="skipLevelFulfillStep">Überspringen</button>
+    <button v-if="isInPlayCardStep" @click.prevent="skipPlayCardsStep">Überspringen</button>
   </main>
 </template>
 
@@ -91,8 +92,15 @@ const skipLevelFulfillStep = () => {
   store.commit("abortFulfillment");
   store.commit("skipLevelFulfillStep");
 };
-const isInLevelFulfillStep = computed(
+const skipPlayCardsStep = () => {
+  store.commit("abordPlayCardStep");
+  store.commit("skipPlayCardsStep");
+};
+const isInLevelFulfillStep: ComputedRef<boolean> = computed(
   () => isActivePlayer.value && store.getters.getCurrentStep === 1
+);
+const isInPlayCardStep: ComputedRef<boolean> = computed(
+  () => isActivePlayer.value && store.getters.getCurrentStep === 2
 );
 const startFulfillingLevel = () => {
   fulfillLevelMode.value = true;
