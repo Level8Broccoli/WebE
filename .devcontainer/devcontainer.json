@@ -11,8 +11,8 @@
         }
 	},
 	"extensions": [
-		"octref.vetur",
 		"ritwickdey.liveserver",
-		"esbenp.prettier-vscode"
+		"esbenp.prettier-vscode",
+		"johnsoncodehk.volar"
 	],
 }
