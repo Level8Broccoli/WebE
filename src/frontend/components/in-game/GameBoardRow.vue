@@ -14,7 +14,7 @@
         </li>
         <li>
             <CardSpot
-                :out-of-range="row.type === 'STREET' && lastCard.value === 1"
+                :out-of-range="row.type === 'STREET' && lastCard.value === 15"
                 :card-row-type="row.type"
                 :card-row-id="row.id"
                 :spot-for-color="row.type === 'SAME_COLOR' ? lastCard.color : undefined"
