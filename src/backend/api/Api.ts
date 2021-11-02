@@ -33,7 +33,7 @@ import {
 import { ServerState } from "../../shared/model/ServerState";
 import {
   discardCard, drawCardFromPile, getAllGamesForPlayer,
-  getGame, getPile, initGameState, initialCardSet, isCardOwner,
+  getGame, getPile, hasAlreadyFulfilledLevel, initGameState, initialCardSet, isCardOwner,
   markPlayerLevelFulfilled,
   moveCardsFromHandToBoard,
   nextGameStep,
@@ -423,7 +423,11 @@ export class Api {
 
       drawCardFromPile(game, request.pileId, request.player.id);
 
-      nextGameStep(game, GameStep.FULFILL_LEVEL);
+      if (hasAlreadyFulfilledLevel(game.state.playerLevels, request.player.id)) {
+        nextGameStep(game, GameStep.DISCARD);
+      } else {
+        nextGameStep(game, GameStep.FULFILL_LEVEL);
+      }
 
       const response: UpdateGameBoardResponse = {
         status: StatusCode.OK,

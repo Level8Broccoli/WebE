@@ -13,7 +13,8 @@ import {
   GameStatus,
   GameStep,
   LevelSystem,
-  NumberCard
+  NumberCard,
+  PlayerLevel
 } from "../../shared/model/Game";
 import { ServerState } from "../../shared/model/ServerState";
 import { getUUID } from "./TokenGeneratorService";
@@ -323,4 +324,12 @@ function getCardById(cards: Card[], cardId: string): Card {
     throw new Error("Card not found!");
   }
   return card;
+}
+
+export function hasAlreadyFulfilledLevel(playerLevels: PlayerLevel[], playerId: string): boolean {
+  const playerLevel = playerLevels.find(pl => pl.playerId === playerId);
+  if (typeof playerLevel === "undefined") {
+    throw new Error("Player not found!");
+  }
+  return playerLevel.hasAchievedLevel;
 }
