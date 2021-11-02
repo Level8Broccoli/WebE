@@ -1,5 +1,5 @@
 import { ChatMessage } from "../../shared/model/Chat";
-import { CardRow, CardRowType, DRAW_PILE_ID, Game, GameRules } from "../../shared/model/Game";
+import { CardRow, CardRowRequest, CardRowType, DRAW_PILE_ID, Game, GameRules } from "../../shared/model/Game";
 import { FullPlayer, PrivatePlayer, PublicPlayer } from "../../shared/model/Player";
 import { ServerState } from "../../shared/model/ServerState";
 
@@ -166,7 +166,7 @@ export function getAllRegisteredPlayers(
 export function isLevelValid(
   game: Game,
   playerId: string,
-  cardRows: CardRow[]
+  cardRows: CardRowRequest[]
 ): boolean {
   const playerLevel = game.state.playerLevels.find(l => l.playerId === playerId)?.currentLevelIndex;
   if (typeof playerLevel === 'undefined') {

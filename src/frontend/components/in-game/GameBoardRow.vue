@@ -4,6 +4,7 @@
             <CardSpot
                 :out-of-range="row.type === 'STREET' && firstCard.value === 1"
                 :card-row-type="row.type"
+                :card-row-id="row.id"
                 :spot-for-color="row.type === 'SAME_COLOR' ? firstCard.color : undefined"
                 :spot-for-value="row.type === 'STREET' ? firstCard.value - 1 : row.type === 'SAME_NUMBER' ? firstCard.value : undefined"
             />
@@ -15,6 +16,7 @@
             <CardSpot
                 :out-of-range="row.type === 'STREET' && lastCard.value === 1"
                 :card-row-type="row.type"
+                :card-row-id="row.id"
                 :spot-for-color="row.type === 'SAME_COLOR' ? lastCard.color : undefined"
                 :spot-for-value="row.type === 'STREET' ? lastCard.value + 1 : row.type === 'SAME_NUMBER' ? lastCard.value : undefined"
             />

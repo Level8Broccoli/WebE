@@ -1,6 +1,7 @@
 import {
   Card,
   CardRow,
+  CardRowRequest,
   CardRowType,
   CardStack,
   CardStackOpen,
@@ -89,6 +90,14 @@ export function getGameState(
   gameId: string
 ): GameState {
   return serverState.games.find((g) => g.id === gameId)!.state!;
+}
+
+export function getCardRow(board: CardRow[], cardRowId: string): CardRow {
+  const cardRow = board.find(cr => cr.id === cardRowId);
+  if (typeof cardRow === "undefined") {
+    throw new Error("CardRow not found!");
+  }
+  return cardRow;
 }
 
 export function pileExists(
@@ -268,7 +277,10 @@ export function getAllGamesForPlayer(
   });
 }
 
-export function moveCardsFromHandToBoard(game: Game, playerId: string, cardRows: CardRow[]) {
+export function moveCardsFromHandToBoard(
+  game: Game,
+  playerId: string,
+  cardRows: CardRowRequest[]) {
   const sortedCardRows = cardRows.map(({ type, cardIds }) => {
     if (type === CardRowType.STREET) {
       const cards: Card[] = [];
@@ -281,7 +293,7 @@ export function moveCardsFromHandToBoard(game: Game, playerId: string, cardRows:
     }
     return { type, cardIds };
   });
-  game.state.board.push(...sortedCardRows);
+  game.state.board.push(...sortedCardRows.map(cr => { return { ...cr, id: getUUID() } }));
   game.state.hands = game.state.hands.map(h => {
     if (h.id === playerId) {
       const cardsToRemove: string[][] = [];
@@ -289,6 +301,27 @@ export function moveCardsFromHandToBoard(game: Game, playerId: string, cardRows:
 
       return {
         cardIds: (h as CardStackOpen).cardIds.filter(id => !(cardsToRemove.flat().includes(id))),
+        id: h.id
+      }
+    }
+    return h
+  })
+}
+
+export function moveCardFromHandToBoard(
+  game: Game,
+  playerId: string,
+  cardId: string,
+  cardRow: CardRow) {
+  cardRow.cardIds.push(cardId);
+  if (cardRow.type === CardRowType.STREET) {
+    const cardIdsToBeSorted = game.cards.filter(c => cardRow.cardIds.includes(c.id));
+    cardRow.cardIds = cardIdsToBeSorted.sort((a, b) => a.value - b.value).map(c => c.id);
+  }
+  game.state.hands = game.state.hands.map(h => {
+    if (h.id === playerId) {
+      return {
+        cardIds: (h as CardStackOpen).cardIds.filter(id => id !== cardId),
         id: h.id
       }
     }
@@ -332,4 +365,46 @@ export function hasAlreadyFulfilledLevel(playerLevels: PlayerLevel[], playerId: 
     throw new Error("Player not found!");
   }
   return playerLevel.hasAchievedLevel;
+}
+
+export function isPlayValid(
+  game: Game,
+  cardId: string,
+  cardRowId: string) {
+  const card = game.cards.find(c => c.id === cardId);
+  if (typeof card === "undefined") {
+    throw new Error("Card not found!");
+  }
+  const cardRow = game.state.board.find(cr => cr.id === cardRowId);
+  if (typeof cardRow === "undefined") {
+    throw new Error("CardRow not found!");
+  }
+  if (cardRow.type === CardRowType.SAME_COLOR) {
+    const firstCard = game.cards.find(c => c.id === cardRow.cardIds[0]);
+    if (typeof firstCard === "undefined") {
+      throw new Error("FirstCard not found!");
+    }
+    return firstCard.color === card.color;
+  } else if (cardRow.type === CardRowType.SAME_NUMBER) {
+    const firstCard = game.cards.find(c => c.id === cardRow.cardIds[0]);
+    if (typeof firstCard === "undefined") {
+      throw new Error("FirstCard not found!");
+    }
+    return firstCard.value === card.value;
+  } else if (cardRow.type === CardRowType.STREET) {
+    const cardsInRow = game.cards.filter(c => cardRow.cardIds.includes(c.id));
+    if (cardsInRow.length === 0) {
+      return false;
+    }
+    const newRow = [...cardsInRow, card];
+    newRow.sort((a, b) => a.value - b.value);
+    for (let i = 0; i < newRow.length - 1; i++) {
+      const curr = newRow[i];
+      const next = newRow[i + 1];
+      if (curr.value + 1 !== next.value) {
+        return false;
+      }
+    }
+  }
+  return true;
 }

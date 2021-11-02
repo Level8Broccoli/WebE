@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client';
 import { InjectionKey } from 'vue';
 import { createStore, Store } from 'vuex';
-import { Card, CardRow, CardRowType, CardStackOpen, CardStackSecret, CardType, Config, DRAW_PILE_ID, Game, GameRule, GameRules, GameStatus, LevelSystem, PlayerOverviewAggregate } from '../../shared/model/Game';
+import { Card, CardRow, CardRowRequest, CardRowType, CardStackOpen, CardStackSecret, CardType, Config, DRAW_PILE_ID, Game, GameRule, GameRules, GameStatus, LevelSystem, PlayerOverviewAggregate } from '../../shared/model/Game';
 import { PrivatePlayer, PublicPlayer } from '../../shared/model/Player';
 import { ChatResponse } from '../../shared/model/ResponseTypes';
 import { i18n, Language } from '../i18n/i18n';
@@ -18,7 +18,7 @@ export interface State {
     activeGameId: string,
     tempCardIdForPlay: string,
     tempCardsForFulfillment: string[],
-    cardRowsForFulfillment: CardRow[],
+    cardRowsForFulfillment: CardRowRequest[],
     errorLog: string[]
 }
 
@@ -332,6 +332,7 @@ export const store = createStore<State>({
         drawCardFromDrawPile() { /* handled by WebSocketPlugin */ },
         drawCard() { /* handled by WebSocketPlugin */ },
         finishFulfillment() { /* handled by WebSocketPlugin */ },
+        playCard() { /* handled by WebSocketPlugin */ },
         resetState(state) {
             state.player = {
                 name: "",

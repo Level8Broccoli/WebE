@@ -1,6 +1,6 @@
 import { Socket } from "socket.io-client";
 import { Store } from "vuex";
-import { ChatRequest, CreateGameRequest, DeleteGameRequest, DiscardCardRequest, DrawCardRequest, EditPlayerNameRequest, FinishFulfillmentRequest, JoinGameRequest, LeaveGameRequest, LogoutRequest, RegisterExistingPlayerRequest, RegisterPlayerRequest, SkipLevelFulfillStepRequest, SkipPlayCardsStepRequest, StartGameRequest } from "../../shared/model/RequestTypes";
+import { ChatRequest, CreateGameRequest, DeleteGameRequest, DiscardCardRequest, DrawCardRequest, EditPlayerNameRequest, FinishFulfillmentRequest, JoinGameRequest, LeaveGameRequest, LogoutRequest, PlayCardRequest, RegisterExistingPlayerRequest, RegisterPlayerRequest, SkipLevelFulfillStepRequest, SkipPlayCardsStepRequest, StartGameRequest } from "../../shared/model/RequestTypes";
 import { ChatResponse, CreateGameResponse, DeleteGameResponse, EditPlayerNameResponse, ErrorResponse, JoinGameResponse, LeaveGameResponse, LogoutResponse, RegisterExistingPlayerResponse, RegisterPlayerResponse, StartGameResponse, UpdateGameBoardResponse, UpdateGameListResponse, UpdatePlayerListResponse } from "../../shared/model/ResponseTypes";
 import { State } from "./store";
 
@@ -154,6 +154,11 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
         store.commit("addToErrorLog", res.status);
     })
 
+    socket.on("playCard", (res: ErrorResponse) => {
+        console.error(res.status);
+        store.commit("addToErrorLog", res.status);
+    })
+
     socket.on("finishFulfillment", (res: UpdateGameBoardResponse | ErrorResponse) => {
         if ("gameId" in res) {
             store.commit("abortFulfillment");
@@ -272,6 +277,16 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
                 player: store.state.player,
             }
             socket.emit("skipPlayCardsStep", payload);
+        }
+
+        if (mutation.type === "playCard") {
+            const payload: PlayCardRequest = {
+                player: store.state.player,
+                gameId: store.state.activeGameId,
+                cardId: store.state.tempCardIdForPlay,
+                cardRowId: mutation.payload,
+            }
+            socket.emit("playCard", payload);
         }
 
         if (mutation.type === "finishFulfillment") {

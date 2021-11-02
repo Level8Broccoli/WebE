@@ -13,6 +13,7 @@ import {
   JoinGameRequest,
   LeaveGameRequest,
   LogoutRequest,
+  PlayCardRequest,
   RegisterExistingPlayerRequest,
   RegisterPlayerRequest,
   SkipLevelFulfillStepRequest,
@@ -34,8 +35,11 @@ import {
 import { ServerState } from "../../shared/model/ServerState";
 import {
   discardCard, drawCardFromPile, getAllGamesForPlayer,
+  getCardRow,
   getGame, getPile, hasAlreadyFulfilledLevel, initGameState, initialCardSet, isCardOwner,
+  isPlayValid,
   markPlayerLevelFulfilled,
+  moveCardFromHandToBoard,
   moveCardsFromHandToBoard,
   nextGameStep,
   nextPlayer, pileExists, startGameState
@@ -591,6 +595,52 @@ export class Api {
       markPlayerLevelFulfilled(game.state, request.player.id);
 
       nextGameStep(game, GameStep.PLAY);
+
+      const response: UpdateGameBoardResponse = {
+        status: StatusCode.OK,
+        timestamp: DateTime.now(),
+        gameId: request.gameId,
+      };
+
+      resolve(response);
+    })
+  }
+
+  playCard(request: PlayCardRequest): Promise<UpdateGameBoardResponse> {
+    return new Promise((resolve, reject) => {
+
+      // [Server] Validation (playerId + Secret, player is on move? -> Errorfeedback
+      if (!authenticatePlayer(this._serverState.players, request.player)) {
+        reject(new Error(StatusCode.PLAYER_INVALID));
+      }
+
+      if (!gameExists(this._serverState.games, request.gameId)) {
+        reject(new Error(StatusCode.GAME_NOT_EXISTS));
+      }
+
+      const game = getGame(this._serverState.games, request.gameId);
+
+      if (!(game.state.activePlayerId === request.player.id)) {
+        reject(new Error(StatusCode.NOT_ACTIVE_PLAYER));
+      }
+
+      if (
+        !isCardOwner(
+          game,
+          request.player.id,
+          request.cardId
+        )
+      ) {
+        reject(new Error(StatusCode.PLAYER_NOT_CARD_OWNER));
+      }
+
+      if (!(isPlayValid(game, request.cardId, request.cardRowId))) {
+        reject(new Error(StatusCode.NOT_VALID_PLAY_OF_CARD));
+      }
+
+      const cardRow = getCardRow(game.state.board, request.cardRowId);
+
+      moveCardFromHandToBoard(game, request.player.id, request.cardId, cardRow);
 
       const response: UpdateGameBoardResponse = {
         status: StatusCode.OK,

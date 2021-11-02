@@ -11,6 +11,7 @@ import {
   JoinGameRequest,
   LeaveGameRequest,
   LogoutRequest,
+  PlayCardRequest,
   RegisterExistingPlayerRequest,
   RegisterPlayerRequest,
   SkipLevelFulfillStepRequest,
@@ -248,6 +249,20 @@ io.on("connection", (socket) => {
           status: error.message,
         };
         socket.emit("skipPlayCardsStep", response);
+      });
+  })
+
+  socket.on("playCard", (request: PlayCardRequest) => {
+    api
+      .playCard(request)
+      .then((response) => {
+        broadcastUpdateGameState(response.gameId);
+      })
+      .catch((error) => {
+        const response: ErrorResponse = {
+          status: error.message,
+        };
+        socket.emit("playCard", response);
       });
   })
 

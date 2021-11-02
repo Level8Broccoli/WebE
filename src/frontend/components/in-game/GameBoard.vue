@@ -1,7 +1,7 @@
 <template>
   <div>
     <ul role="list">
-      <li v-for="(row, i) in cardRows" :key="i">
+      <li v-for="row in cardRows" :key="row.id">
         <GameBoardRow :row="row" />
       </li>
     </ul>

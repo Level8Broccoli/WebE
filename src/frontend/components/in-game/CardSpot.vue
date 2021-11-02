@@ -2,7 +2,7 @@
     <div
         :class="'card spot ' + (props.outOfRange ? 'out-of-range' : isValidPlay ? 'interactive' : '')"
         v-on="isValidPlay ? { click: playCard } : {}"
-    >{{ isValidPlay ? "valid" : "not-valid" }}</div>
+    ></div>
 </template>
 
 <script setup lang="ts">
@@ -18,6 +18,7 @@ type Props = {
     cardRowType: CardRowType;
     spotForValue?: number;
     spotForColor?: string;
+    cardRowId: string
 }
 const props = withDefaults(defineProps<Props>(), {
     outOfRange: false,
@@ -47,7 +48,8 @@ const isValidPlay = computed(() => {
 });
 
 const playCard = () => {
-    store.commit("playCard", {})
+    store.commit("playCard", props.cardRowId)
+    store.commit("abordPlayCardStep")
 }
 </script>
 

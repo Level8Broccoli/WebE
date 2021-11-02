@@ -86,7 +86,13 @@ export enum CardRowType {
   SAME_COLOR = "SAME_COLOR"
 };
 
+export type CardRowRequest = {
+  type: CardRowType;
+  cardIds: string[];
+}
+
 export type CardRow = {
+  id: string;
   type: CardRowType;
   cardIds: string[];
 }
