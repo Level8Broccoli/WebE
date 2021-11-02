@@ -1,20 +1,54 @@
 <template>
-    <div :class="'card spot ' + (props.outOfRange ? 'out-of-range' : '')"></div>
+    <div
+        :class="'card spot ' + (props.outOfRange ? 'out-of-range' : isValidPlay ? 'interactive' : '')"
+        v-on="isValidPlay ? { click: playCard } : {}"
+    >{{ isValidPlay ? "valid" : "not-valid" }}</div>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ComputedRef } from "vue";
 import { useStore } from "vuex";
+import { Card, CardRowType } from "../../../shared/model/Game";
 import { key } from "../../store/store";
 
+const store = useStore(key);
+
 type Props = {
-    outOfRange?: boolean
+    outOfRange?: boolean;
+    cardRowType: CardRowType;
+    spotForValue?: number;
+    spotForColor?: string;
 }
 const props = withDefaults(defineProps<Props>(), {
-    outOfRange: false
+    outOfRange: false,
+    spotForValue: -1,
+    spotForColor: "",
 })
 
+const cardSelected: ComputedRef<Card> = computed(() => {
+    const id = store.state.tempCardIdForPlay;
+    return store.getters.getCardById(id);
+});
 
+const isValidPlay = computed(() => {
+    if (cardSelected.value.id === "CARD-NOT-FOUND") {
+        return false;
+    }
+    if (props.cardRowType === CardRowType.STREET && props.spotForValue === cardSelected.value.value) {
+        return true;
+    }
+    if (props.cardRowType === CardRowType.SAME_COLOR && props.spotForColor === cardSelected.value.color) {
+        return true;
+    }
+    if (props.cardRowType === CardRowType.SAME_NUMBER && props.spotForValue === cardSelected.value.value) {
+        return true;
+    }
+    return false;
+});
+
+const playCard = () => {
+    store.commit("playCard", {})
+}
 </script>
 
 <style scoped>
