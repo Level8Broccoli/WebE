@@ -4,9 +4,9 @@ Guten Tag Herr Zimmermann
 
 Hier finden Sie unsere Abgabe zum Meilenstein 3 (WebE):
 
-- Release: https://github.com/Level8Broccoli/WebE/releases/tag/Milestone3
-- Kanban Board: https://github.com/Level8Broccoli/WebE/projects/1
-- Das Spiel kann bereits unter folgender URL ausprobiert werden: https://game.lvl8.io/
+- Release: [https://github.com/Level8Broccoli/WebE/releases/tag/Milestone3](https://github.com/Level8Broccoli/WebE/releases/tag/Milestone3)
+- Kanban Board: [https://github.com/Level8Broccoli/WebE/projects/1](https://github.com/Level8Broccoli/WebE/projects/1)
+- Das Spiel kann bereits unter folgender URL ausprobiert werden: [https://game.lvl8.io/](https://game.lvl8.io/)
 
 ## Release notes
 
@@ -22,7 +22,7 @@ Bereiten Sie den 3. Meilenstein gemäss der nachfolgender Beschreibung vor.
 - Komplette Implementierung des Protokolls.
 
   - Wurde an Entwurf Server angepasst
-  - https://github.com/Level8Broccoli/WebE/blob/main/_dokumentation/architekturdokumentation.md#5-server-client-protokoll
+  - [https://github.com/Level8Broccoli/WebE/blob/main/_dokumentation/architekturdokumentation.md#5-server-client-protokoll](https://github.com/Level8Broccoli/WebE/blob/main/_dokumentation/architekturdokumentation.md#5-server-client-protokoll)
   - Vervollständigung in der Dokumentation erfolgt in Meilenstein 4.
 
 - Das Spiel muss vollständig realisiert sein (ohne vollständiges GUI und Regelüberprüfung).
