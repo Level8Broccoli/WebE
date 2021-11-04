@@ -13,11 +13,17 @@ Hier finden Sie unsere Abgabe zum Meilenstein 3 (WebE):
 Bereiten Sie den 3. Meilenstein gemäss der nachfolgender Beschreibung vor.
 
 - Verwaltung Status des Spiels.
-  - TBD
+
+  - Status eines Spiels wird auf dem Server verwaltet. Er ist der Single Point of Truth.
+  - Der Server kann verschiedene Spiele parallel verwalten.
+  - Clientseitig wird Vuex für eine einfache Statusverwaltung verwendet. Dies ermöglicht die Daten einfach unter den einzelnen Komponenten zu verteilen.
+  - Aktuell wird noch nichts persistiert.
+
 - Komplette Implementierung des Protokolls.
 
   - Wurde an Entwurf Server angepasst
   - https://github.com/Level8Broccoli/WebE/blob/main/_dokumentation/architekturdokumentation.md#5-server-client-protokoll
+  - Vervollständigung in der Dokumentation erfolgt in Meilenstein 4.
 
 - Das Spiel muss vollständig realisiert sein (ohne vollständiges GUI und Regelüberprüfung).
   - Das Protokoll, GUI und Serverlogik sind für die Spieldurchführung finalisiert.
@@ -45,3 +51,7 @@ Bereiten Sie den 3. Meilenstein gemäss der nachfolgender Beschreibung vor.
     - Lobby mit Chatfunktion
     - Regelansicht
     - Spielmaske mit Chatfunktion
+
+- Diverses:
+  - Falls die Verbindung verloren geht (z.B. Browserrefresh, Internetunterbruch), wird der Benutzer wieder in die gleiche Session angemeldet und hat den gleichen Screen vor sich, wie vorher.
+  - Internationalisierung eingebaut (Deutsch / Englisch)
