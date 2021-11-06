@@ -1,5 +1,5 @@
 import { ChatMessage } from "../../shared/model/Chat";
-import { CardRow, CardRowRequest, CardRowType, DRAW_PILE_ID, Game, GameRules } from "../../shared/model/Game";
+import { CardRow, CardRowRequest, CardRowType, DRAW_PILE_ID, Game, GameRules, GameState } from "../../shared/model/Game";
 import { FullPlayer, PrivatePlayer, PublicPlayer } from "../../shared/model/Player";
 import { ServerState } from "../../shared/model/ServerState";
 
@@ -32,10 +32,10 @@ export function registerExistingPlayer(playerIdList: FullPlayer[], player: Priva
 }
 
 export function editPlayerName(
-  playerIdList: FullPlayer[],
+  serverState: ServerState,
   player: PrivatePlayer
 ) {
-  playerIdList = playerIdList.map((p) =>
+  serverState.players = serverState.players.map((p) =>
     p.id === player.id && p.secret === player.secret
       ? { ...p, name: player.name }
       : p

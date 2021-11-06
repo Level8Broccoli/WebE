@@ -210,7 +210,7 @@ export class Api {
       }
 
       // [Server] Edit player name
-      editPlayerName(this._serverState.players, request.player);
+      editPlayerName(this._serverState, request.player);
 
       // [Server] send response of type: registerPlayer
       const response: EditPlayerNameResponse = {
