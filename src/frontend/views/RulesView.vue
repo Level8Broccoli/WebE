@@ -9,8 +9,8 @@
       type="application/pdf"
       :data="
         isEnglish
-          ? '/frontend/public/game_rules_en.pdf'
-          : '/frontend/public/game_rules_de.pdf'
+          ? '/game_rules_en.pdf'
+          : '/game_rules_de.pdf'
       "
     >
       <p>{{ i18n.pdfErrorMessage }}</p>
