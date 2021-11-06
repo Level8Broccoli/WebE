@@ -1,6 +1,11 @@
 import { DateTime } from "luxon";
 import { StatusCode } from "../../shared/api/StatusCode";
-import { Game, GameStatus, GameStep, LevelSystem } from "../../shared/model/Game";
+import {
+  Game,
+  GameStatus,
+  GameStep,
+  LevelSystem,
+} from "../../shared/model/Game";
 import { FullPlayer, PublicPlayer } from "../../shared/model/Player";
 import {
   ChatRequest,
@@ -18,36 +23,65 @@ import {
   RegisterPlayerRequest,
   SkipLevelFulfillStepRequest,
   SkipPlayCardsStepRequest,
-  StartGameRequest
+  StartGameRequest,
 } from "../../shared/model/RequestTypes";
 import {
   ChatResponse,
   CreateGameResponse,
-  DeleteGameResponse, EditPlayerNameResponse,
+  DeleteGameResponse,
+  EditPlayerNameResponse,
   JoinGameResponse,
   LeaveGameResponse,
   LogoutResponse,
   RegisterExistingPlayerResponse,
   RegisterPlayerResponse,
   StartGameResponse,
-  UpdateGameBoardResponse
+  UpdateGameBoardResponse,
 } from "../../shared/model/ResponseTypes";
 import { ServerState } from "../../shared/model/ServerState";
 import {
-  discardCard, drawCardFromPile, getAllGamesForPlayer,
+  discardCard,
+  drawCardFromPile,
+  getAllGamesForPlayer,
   getCardRow,
-  getGame, getPile, hasAlreadyFulfilledLevel, initGameState, initialCardSet, isCardOwner,
+  getGame,
+  getPile,
+  hasAlreadyFulfilledLevel,
+  initGameState,
+  initialCardSet,
+  isCardOwner,
   isPlayValid,
   markPlayerLevelFulfilled,
   moveCardFromHandToBoard,
   moveCardsFromHandToBoard,
   nextGameStep,
-  nextPlayer, pileExists, startGameState
+  nextPlayer,
+  pileExists,
+  startGameState,
 } from "../services/GameService";
 import {
-  addChatMessage, authenticatePlayer, createGame,
-  deleteGame, deleteOwnGame, editPlayerName, fillDrawPile, freeSpaceInGame, gameExists, getActiveGameId, getAllRegisteredPlayers, isCreator, isLevelValid, isPlayerCountValid, joinGame,
-  leaveGame, playerInGame, playerToSocketId, registerExistingPlayer, registerPlayer, removePlayerFromJoinedGame, removePlayerFromPlayerList
+  addChatMessage,
+  authenticatePlayer,
+  createGame,
+  deleteGame,
+  deleteOwnGame,
+  editPlayerName,
+  fillDrawPile,
+  freeSpaceInGame,
+  gameExists,
+  getActiveGameId,
+  getAllRegisteredPlayers,
+  isCreator,
+  isLevelValid,
+  isPlayerCountValid,
+  joinGame,
+  leaveGame,
+  playerInGame,
+  playerToSocketId,
+  registerExistingPlayer,
+  registerPlayer,
+  removePlayerFromJoinedGame,
+  removePlayerFromPlayerList,
 } from "../services/ServerStateService";
 import { getSecret, getUUID } from "../services/TokenGeneratorService";
 
@@ -138,7 +172,11 @@ export class Api {
       }
 
       // [Server] Edit player name
-      this._serverState.players = registerExistingPlayer(this._serverState.players, request.player, socketId);
+      this._serverState.players = registerExistingPlayer(
+        this._serverState.players,
+        request.player,
+        socketId
+      );
 
       // [Server] Get all games
       // [Server] and send response of type: registerPlayer
@@ -147,7 +185,10 @@ export class Api {
         timestamp: DateTime.now(),
         player: request.player,
         games: this.getAllGames(request.player.id),
-        activeGameId: getActiveGameId(this._serverState.games, request.player.id),
+        activeGameId: getActiveGameId(
+          this._serverState.games,
+          request.player.id
+        ),
       };
 
       resolve(response);
@@ -170,7 +211,6 @@ export class Api {
 
       // [Server] Edit player name
       editPlayerName(this._serverState.players, request.player);
-
 
       // [Server] send response of type: registerPlayer
       const response: EditPlayerNameResponse = {
@@ -391,15 +431,13 @@ export class Api {
         status: StatusCode.OK,
         timestamp: DateTime.now(),
         gameId: request.gameId,
-      }
+      };
 
       resolve(response);
     });
   }
 
-  drawCard(
-    request: DrawCardRequest
-  ): Promise<UpdateGameBoardResponse> {
+  drawCard(request: DrawCardRequest): Promise<UpdateGameBoardResponse> {
     return new Promise((resolve, reject) => {
       // [Server] Validation (playerId + Secret, player is on move? -> Errorfeedback
       if (!authenticatePlayer(this._serverState.players, request.player)) {
@@ -428,7 +466,9 @@ export class Api {
 
       drawCardFromPile(game, request.pileId, request.player.id);
 
-      if (hasAlreadyFulfilledLevel(game.state.playerLevels, request.player.id)) {
+      if (
+        hasAlreadyFulfilledLevel(game.state.playerLevels, request.player.id)
+      ) {
         nextGameStep(game, GameStep.PLAY);
       } else {
         nextGameStep(game, GameStep.FULFILL_LEVEL);
@@ -461,21 +501,11 @@ export class Api {
         reject(new Error(StatusCode.NOT_ACTIVE_PLAYER));
       }
 
-      if (
-        !isCardOwner(
-          game,
-          request.player.id,
-          request.cardId
-        )
-      ) {
+      if (!isCardOwner(game, request.player.id, request.cardId)) {
         reject(new Error(StatusCode.PLAYER_NOT_CARD_OWNER));
       }
 
-      discardCard(
-        game,
-        request.player.id,
-        request.cardId
-      );
+      discardCard(game, request.player.id, request.cardId);
 
       nextPlayer(game);
 
@@ -489,10 +519,11 @@ export class Api {
 
       resolve(response);
     });
-
   }
 
-  skipLevelFulfillStep(request: SkipLevelFulfillStepRequest): Promise<UpdateGameBoardResponse> {
+  skipLevelFulfillStep(
+    request: SkipLevelFulfillStepRequest
+  ): Promise<UpdateGameBoardResponse> {
     return new Promise((resolve, reject) => {
       // [Server] Validation (playerId + Secret, player is on move? -> Errorfeedback
       if (!authenticatePlayer(this._serverState.players, request.player)) {
@@ -509,7 +540,9 @@ export class Api {
         reject(new Error(StatusCode.NOT_ACTIVE_PLAYER));
       }
 
-      if (hasAlreadyFulfilledLevel(game.state.playerLevels, request.player.id)) {
+      if (
+        hasAlreadyFulfilledLevel(game.state.playerLevels, request.player.id)
+      ) {
         nextGameStep(game, GameStep.PLAY);
       } else {
         nextGameStep(game, GameStep.DISCARD);
@@ -522,10 +555,12 @@ export class Api {
       };
 
       resolve(response);
-    })
+    });
   }
 
-  skipPlayCardsStep(request: SkipPlayCardsStepRequest): Promise<UpdateGameBoardResponse> {
+  skipPlayCardsStep(
+    request: SkipPlayCardsStepRequest
+  ): Promise<UpdateGameBoardResponse> {
     return new Promise((resolve, reject) => {
       // [Server] Validation (playerId + Secret, player is on move? -> Errorfeedback
       if (!authenticatePlayer(this._serverState.players, request.player)) {
@@ -551,12 +586,13 @@ export class Api {
       };
 
       resolve(response);
-    })
+    });
   }
 
-  finishFulfillment(request: FinishFulfillmentRequest): Promise<UpdateGameBoardResponse> {
+  finishFulfillment(
+    request: FinishFulfillmentRequest
+  ): Promise<UpdateGameBoardResponse> {
     return new Promise((resolve, reject) => {
-
       // [Server] Validation (playerId + Secret, player is on move? -> Errorfeedback
       if (!authenticatePlayer(this._serverState.players, request.player)) {
         reject(new Error(StatusCode.PLAYER_INVALID));
@@ -573,20 +609,14 @@ export class Api {
       }
 
       const cardIds: string[][] = [];
-      request.level.forEach(cr => cardIds.push(cr.cardIds));
+      request.level.forEach((cr) => cardIds.push(cr.cardIds));
       for (const cardId of cardIds.flat()) {
-        if (
-          !isCardOwner(
-            game,
-            request.player.id,
-            cardId
-          )
-        ) {
+        if (!isCardOwner(game, request.player.id, cardId)) {
           reject(new Error(StatusCode.PLAYER_NOT_CARD_OWNER));
         }
       }
 
-      if (!(isLevelValid(game, request.player.id, request.level))) {
+      if (!isLevelValid(game, request.player.id, request.level)) {
         reject(new Error(StatusCode.NOT_VALID_CARDS_FOR_LEVEL));
       }
 
@@ -603,12 +633,11 @@ export class Api {
       };
 
       resolve(response);
-    })
+    });
   }
 
   playCard(request: PlayCardRequest): Promise<UpdateGameBoardResponse> {
     return new Promise((resolve, reject) => {
-
       // [Server] Validation (playerId + Secret, player is on move? -> Errorfeedback
       if (!authenticatePlayer(this._serverState.players, request.player)) {
         reject(new Error(StatusCode.PLAYER_INVALID));
@@ -624,17 +653,11 @@ export class Api {
         reject(new Error(StatusCode.NOT_ACTIVE_PLAYER));
       }
 
-      if (
-        !isCardOwner(
-          game,
-          request.player.id,
-          request.cardId
-        )
-      ) {
+      if (!isCardOwner(game, request.player.id, request.cardId)) {
         reject(new Error(StatusCode.PLAYER_NOT_CARD_OWNER));
       }
 
-      if (!(isPlayValid(game, request.cardId, request.cardRowId))) {
+      if (!isPlayValid(game, request.cardId, request.cardRowId)) {
         reject(new Error(StatusCode.NOT_VALID_PLAY_OF_CARD));
       }
 
@@ -649,7 +672,7 @@ export class Api {
       };
 
       resolve(response);
-    })
+    });
   }
 
   getSocketId(playerId: string): string {
@@ -661,11 +684,15 @@ export class Api {
     return game.players;
   }
 
+  getPlayerIdListGlobal(): string[] {
+    return this._serverState.players.map((p) => p.id);
+  }
+
   getAllPlayers(): PublicPlayer[] {
     return getAllRegisteredPlayers(this._serverState.players);
   }
 
   getAllGames(playerId?: string): Game[] {
-    return getAllGamesForPlayer(this._serverState.games, playerId)
+    return getAllGamesForPlayer(this._serverState.games, playerId);
   }
 }

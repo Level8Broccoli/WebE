@@ -16,7 +16,7 @@ import {
   RegisterPlayerRequest,
   SkipLevelFulfillStepRequest,
   SkipPlayCardsStepRequest,
-  StartGameRequest
+  StartGameRequest,
 } from "./shared/model/RequestTypes";
 import { ErrorResponse } from "./shared/model/ResponseTypes";
 
@@ -58,7 +58,7 @@ io.on("connection", (socket) => {
       .then((response) => {
         socket.emit("logout", response);
         io.emit("updatePlayerList", { playerList: api.getAllPlayers() });
-        io.emit("updateGameList", { gameList: api.getAllGames() });
+        broadcastUpdateGlobalGameState();
       })
       .catch((error) => {
         const response: ErrorResponse = {
@@ -68,24 +68,27 @@ io.on("connection", (socket) => {
       });
   });
 
-  socket.on("registerExistingPlayer", (request: RegisterExistingPlayerRequest) => {
-    api
-      .registerExistingPlayer(request, socket.id)
-      .then((response) => {
-        socket.emit("registerExistingPlayer", response);
-        io.emit("updatePlayerList", { playerList: api.getAllPlayers() });
-        if (response.activeGameId.length > 0) {
-          socket.join(response.activeGameId);
-        }
-        console.log(`>>> Registered Existing Player ${response.player.id}`);
-      })
-      .catch((error) => {
-        const response: ErrorResponse = {
-          status: error.message,
-        };
-        socket.emit("registerExistingPlayer", response);
-      });
-  });
+  socket.on(
+    "registerExistingPlayer",
+    (request: RegisterExistingPlayerRequest) => {
+      api
+        .registerExistingPlayer(request, socket.id)
+        .then((response) => {
+          socket.emit("registerExistingPlayer", response);
+          io.emit("updatePlayerList", { playerList: api.getAllPlayers() });
+          if (response.activeGameId.length > 0) {
+            socket.join(response.activeGameId);
+          }
+          console.log(`>>> Registered Existing Player ${response.player.id}`);
+        })
+        .catch((error) => {
+          const response: ErrorResponse = {
+            status: error.message,
+          };
+          socket.emit("registerExistingPlayer", response);
+        });
+    }
+  );
 
   socket.on("editPlayerName", (request: EditPlayerNameRequest) => {
     api
@@ -108,7 +111,7 @@ io.on("connection", (socket) => {
       .then((response) => {
         socket.join(response.game.id);
         io.emit("createGame", response);
-        io.emit("updateGameList", { gameList: api.getAllGames() });
+        broadcastUpdateGlobalGameState();
       })
       .catch((error) => {
         const response: ErrorResponse = {
@@ -124,7 +127,7 @@ io.on("connection", (socket) => {
       .then((response) => {
         socket.leave(response.gameId);
         io.emit("deleteGame", response);
-        io.emit("updateGameList", { gameList: api.getAllGames() });
+        broadcastUpdateGlobalGameState();
       })
       .catch((error) => {
         const response: ErrorResponse = {
@@ -140,7 +143,7 @@ io.on("connection", (socket) => {
       .then((response) => {
         socket.join(response.game.id);
         io.emit("joinGame", response);
-        io.emit("updateGameList", { gameList: api.getAllGames() });
+        broadcastUpdateGlobalGameState();
       })
       .catch((error) => {
         const response: ErrorResponse = {
@@ -156,7 +159,7 @@ io.on("connection", (socket) => {
       .then((response) => {
         socket.leave(response.gameId);
         io.emit("leaveGame", response);
-        io.emit("updateGameList", { gameList: api.getAllGames() });
+        broadcastUpdateGlobalGameState();
       })
       .catch((error) => {
         const response: ErrorResponse = {
@@ -196,7 +199,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("drawCard", (request: DrawCardRequest) => {
-
     api
       .drawCard(request)
       .then((response) => {
@@ -236,7 +238,7 @@ io.on("connection", (socket) => {
         };
         socket.emit("skipLevelFulfillStep", response);
       });
-  })
+  });
 
   socket.on("skipPlayCardsStep", (request: SkipPlayCardsStepRequest) => {
     api
@@ -250,7 +252,7 @@ io.on("connection", (socket) => {
         };
         socket.emit("skipPlayCardsStep", response);
       });
-  })
+  });
 
   socket.on("playCard", (request: PlayCardRequest) => {
     api
@@ -265,7 +267,7 @@ io.on("connection", (socket) => {
         };
         socket.emit("playCard", response);
       });
-  })
+  });
 
   socket.on("finishFulfillment", (request: FinishFulfillmentRequest) => {
     api
@@ -280,17 +282,28 @@ io.on("connection", (socket) => {
         };
         socket.emit("finishFulfillment", response);
       });
-  })
+  });
 
   socket.on("disconnect", () => {
     console.log(`Disconnected ${socket.id}`);
   });
 });
 
+function broadcastUpdateGlobalGameState() {
+  const playerIdList = api.getPlayerIdListGlobal();
+  broadcastUpdateGameStateToPlayers(playerIdList);
+}
+
 function broadcastUpdateGameState(gameId: string) {
   const playerIdList = api.getPlayerIdListFromGame(gameId);
+  broadcastUpdateGameStateToPlayers(playerIdList);
+}
+
+function broadcastUpdateGameStateToPlayers(playerIdList: string[]) {
   for (const playerId of playerIdList) {
     const socketId = api.getSocketId(playerId);
-    io.to(socketId).emit("updateGameList", { gameList: api.getAllGames(playerId) });
+    io.to(socketId).emit("updateGameList", {
+      gameList: api.getAllGames(playerId),
+    });
   }
 }
