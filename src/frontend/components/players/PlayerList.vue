@@ -23,9 +23,7 @@ const playerCount = computed(() => game.value.config.maxPlayerCount);
 const playerList = computed(() => game.value.players);
 const creatorId = computed(() => game.value.creatorId);
 
-const emptySlots = computed(
-  () => playerCount.value - playerList.value.length
-);
+const emptySlots = computed(() => playerCount.value - playerList.value.length);
 </script>
 
 <style scoped>

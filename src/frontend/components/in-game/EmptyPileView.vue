@@ -1,4 +1,3 @@
-
 <template>
   <div class="empty">
     <span>{{ i18n.emptyCardSlot }}</span>

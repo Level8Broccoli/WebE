@@ -23,9 +23,7 @@
 <script setup lang="ts">
 import { computed, ComputedRef } from "vue";
 import { useStore } from "vuex";
-import {
-PlayerOverviewAggregate
-} from "../../../shared/model/Game";
+import { PlayerOverviewAggregate } from "../../../shared/model/Game";
 import { key } from "../../store/store";
 import BackPileView from "./BackPileView.vue";
 import CardView from "./CardView.vue";
@@ -33,7 +31,7 @@ import EmptyPileView from "./EmptyPileView.vue";
 
 type Props = {
   player: PlayerOverviewAggregate;
-}
+};
 const props = defineProps<Props>();
 
 const store = useStore(key);
@@ -48,7 +46,7 @@ const maxLevelCount = computed(() => props.player.maxLevelCount);
 const handCount = computed(() => props.player.handCardCount);
 const i18n = computed(() => store.getters.i18n);
 
-const currentStep:ComputedRef<string> = computed(() =>
+const currentStep: ComputedRef<string> = computed(() =>
   store.getters.translateCurrentStep(props.player.currentStep)
 );
 const discardPile = computed(() => props.player.discardPile);

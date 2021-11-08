@@ -1,9 +1,11 @@
 <template>
   <div
-    :class="'card card-shadow back' + (canBeDrawn ? ' interactive' : '')"
     v-if="count > 0"
+    :class="'card card-shadow back' + (canBeDrawn ? ' interactive' : '')"
     v-on="canBeDrawn ? { click: drawCard } : {}"
-  >{{ count }}</div>
+  >
+    {{ count }}
+  </div>
   <EmptyPileView v-else />
 </template>
 
@@ -16,15 +18,14 @@ import EmptyPileView from "./EmptyPileView.vue";
 type Props = {
   count?: number;
   isDrawPile?: boolean;
-}
+};
 const props = withDefaults(defineProps<Props>(), {
   count: 0,
-  isDrawPile: false
+  isDrawPile: false,
 });
 const store = useStore(key);
 
 const count = computed(() => props.count);
-const isDrawPile = computed(() => props.isDrawPile);
 
 const canBeDrawn = computed(
   () =>

@@ -1,12 +1,12 @@
 {
-    "compilerOptions": {
-      "target": "es6",
-      "module": "CommonJS",
-      "moduleResolution": "Node",
-      "rootDir": "./",
-      "outDir": "./dist-backend",
-      "esModuleInterop": true,
-      "strict": true,
-    },
-    "exclude": ["frontend", "vite*"]
-  }
+  "compilerOptions": {
+    "target": "es6",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "rootDir": "./",
+    "outDir": "./dist-backend",
+    "esModuleInterop": true,
+    "strict": true
+  },
+  "exclude": ["frontend", "vite*"]
+}

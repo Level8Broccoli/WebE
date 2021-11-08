@@ -4,7 +4,9 @@
       v-for="(level, i) in levels"
       :key="i"
       :class="i === myCurrentLevel ? 'current-level' : ''"
-    >{{ level }}</li>
+    >
+      {{ level }}
+    </li>
   </ul>
 </template>
 
@@ -14,8 +16,12 @@ import { useStore } from "vuex";
 import { key } from "../../store/store";
 
 const store = useStore(key);
-const levels: ComputedRef<string[]> = computed(() => store.getters.getTranslatedLevels);
-const myCurrentLevel: ComputedRef<number> = computed(() => store.getters.myCurrentLevel);
+const levels: ComputedRef<string[]> = computed(
+  () => store.getters.getTranslatedLevels
+);
+const myCurrentLevel: ComputedRef<number> = computed(
+  () => store.getters.myCurrentLevel
+);
 </script>
 
 <style scoped>

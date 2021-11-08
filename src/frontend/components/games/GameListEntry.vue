@@ -1,4 +1,3 @@
-
 <template>
   <div :class="joinButton ? 'entry' : 'entry no-join-button'">
     <div>

@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 import { DateTime } from "luxon";
-import { computed, PropType } from "vue";
+import { computed } from "vue";
 import { useStore } from "vuex";
 import { ChatMessage } from "../../../shared/model/Chat";
 import { Language } from "../../i18n/i18n";
