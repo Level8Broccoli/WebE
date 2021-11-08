@@ -203,7 +203,7 @@ function setupGameLevels(game: Game) {
     GameLevel.LVL8,
   ];
   if (levelSystem === LevelSystem.RANDOM) {
-    levels.sort((a, b) => 0.5 - Math.random());
+    levels.sort(() => 0.5 - Math.random());
   }
   game.levels = levels.slice(0, levelCount);
 

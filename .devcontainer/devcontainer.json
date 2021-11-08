@@ -13,6 +13,7 @@
 	"extensions": [
 		"ritwickdey.liveserver",
 		"esbenp.prettier-vscode",
-		"johnsoncodehk.volar"
+		"johnsoncodehk.volar",
+		"dbaeumer.vscode-eslint"
 	],
 }

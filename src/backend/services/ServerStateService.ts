@@ -69,7 +69,7 @@ export function fillDrawPile(game: Game) {
   const cards = game.cards;
   game.state.piles.push({
     id: DRAW_PILE_ID,
-    cardIds: cards.sort((a, b) => 0.5 - Math.random()).map((c) => c.id),
+    cardIds: cards.sort(() => 0.5 - Math.random()).map((c) => c.id),
   });
 }
 

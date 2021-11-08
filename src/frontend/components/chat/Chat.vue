@@ -19,7 +19,6 @@ import ChatInput from "./ChatInput.vue";
 import ChatMessage from "./ChatMessage.vue";
 
 const store = useStore(key);
-const i18n = computed(() => store.getters.i18n);
 const game: ComputedRef<Game> = computed(() => store.getters.getActiveGame);
 const messageList = computed(() =>
   [...game.value.chat].sort((a, b) => {

@@ -1,7 +1,7 @@
 <template>
   <div
-    :class="'card card-shadow back' + (canBeDrawn ? ' interactive' : '')"
     v-if="count > 0"
+    :class="'card card-shadow back' + (canBeDrawn ? ' interactive' : '')"
     v-on="canBeDrawn ? { click: drawCard } : {}"
   >
     {{ count }}
@@ -26,7 +26,6 @@ const props = withDefaults(defineProps<Props>(), {
 const store = useStore(key);
 
 const count = computed(() => props.count);
-const isDrawPile = computed(() => props.isDrawPile);
 
 const canBeDrawn = computed(
   () =>

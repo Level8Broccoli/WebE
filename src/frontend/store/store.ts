@@ -25,8 +25,8 @@ import { WebSocketPlugin } from "./WebSocketPlugin";
 
 export interface State {
   language: Language;
-  connection: Boolean;
-  showRules: Boolean;
+  connection: boolean;
+  showRules: boolean;
   player: PrivatePlayer;
   playerList: PublicPlayer[];
   games: Game[];
@@ -453,7 +453,7 @@ export const store = createStore<State>({
     createThirdPartyGame(state, payload: Game) {
       state.games.push(payload);
     },
-    updateConnection(state, value: Boolean) {
+    updateConnection(state, value: boolean) {
       state.connection = value;
     },
     addToErrorLog(state, value: string) {
