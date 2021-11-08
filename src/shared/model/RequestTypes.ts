@@ -1,5 +1,5 @@
+import { CardRowRequest, Config } from "./Game";
 import { PrivatePlayer } from "./Player";
-import { Card, CardRow, CardRowRequest, Config } from "./Game";
 
 export type RegisterPlayerRequest = {
   playerName: string;
@@ -63,22 +63,22 @@ export type DiscardCardRequest = {
 export type SkipLevelFulfillStepRequest = {
   player: PrivatePlayer;
   gameId: string;
-}
+};
 
 export type SkipPlayCardsStepRequest = {
   player: PrivatePlayer;
   gameId: string;
-}
+};
 
 export type FinishFulfillmentRequest = {
   player: PrivatePlayer;
   gameId: string;
   level: CardRowRequest[];
-}
+};
 
 export type PlayCardRequest = {
   player: PrivatePlayer;
   gameId: string;
   cardId: string;
   cardRowId: string;
-}
+};

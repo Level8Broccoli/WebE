@@ -1,8 +1,9 @@
-
 <template>
-  <div :class="
-    isCreator ? 'entry is-creator' : isEmpty ? 'entry is-empty' : 'entry'
-  ">
+  <div
+    :class="
+      isCreator ? 'entry is-creator' : isEmpty ? 'entry is-empty' : 'entry'
+    "
+  >
     <span v-if="isEmpty">{{ i18n.playerPlaceholder }}</span>
     <span v-else>{{ playerName }}</span>
     <span v-if="isCreator">
@@ -20,7 +21,7 @@ type Props = {
   playerId?: string;
   creatorId?: string;
   isEmpty?: boolean;
-}
+};
 const props = withDefaults(defineProps<Props>(), {
   playerId: "",
   creatorId: "",

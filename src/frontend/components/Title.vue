@@ -14,7 +14,6 @@ const store = useStore(key);
 const i18n = computed(() => store.getters.i18n);
 </script>
 
-
 <style scoped>
 header {
   display: grid;

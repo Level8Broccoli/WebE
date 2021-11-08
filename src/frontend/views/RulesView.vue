@@ -7,11 +7,7 @@
       width="100%"
       height="100%"
       type="application/pdf"
-      :data="
-        isEnglish
-          ? '/game_rules_en.pdf'
-          : '/game_rules_de.pdf'
-      "
+      :data="isEnglish ? '/game_rules_en.pdf' : '/game_rules_de.pdf'"
     >
       <p>{{ i18n.pdfErrorMessage }}</p>
     </object>

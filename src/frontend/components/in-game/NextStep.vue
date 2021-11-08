@@ -25,9 +25,7 @@ const currentStep = computed(() =>
   store.getters.translateCurrentStep(store.getters.getCurrentStep)
 );
 const currentStepExplanation: ComputedRef<string> = computed(() =>
-  store.getters.translateCurrentStepExplanation(
-    store.getters.getCurrentStep
-  )
+  store.getters.translateCurrentStepExplanation(store.getters.getCurrentStep)
 );
 const currentPlayerName: ComputedRef<string> = computed(() => {
   const game: Game = store.getters.getActiveGame;

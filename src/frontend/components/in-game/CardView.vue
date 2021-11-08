@@ -1,4 +1,3 @@
-
 <template>
   <div
     :class="
@@ -14,14 +13,14 @@
       canBeDiscarded
         ? { click: discardCard }
         : canBeDrawn
-          ? { click: drawCard }
-          : isInFulfillmentMode
-            ? { click: chooseForFulfillment }
-            : isAlreadySelected
-              ? { click: deselectCard }
-              : canBePlayed
-                ? { click: chooseForPlay }
-                : {}
+        ? { click: drawCard }
+        : isInFulfillmentMode
+        ? { click: chooseForFulfillment }
+        : isAlreadySelected
+        ? { click: deselectCard }
+        : canBePlayed
+        ? { click: chooseForPlay }
+        : {}
     "
   >
     <header class="top">
@@ -50,13 +49,13 @@ type Props = {
   isDiscard?: boolean;
   isInFulfillmentMode?: boolean;
   owner?: string;
-}
+};
 const props = withDefaults(defineProps<Props>(), {
   isHand: false,
   isDiscard: false,
   isInFulfillmentMode: false,
   owner: "",
-})
+});
 const store = useStore(key);
 const canBeDiscarded = computed(
   () =>
@@ -98,7 +97,7 @@ const isAlreadySelected = computed(() => {
 const isAlreadyInFulfillment = computed(() => {
   const prepared = store.state.cardRowsForFulfillment;
   for (const row of prepared) {
-    if (row.cardIds.find(id => id === props.id) !== undefined) {
+    if (row.cardIds.find((id) => id === props.id) !== undefined) {
       return true;
     }
   }
@@ -121,7 +120,7 @@ const card: ComputedRef<Card> = computed(() =>
 );
 const chooseForPlay = () => {
   store.commit("chooseForPlay", { cardId: props.id });
-}
+};
 </script>
 
 <style scoped>

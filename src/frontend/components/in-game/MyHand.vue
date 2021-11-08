@@ -11,26 +11,44 @@
     </button>
     <ul role="list">
       <li v-for="cardId in myHand" :key="cardId">
-        <CardView :id="cardId" :isHand="true" :isInFulfillmentMode="fulfillLevelMode" />
+        <CardView
+          :id="cardId"
+          :isHand="true"
+          :isInFulfillmentMode="fulfillLevelMode"
+        />
       </li>
     </ul>
     <br />
     <button
       v-if="isInLevelFulfillStep && !fulfillLevelMode"
       @click.prevent="startFulfillingLevel"
-    >Level erfüllen</button>
-    <button v-if="fulfillLevelMode" @click.prevent="abortFulfillment">Abbrechen</button>
+    >
+      Level erfüllen
+    </button>
+    <button v-if="fulfillLevelMode" @click.prevent="abortFulfillment">
+      Abbrechen
+    </button>
     <button
       v-if="fulfillLevelMode && valid && !isLastPart"
       @click.prevent="nextFulfillmentPart"
-    >NextStep</button>
+    >
+      NextStep
+    </button>
     <button
       v-if="fulfillLevelMode && valid && isLastPart"
       @click.prevent="finishFulfillment"
-    >Finish Fulfillment</button>
-    <button v-if="fulfillLevelMode && !valid" class="is-disabled">noch nicht valide</button>
-    <button v-if="isInLevelFulfillStep" @click.prevent="skipLevelFulfillStep">Überspringen</button>
-    <button v-if="isInPlayCardStep" @click.prevent="skipPlayCardsStep">Überspringen</button>
+    >
+      Finish Fulfillment
+    </button>
+    <button v-if="fulfillLevelMode && !valid" class="is-disabled">
+      noch nicht valide
+    </button>
+    <button v-if="isInLevelFulfillStep" @click.prevent="skipLevelFulfillStep">
+      Überspringen
+    </button>
+    <button v-if="isInPlayCardStep" @click.prevent="skipPlayCardsStep">
+      Überspringen
+    </button>
   </main>
 </template>
 
@@ -75,8 +93,8 @@ const switchSorting = () => {
     sorting.value === Sorting.NONE
       ? Sorting.COLOR
       : sorting.value === Sorting.COLOR
-        ? Sorting.NUMBER
-        : Sorting.NONE;
+      ? Sorting.NUMBER
+      : Sorting.NONE;
   sorting.value = newValue;
 };
 const currentLevelRules: ComputedRef<GameRule[]> = computed(

@@ -16,5 +16,4 @@ const store = useStore(key);
 const isConnected = computed(() => store.state.connection);
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

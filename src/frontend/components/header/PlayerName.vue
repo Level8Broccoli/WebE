@@ -2,7 +2,9 @@
   <a v-if="!isEdit" href="#" @click.prevent="switchToEdit">{{ playerName }}</a>
   <form v-else>
     <input @input="updatePlayerName" type="text" :value="playerName" />
-    <button @click.prevent="sendUpdate">{{ i18n.buttonUpdatePlayerName }}</button>
+    <button @click.prevent="sendUpdate">
+      {{ i18n.buttonUpdatePlayerName }}
+    </button>
   </form>
 </template>
 

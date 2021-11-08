@@ -1,3 +1,3 @@
 interface ImportMetaEnv {
-    VITE_WS_SERVER?: string;
+  VITE_WS_SERVER?: string;
 }

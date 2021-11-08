@@ -24,9 +24,7 @@ import PlayerName from "../header/PlayerName.vue";
 import RulesSwitcher from "../header/RulesSwitcher.vue";
 
 const store = useStore(key);
-const playerIsRegistered = computed(
-  () => store.state.player.secret.length > 0
-);
+const playerIsRegistered = computed(() => store.state.player.secret.length > 0);
 </script>
 
 <style scoped>
