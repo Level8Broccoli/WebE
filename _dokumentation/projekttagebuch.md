@@ -17,6 +17,18 @@ Folgende Anforderungen sind an das Projekttagebuch gestellt:
 > - Auch zum Projekttagebuch werden keine Vorgaben zur Umsetzung gemacht. Dies kann
 >   ebenfalls innerhalb der Gruppe festgelegt werden.
 
+## Sitzung 08.11.2021
+
+- Neue Iteration geplant und Tasks zugewiesen
+
+- Nächste Schritte:
+
+  - Oliver: Finalisieren der Regeln, i18n fertig implementieren
+  - Thierry: Datenpesistenz einbauen, Leaderboard implementieren
+  - Beide: UI verbessern
+
+- Bisherige Probleme / Verzögerungen: _Keine_
+
 ## Sitzung 16.10.2021
 
 - Oliver hat Spiel mit Kollegen gespielt
