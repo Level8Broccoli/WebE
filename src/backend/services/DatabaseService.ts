@@ -1,5 +1,7 @@
 import * as mongoDB from "mongodb";
 import { Game } from "../../shared/model/Game";
+import { LeaderboardEntry } from "../../shared/model/Leaderboard";
+import { PublicPlayer } from "../../shared/model/Player";
 
 const DB_CONN_STRING = "mongodb+srv://level8:level8@ffhs.ajxx1.mongodb.net";
 const DB_NAME = "level8";
@@ -13,7 +15,7 @@ async function connectDb() {
   return client.db(DB_NAME!);
 }
 
-export async function persistGame(game: Game, winnerId: string) {
+export async function persistGame(game: Game, winner: PublicPlayer) {
   const db = connectDb();
   const gamesCollection: mongoDB.Collection = (await db).collection(
     GAMES_COLLECTION_NAME!
@@ -22,8 +24,38 @@ export async function persistGame(game: Game, winnerId: string) {
   const g = {
     gameId: game.id,
     players: game.players,
-    winnerId: winnerId,
+    winner: winner,
   };
 
   gamesCollection.insertOne(g);
+}
+
+export async function getLeaderboard(): Promise<LeaderboardEntry[]> {
+  const db = connectDb();
+  const gamesCollection: mongoDB.Collection = (await db).collection(
+    GAMES_COLLECTION_NAME!
+  );
+
+  return gamesCollection
+    .aggregate<LeaderboardEntry>([
+      {
+        $group: {
+          _id: "$winner",
+          wins: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          name: "$_id.name",
+          wins: "$wins",
+        },
+      },
+      {
+        $sort: {
+          wins: -1,
+        },
+      },
+    ])
+    .toArray();
 }
