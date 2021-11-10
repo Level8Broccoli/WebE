@@ -1,6 +1,7 @@
 import { DateTime } from "luxon";
 import { StatusCode } from "../api/StatusCode";
 import { Game } from "./Game";
+import { LeaderboardEntry } from "./Leaderboard";
 import { PrivatePlayer, PublicPlayer } from "./Player";
 
 export type RegisterPlayerResponse = {
@@ -88,4 +89,8 @@ export type UpdateGameBoardResponse = {
   status: StatusCode;
   timestamp: DateTime;
   gameId: string;
+};
+
+export type LeaderboardResponse = {
+  leaderboard: LeaderboardEntry[];
 };

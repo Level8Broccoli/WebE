@@ -9,6 +9,7 @@ import {
   EditPlayerNameRequest,
   FinishFulfillmentRequest,
   JoinGameRequest,
+  LeaderboardRequest,
   LeaveGameRequest,
   LogoutRequest,
   PlayCardRequest,
@@ -281,6 +282,20 @@ io.on("connection", (socket) => {
           status: error.message,
         };
         socket.emit("finishFulfillment", response);
+      });
+  });
+
+  socket.on("leaderboard", (request: LeaderboardRequest) => {
+    api
+      .leaderboard(request)
+      .then((response) => {
+        socket.emit("leaderboard", response);
+      })
+      .catch((error) => {
+        const response: ErrorResponse = {
+          status: error.message,
+        };
+        socket.emit("leaderboard", response);
       });
   });
 

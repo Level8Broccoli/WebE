@@ -16,6 +16,7 @@ import {
   EditPlayerNameRequest,
   FinishFulfillmentRequest,
   JoinGameRequest,
+  LeaderboardRequest,
   LeaveGameRequest,
   LogoutRequest,
   PlayCardRequest,
@@ -31,6 +32,7 @@ import {
   DeleteGameResponse,
   EditPlayerNameResponse,
   JoinGameResponse,
+  LeaderboardResponse,
   LeaveGameResponse,
   LogoutResponse,
   RegisterExistingPlayerResponse,
@@ -39,6 +41,7 @@ import {
   UpdateGameBoardResponse,
 } from "../../shared/model/ResponseTypes";
 import { ServerState } from "../../shared/model/ServerState";
+import { getLeaderboard } from "../services/DatabaseService";
 import {
   discardCard,
   drawCardFromPile,
@@ -669,6 +672,16 @@ export class Api {
         status: StatusCode.OK,
         timestamp: DateTime.now(),
         gameId: request.gameId,
+      };
+
+      resolve(response);
+    });
+  }
+
+  leaderboard(request: LeaderboardRequest): Promise<LeaderboardResponse> {
+    return new Promise(async (resolve, reject) => {
+      const response: LeaderboardResponse = {
+        leaderboard: await getLeaderboard(),
       };
 
       resolve(response);

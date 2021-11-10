@@ -82,3 +82,5 @@ export type PlayCardRequest = {
   cardId: string;
   cardRowId: string;
 };
+
+export type LeaderboardRequest = {};
