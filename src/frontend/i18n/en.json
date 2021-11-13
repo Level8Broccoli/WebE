@@ -43,5 +43,11 @@
   "lvl5": "a run of 7 cards",
   "lvl6": "a pair + two 3 of a kind",
   "lvl7": "3 of a kind + 5 cards = colour",
-  "lvl8": "pair + 3 of a kind + 4 of a kind"
+  "lvl8": "pair + 3 of a kind + 4 of a kind",
+  "closeLeaderboard": "Close leaderboard",
+  "leaderboardTitle": "Leaderboard Top 10",
+  "place": "Place",
+  "playerName": "Player name",
+  "wins": "Wins",
+  "leaderboardLink": "Leaderboard"
 }

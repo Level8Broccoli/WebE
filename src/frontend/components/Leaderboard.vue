@@ -1,15 +1,15 @@
 <template>
   <section>
     <button @click="closeLeaderboard">
-      <i class="far fa-times icon-left"></i> Close leaderboard
+      <i class="far fa-times icon-left"></i> {{ i18n.closeLeaderboard }}
     </button>
-    <h1>Leaderboard Top 10</h1>
+    <h1>{{ i18n.leaderboardTitle }}</h1>
     <table>
       <thead>
         <tr>
-          <th>Platz</th>
-          <th>Playername</th>
-          <th>Wins</th>
+          <th>{{ i18n.place }}</th>
+          <th>{{ i18n.playerName }}</th>
+          <th>{{ i18n.wins }}</th>
         </tr>
       </thead>
       <tbody>

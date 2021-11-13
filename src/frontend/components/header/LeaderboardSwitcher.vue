@@ -1,5 +1,5 @@
 <template>
-  <a href="#" @click.prevent="switchRules">Leaderboard</a>
+  <a href="#" @click.prevent="switchRules">{{ i18n.leaderboardLink }}</a>
 </template>
 
 <script setup lang="ts">
