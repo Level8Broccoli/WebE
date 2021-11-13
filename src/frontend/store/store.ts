@@ -18,6 +18,7 @@ import {
   LevelSystem,
   PlayerOverviewAggregate,
 } from "../../shared/model/Game";
+import { LeaderboardEntry } from "../../shared/model/Leaderboard";
 import { PrivatePlayer, PublicPlayer } from "../../shared/model/Player";
 import { ChatResponse } from "../../shared/model/ResponseTypes";
 import { i18n, Language } from "../i18n/i18n";
@@ -35,6 +36,8 @@ export interface State {
   tempCardIdForPlay: string;
   tempCardsForFulfillment: string[];
   cardRowsForFulfillment: CardRowRequest[];
+  showLeaderboard: boolean;
+  leaderboard: LeaderboardEntry[];
   errorLog: string[];
 }
 
@@ -59,6 +62,8 @@ export const store = createStore<State>({
     tempCardIdForPlay: "",
     tempCardsForFulfillment: [],
     cardRowsForFulfillment: [],
+    showLeaderboard: false,
+    leaderboard: [],
     errorLog: [],
   },
   getters: {
@@ -77,6 +82,9 @@ export const store = createStore<State>({
         state.activeGameId.length > 0 && (getters.getActiveGame as Game);
       if (state.showRules) {
         return "rules";
+      }
+      if (state.showLeaderboard) {
+        return "leaderboard";
       }
       if (!(state.player.secret.length > 0)) {
         return "start";
@@ -299,6 +307,10 @@ export const store = createStore<State>({
         return card.color;
       };
     },
+
+    getLeaderboard(state, getter): LeaderboardEntry[] {
+      return state.leaderboard;
+    },
   },
   mutations: {
     abortFulfillment(state) {
@@ -462,6 +474,15 @@ export const store = createStore<State>({
     addChatMessage(state, value: ChatResponse) {
       const activeGame = state.games.find((g) => g.id === state.activeGameId);
       activeGame?.chat.push(value);
+    },
+    getLeaderboard() {
+      /* handled by WebSocketPlugin */
+    },
+    updateLeaderboard(state, leaderboard: LeaderboardEntry[]) {
+      state.leaderboard = leaderboard;
+    },
+    switchLeaderboard(state) {
+      state.showLeaderboard = !state.showLeaderboard;
     },
   },
   plugins: [WebSocketPlugin(socket)],

@@ -56,6 +56,7 @@ export async function getLeaderboard(): Promise<LeaderboardEntry[]> {
           wins: -1,
         },
       },
+      { $limit: 10 },
     ])
     .toArray();
 }

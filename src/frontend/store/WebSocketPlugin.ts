@@ -9,6 +9,7 @@ import {
   EditPlayerNameRequest,
   FinishFulfillmentRequest,
   JoinGameRequest,
+  LeaderboardRequest,
   LeaveGameRequest,
   LogoutRequest,
   PlayCardRequest,
@@ -25,6 +26,7 @@ import {
   EditPlayerNameResponse,
   ErrorResponse,
   JoinGameResponse,
+  LeaderboardResponse,
   LeaveGameResponse,
   LogoutResponse,
   RegisterExistingPlayerResponse,
@@ -212,6 +214,15 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
     }
   );
 
+  socket.on("leaderboard", (res: LeaderboardResponse | ErrorResponse) => {
+    if ("leaderboard" in res) {
+      store.commit("updateLeaderboard", res.leaderboard);
+    } else {
+      console.log(res.status);
+      store.commit("addToErrorLog", res.status);
+    }
+  });
+
   store.subscribe((mutation, state) => {
     if (mutation.type === "registerPlayer") {
       const payload: RegisterPlayerRequest = { playerName: state.player.name };
@@ -340,6 +351,11 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
         level: store.state.cardRowsForFulfillment,
       };
       socket.emit("finishFulfillment", payload);
+    }
+
+    if (mutation.type === "getLeaderboard") {
+      const payload: LeaderboardRequest = {};
+      socket.emit("leaderboard", payload);
     }
   });
 };
