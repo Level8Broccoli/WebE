@@ -23,31 +23,31 @@
       v-if="isInLevelFulfillStep && !fulfillLevelMode"
       @click.prevent="startFulfillingLevel"
     >
-      Level erfüllen
+      {{ i18n.startFulfillingLevel }}
     </button>
     <button v-if="fulfillLevelMode" @click.prevent="abortFulfillment">
-      Abbrechen
+      {{ i18n.abortButton }}
     </button>
     <button
       v-if="fulfillLevelMode && valid && !isLastPart"
       @click.prevent="nextFulfillmentPart"
     >
-      NextStep
+      {{ i18n.nextStep }}
     </button>
     <button
       v-if="fulfillLevelMode && valid && isLastPart"
       @click.prevent="finishFulfillment"
     >
-      Finish Fulfillment
+      {{ i18n.finishFulfillment }}
     </button>
     <button v-if="fulfillLevelMode && !valid" class="is-disabled">
-      noch nicht valide
+      {{ i18n.notYetValid }}
     </button>
     <button v-if="isInLevelFulfillStep" @click.prevent="skipLevelFulfillStep">
-      Überspringen
+      {{ i18n.skipStep }}
     </button>
     <button v-if="isInPlayCardStep" @click.prevent="skipPlayCardsStep">
-      Überspringen
+      {{ i18n.skipStep }}
     </button>
   </main>
 </template>
@@ -60,6 +60,8 @@ import { key } from "../../store/store";
 import CardView from "./CardView.vue";
 
 const store = useStore(key);
+const i18n = computed(() => store.getters.i18n);
+
 enum Sorting {
   NONE = "NONE",
   COLOR = "COLOR",

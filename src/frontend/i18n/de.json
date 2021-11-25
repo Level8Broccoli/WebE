@@ -52,5 +52,10 @@
   "leaderboardLink": "Rangliste",
   "backToGameList": "Zurück zur Spielübersicht",
   "openLeaderboard": "Öffne die Rangliste",
-  "gameFinished": "Spiel beendet"
+  "gameFinished": "Spiel beendet",
+  "startFulfillingLevel": "Level erfüllen",
+  "nextStep": "nächster Schritt",
+  "finishFulfillment": "Level abschliessen",
+  "notYetValid": "noch nicht valide",
+  "skipStep": "Schritt überspringen"
 }

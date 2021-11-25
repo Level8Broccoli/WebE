@@ -52,5 +52,10 @@
   "leaderboardLink": "Leaderboard",
   "backToGameList": "Back to the game list",
   "openLeaderboard": "Open the leaderboard",
-  "gameFinished": "Game finished"
+  "gameFinished": "Game finished",
+  "startFulfillingLevel": "Fulfill level",
+  "nextStep": "next step",
+  "finishFulfillment": "complete level",
+  "notYetValid": "not yet valid",
+  "skipStep": "Skip step"
 }
