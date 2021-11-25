@@ -3,7 +3,7 @@
     <button @click="closeLeaderboard">
       <i class="far fa-times icon-left"></i> {{ i18n.closeLeaderboard }}
     </button>
-    <h1>{{ i18n.leaderboardTitle }}</h1>
+    <h2>{{ i18n.leaderboardTitle }}</h2>
     <table>
       <thead>
         <tr>
