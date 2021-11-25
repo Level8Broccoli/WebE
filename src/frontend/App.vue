@@ -9,6 +9,7 @@
     <GameSearchView v-if="view === 'game-search'" />
     <GameCreateView v-if="view === 'game-in-creation'" />
     <GameLobbyView v-if="view === 'game-in-lobby'" />
+    <GameFinishedView v-if="view === 'game-finished'" />
     <GameView v-if="view === 'game-in-progress'" />
   </main>
 </template>
@@ -26,6 +27,7 @@ import RulesView from "./views/RulesView.vue";
 import StartView from "./views/StartView.vue";
 import GameLobbyView from "./views/GameLobbyView.vue";
 import GameView from "./views/GameView.vue";
+import GameFinishedView from "./views/GameFinishedView.vue";
 import LeaderboardView from "./views/LeaderboardView.vue";
 
 export default defineComponent({
@@ -35,6 +37,7 @@ export default defineComponent({
     GameSearchView,
     Header,
     GameView,
+    GameFinishedView,
     Title,
     RulesView,
     GameCreateView,

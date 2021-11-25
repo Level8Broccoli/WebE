@@ -49,5 +49,8 @@
   "place": "Place",
   "playerName": "Player name",
   "wins": "Wins",
-  "leaderboardLink": "Leaderboard"
+  "leaderboardLink": "Leaderboard",
+  "backToGameList": "Back to the game list",
+  "openLeaderboard": "Open the leaderboard",
+  "gameFinished": "Game finished"
 }

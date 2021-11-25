@@ -1,9 +1,9 @@
 import { ChatMessage } from "./Chat";
 
 export enum GameStatus {
-  IN_LOBBY,
-  IN_PROGRESS,
-  FINISHED,
+  IN_LOBBY = "IN_LOBBY",
+  IN_PROGRESS = "IN_PROGRESS",
+  FINISHED = "FINISHED",
 }
 
 export const DRAW_PILE_ID = "drawPile";
@@ -142,8 +142,10 @@ export type GameRule = {
 
 export const GameRules: GameRule[][] = [
   [
-    { type: CardRowType.STREET, count: 3 },
-    { type: CardRowType.STREET, count: 3 },
+    { type: CardRowType.STREET, count: 1 },
+    { type: CardRowType.STREET, count: 1 },
+    { type: CardRowType.STREET, count: 1 },
+    { type: CardRowType.STREET, count: 1 },
   ],
   [
     { type: CardRowType.SAME_NUMBER, count: 2 },

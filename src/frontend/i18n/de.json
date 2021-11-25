@@ -49,5 +49,8 @@
   "place": "Platz",
   "playerName": "Spielername",
   "wins": "Anzahl Gewinne",
-  "leaderboardLink": "Rangliste"
+  "leaderboardLink": "Rangliste",
+  "backToGameList": "Zurück zur Spielübersicht",
+  "openLeaderboard": "Öffne die Rangliste",
+  "gameFinished": "Spiel beendet"
 }

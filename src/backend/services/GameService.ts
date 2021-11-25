@@ -17,10 +17,12 @@ import {
   NumberCard,
   PlayerLevel,
 } from "../../shared/model/Game";
+import { PublicPlayer } from "../../shared/model/Player";
 import { ServerState } from "../../shared/model/ServerState";
+import { persistGame } from "./DatabaseService";
 import { getUUID } from "./TokenGeneratorService";
 
-const HAND_SIZE_START = 10;
+const HAND_SIZE_START = 5;
 
 export function initialCardSet(): Card[] {
   const cardset: Card[] = [];
@@ -510,4 +512,49 @@ export function startNextRound(game: Game) {
   }
 
   revealOneCardToDiscard(game.state.piles, game.state.activePlayerId);
+}
+
+export function gameHasAWinner(game: Game) {
+  const levelCount = game.config.levelCount;
+  return (
+    typeof game.state.playerLevels.find((pl) => {
+      if (pl.hasAchievedLevel) {
+        return pl.currentLevelIndex + 1 >= levelCount;
+      } else {
+        return pl.currentLevelIndex >= levelCount;
+      }
+    }) !== "undefined"
+  );
+}
+
+export function getWinner(serverState: ServerState, game: Game): PublicPlayer {
+  const levelCount = game.config.levelCount;
+
+  const winner = game.state.playerLevels.find((pl) => {
+    if (pl.hasAchievedLevel) {
+      return pl.currentLevelIndex + 1 >= levelCount;
+    } else {
+      return pl.currentLevelIndex >= levelCount;
+    }
+  });
+
+  if (typeof winner === "undefined") {
+    throw new Error("There is no winner yet");
+  }
+
+  const winnerPlayer = serverState.players.find(
+    (p) => p.id === winner.playerId
+  );
+
+  if (typeof winnerPlayer === "undefined") {
+    throw new Error("Winner id is incorrect");
+  }
+
+  return { id: winnerPlayer.id, name: winnerPlayer.name };
+}
+
+export function endGame(serverState: ServerState, game: Game) {
+  game.status = GameStatus.FINISHED;
+  const winner = getWinner(serverState, game);
+  persistGame(game, winner);
 }

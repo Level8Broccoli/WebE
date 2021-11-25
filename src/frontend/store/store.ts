@@ -97,6 +97,9 @@ export const store = createStore<State>({
       if (activeGame && activeGame.status === GameStatus.IN_PROGRESS) {
         return "game-in-progress";
       }
+      if (activeGame && activeGame.status === GameStatus.FINISHED) {
+        return "game-finished";
+      }
       return "game-search";
     },
     getPlayerName(state) {
@@ -307,8 +310,31 @@ export const store = createStore<State>({
       };
     },
 
-    getLeaderboard(state, getter): LeaderboardEntry[] {
+    getLeaderboard(state): LeaderboardEntry[] {
       return state.leaderboard;
+    },
+    getPlayerListWithWinner(state, getters) {
+      const activeGame =
+        state.activeGameId.length > 0 && (getters.getActiveGame as Game);
+      if (!activeGame) {
+        return [];
+      }
+      const playerLevels = [...activeGame.state.playerLevels].sort(
+        (a, b) => b.currentLevelIndex - a.currentLevelIndex
+      );
+      return playerLevels.map((pl, i) => {
+        if (i === 0) {
+          return {
+            id: pl.playerId,
+            winner: true,
+          };
+        } else {
+          return {
+            id: pl.playerId,
+            winner: false,
+          };
+        }
+      });
     },
   },
   mutations: {
@@ -361,6 +387,9 @@ export const store = createStore<State>({
     },
     updateGames(state, value: Game[]) {
       state.games = value;
+    },
+    removeActiveGame(state) {
+      state.activeGameId = "";
     },
     addGame(state, value: Game) {
       state.games.push(value);

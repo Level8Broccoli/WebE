@@ -1,3 +1,4 @@
+import { ENGINE_METHOD_PKEY_ASN1_METHS } from "constants";
 import { DateTime } from "luxon";
 import { StatusCode } from "../../shared/api/StatusCode";
 import {
@@ -41,7 +42,7 @@ import {
   UpdateGameBoardResponse,
 } from "../../shared/model/ResponseTypes";
 import { ServerState } from "../../shared/model/ServerState";
-import { getLeaderboard } from "../services/DatabaseService";
+import { getLeaderboard, persistGame } from "../services/DatabaseService";
 import {
   discardCard,
   drawCardFromPile,
@@ -65,6 +66,9 @@ import {
   startGameState,
   addLevelToPlayer,
   startNextRound,
+  gameHasAWinner,
+  getWinner,
+  endGame,
 } from "../services/GameService";
 import {
   addChatMessage,
@@ -519,8 +523,12 @@ export class Api {
       if (hasNoCardsLeft(game.state, request.player.id)) {
         addLevelToPlayer(game, request.player.id);
         prepareForNextRound(game);
-        fillDrawPile(game);
-        startNextRound(game);
+        if (gameHasAWinner(game)) {
+          endGame(this._serverState, game);
+        } else {
+          fillDrawPile(game);
+          startNextRound(game);
+        }
       } else {
         nextGameStep(game, GameStep.DRAW);
       }
@@ -638,7 +646,12 @@ export class Api {
 
       markPlayerLevelFulfilled(game.state, request.player.id);
 
-      nextGameStep(game, GameStep.PLAY);
+      if (gameHasAWinner(game)) {
+        endGame(this._serverState, game);
+        prepareForNextRound(game);
+      } else {
+        nextGameStep(game, GameStep.PLAY);
+      }
 
       const response: UpdateGameBoardResponse = {
         status: StatusCode.OK,
@@ -682,8 +695,12 @@ export class Api {
       if (hasNoCardsLeft(game.state, request.player.id)) {
         addLevelToPlayer(game, request.player.id);
         prepareForNextRound(game);
-        fillDrawPile(game);
-        startNextRound(game);
+        if (gameHasAWinner(game)) {
+          endGame(this._serverState, game);
+        } else {
+          fillDrawPile(game);
+          startNextRound(game);
+        }
       }
 
       const response: UpdateGameBoardResponse = {
