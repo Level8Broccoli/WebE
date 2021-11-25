@@ -39,7 +39,7 @@ header {
 
 .right {
   display: grid;
-  grid-template-columns: repeat(5, max-content);
+  grid-template-columns: repeat(6, max-content);
   gap: 1rem;
   align-content: flex-start;
   align-items: center;
