@@ -26,12 +26,9 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useStore } from "vuex";
-import { Language } from "../i18n/i18n";
 import { key } from "../store/store";
 
 const store = useStore(key);
-const language = computed(() => store.state.language);
-const isEnglish = computed(() => language.value == Language.ENGLISH);
 const i18n = computed(() => store.getters.i18n);
 const closeLeaderboard = () => {
   store.commit("switchLeaderboard");

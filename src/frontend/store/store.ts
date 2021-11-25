@@ -1,3 +1,4 @@
+import { stat } from "fs";
 import { io } from "socket.io-client";
 import { InjectionKey } from "vue";
 import { createStore, Store } from "vuex";
@@ -27,7 +28,7 @@ import { WebSocketPlugin } from "./WebSocketPlugin";
 export interface State {
   language: Language;
   connection: boolean;
-  showRules: boolean;
+  overwriteView: string;
   player: PrivatePlayer;
   playerList: PublicPlayer[];
   games: Game[];
@@ -36,7 +37,6 @@ export interface State {
   tempCardIdForPlay: string;
   tempCardsForFulfillment: string[];
   cardRowsForFulfillment: CardRowRequest[];
-  showLeaderboard: boolean;
   leaderboard: LeaderboardEntry[];
   errorLog: string[];
 }
@@ -49,7 +49,7 @@ export const store = createStore<State>({
   state: {
     language: Language.ENGLISH,
     connection: false,
-    showRules: false,
+    overwriteView: "",
     player: {
       name: "",
       id: "",
@@ -62,7 +62,6 @@ export const store = createStore<State>({
     tempCardIdForPlay: "",
     tempCardsForFulfillment: [],
     cardRowsForFulfillment: [],
-    showLeaderboard: false,
     leaderboard: [],
     errorLog: [],
   },
@@ -80,10 +79,10 @@ export const store = createStore<State>({
     view: (state, getters) => {
       const activeGame =
         state.activeGameId.length > 0 && (getters.getActiveGame as Game);
-      if (state.showRules) {
+      if (state.overwriteView === "rules") {
         return "rules";
       }
-      if (state.showLeaderboard) {
+      if (state.overwriteView === "leaderboard") {
         return "leaderboard";
       }
       if (!(state.player.secret.length > 0)) {
@@ -377,7 +376,66 @@ export const store = createStore<State>({
       }
     },
     switchRules(state) {
-      state.showRules = !state.showRules;
+      if (state.overwriteView === "rules") {
+        state.overwriteView = "";
+      } else {
+        state.overwriteView = "rules";
+      }
+    },
+    resetState(state) {
+      state.player = {
+        name: "",
+        secret: "",
+        id: "",
+      };
+      state.activeGameId = "";
+      state.gameInCreation = undefined;
+      state.games = [];
+    },
+    initNewGame(state) {
+      state.gameInCreation = {
+        maxPlayerCount: 6,
+        levelCount: 8,
+        levelSystem: LevelSystem.NORMAL,
+      };
+    },
+    updateGameInCreation(state, payload: Config) {
+      state.gameInCreation = payload;
+    },
+    deleteGameInCreation(state) {
+      state.gameInCreation = undefined;
+    },
+    abortGameInCreation(state) {
+      state.gameInCreation = undefined;
+    },
+    abortGameInLobby(state) {
+      state.activeGameId = "";
+    },
+    activateGame(state, payload: string) {
+      state.activeGameId = payload;
+    },
+    createThirdPartyGame(state, payload: Game) {
+      state.games.push(payload);
+    },
+    updateConnection(state, value: boolean) {
+      state.connection = value;
+    },
+    addToErrorLog(state, value: string) {
+      state.errorLog.unshift(value);
+    },
+    addChatMessage(state, value: ChatResponse) {
+      const activeGame = state.games.find((g) => g.id === state.activeGameId);
+      activeGame?.chat.push(value);
+    },
+    updateLeaderboard(state, leaderboard: LeaderboardEntry[]) {
+      state.leaderboard = leaderboard;
+    },
+    switchLeaderboard(state) {
+      if (state.overwriteView === "leaderboard") {
+        state.overwriteView = "";
+      } else {
+        state.overwriteView = "leaderboard";
+      }
     },
     registerPlayer() {
       /* handled by WebSocketPlugin */
@@ -430,59 +488,8 @@ export const store = createStore<State>({
     playCard() {
       /* handled by WebSocketPlugin */
     },
-    resetState(state) {
-      state.player = {
-        name: "",
-        secret: "",
-        id: "",
-      };
-      state.activeGameId = "";
-      state.gameInCreation = undefined;
-      state.games = [];
-    },
-    initNewGame(state) {
-      state.gameInCreation = {
-        maxPlayerCount: 6,
-        levelCount: 8,
-        levelSystem: LevelSystem.NORMAL,
-      };
-    },
-    updateGameInCreation(state, payload: Config) {
-      state.gameInCreation = payload;
-    },
-    deleteGameInCreation(state) {
-      state.gameInCreation = undefined;
-    },
-    abortGameInCreation(state) {
-      state.gameInCreation = undefined;
-    },
-    abortGameInLobby(state) {
-      state.activeGameId = "";
-    },
-    activateGame(state, payload: string) {
-      state.activeGameId = payload;
-    },
-    createThirdPartyGame(state, payload: Game) {
-      state.games.push(payload);
-    },
-    updateConnection(state, value: boolean) {
-      state.connection = value;
-    },
-    addToErrorLog(state, value: string) {
-      state.errorLog.unshift(value);
-    },
-    addChatMessage(state, value: ChatResponse) {
-      const activeGame = state.games.find((g) => g.id === state.activeGameId);
-      activeGame?.chat.push(value);
-    },
     getLeaderboard() {
       /* handled by WebSocketPlugin */
-    },
-    updateLeaderboard(state, leaderboard: LeaderboardEntry[]) {
-      state.leaderboard = leaderboard;
-    },
-    switchLeaderboard(state) {
-      state.showLeaderboard = !state.showLeaderboard;
     },
   },
   plugins: [WebSocketPlugin(socket)],
