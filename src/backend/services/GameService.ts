@@ -116,7 +116,7 @@ export function getPile(game: Game, pileId: string): string[] {
 export function getHand(game: Game, playerId: string): string[] {
   const hand = game.state.hands.find((h) => h.id === playerId);
   if (typeof hand === "undefined") {
-    throw new Error("Pile does not exists!");
+    throw new Error("Hand does not exists!");
   }
   return (hand as CardStackOpen).cardIds;
 }
@@ -447,4 +447,67 @@ export function isPlayValid(game: Game, cardId: string, cardRowId: string) {
     }
   }
   return true;
+}
+
+export function hasNoCardsLeft(
+  gameState: GameState,
+  playerId: string
+): Boolean {
+  const hand = gameState.hands.find((p) => p.id === playerId);
+
+  if (typeof hand === "undefined") {
+    throw new Error("Hand does not exists!");
+  }
+  return (hand as CardStackOpen).cardIds.length === 0;
+}
+
+export function addLevelToPlayer(game: Game, playerId: string) {
+  game.state.playerLevels = game.state.playerLevels.map((pl) => {
+    if (pl.playerId === playerId) {
+      return {
+        ...pl,
+        currentLevelIndex: pl.currentLevelIndex + 1,
+      };
+    } else {
+      return pl;
+    }
+  });
+}
+
+export function prepareForNextRound(game: Game) {
+  game.state = {
+    ...game.state,
+    board: [],
+    hands: [],
+    piles: [],
+    currentStep: GameStep.DRAW,
+    playerLevels: game.state.playerLevels.map((pl) => {
+      if (pl.hasAchievedLevel) {
+        return {
+          ...pl,
+          hasAchievedLevel: false,
+          currentLevelIndex: pl.currentLevelIndex + 1,
+        };
+      } else {
+        return {
+          ...pl,
+          hasAchievedLevel: false,
+        };
+      }
+    }),
+  };
+}
+
+export function startNextRound(game: Game) {
+  const playerIdList = game.players;
+
+  for (const playerId of playerIdList) {
+    createPlayerStartHand(game, playerId, HAND_SIZE_START);
+  }
+
+  for (const playerId of playerIdList) {
+    createEmptyDiscardPile(game, playerId);
+  }
+
+  revealOneCardToDiscard(game.state.piles, game.state.activePlayerId);
 }

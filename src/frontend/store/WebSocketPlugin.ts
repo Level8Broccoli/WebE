@@ -218,7 +218,7 @@ export const WebSocketPlugin = (socket: Socket) => (store: Store<State>) => {
     if ("leaderboard" in res) {
       store.commit("updateLeaderboard", res.leaderboard);
     } else {
-      console.log(res.status);
+      console.error(res.status);
       store.commit("addToErrorLog", res.status);
     }
   });

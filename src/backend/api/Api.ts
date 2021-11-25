@@ -45,11 +45,13 @@ import { getLeaderboard } from "../services/DatabaseService";
 import {
   discardCard,
   drawCardFromPile,
+  prepareForNextRound,
   getAllGamesForPlayer,
   getCardRow,
   getGame,
   getPile,
   hasAlreadyFulfilledLevel,
+  hasNoCardsLeft,
   initGameState,
   initialCardSet,
   isCardOwner,
@@ -61,6 +63,8 @@ import {
   nextPlayer,
   pileExists,
   startGameState,
+  addLevelToPlayer,
+  startNextRound,
 } from "../services/GameService";
 import {
   addChatMessage,
@@ -512,7 +516,14 @@ export class Api {
 
       nextPlayer(game);
 
-      nextGameStep(game, GameStep.DRAW);
+      if (hasNoCardsLeft(game.state, request.player.id)) {
+        addLevelToPlayer(game, request.player.id);
+        prepareForNextRound(game);
+        fillDrawPile(game);
+        startNextRound(game);
+      } else {
+        nextGameStep(game, GameStep.DRAW);
+      }
 
       const response: UpdateGameBoardResponse = {
         status: StatusCode.OK,
@@ -667,6 +678,13 @@ export class Api {
       const cardRow = getCardRow(game.state.board, request.cardRowId);
 
       moveCardFromHandToBoard(game, request.player.id, request.cardId, cardRow);
+
+      if (hasNoCardsLeft(game.state, request.player.id)) {
+        addLevelToPlayer(game, request.player.id);
+        prepareForNextRound(game);
+        fillDrawPile(game);
+        startNextRound(game);
+      }
 
       const response: UpdateGameBoardResponse = {
         status: StatusCode.OK,
