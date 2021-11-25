@@ -22,7 +22,7 @@ import { ServerState } from "../../shared/model/ServerState";
 import { persistGame } from "./DatabaseService";
 import { getUUID } from "./TokenGeneratorService";
 
-const HAND_SIZE_START = 5;
+const HAND_SIZE_START = 10;
 
 export function initialCardSet(): Card[] {
   const cardset: Card[] = [];

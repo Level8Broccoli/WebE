@@ -142,10 +142,8 @@ export type GameRule = {
 
 export const GameRules: GameRule[][] = [
   [
-    { type: CardRowType.STREET, count: 1 },
-    { type: CardRowType.STREET, count: 1 },
-    { type: CardRowType.STREET, count: 1 },
-    { type: CardRowType.STREET, count: 1 },
+    { type: CardRowType.STREET, count: 3 },
+    { type: CardRowType.STREET, count: 3 },
   ],
   [
     { type: CardRowType.SAME_NUMBER, count: 2 },
