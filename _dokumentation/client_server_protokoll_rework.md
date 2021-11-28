@@ -22,7 +22,7 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
 }
 ```
 
-## Response
+### Response
 
 | Sender | Empfänger | Event            |
 | ------ | --------- | ---------------- |
