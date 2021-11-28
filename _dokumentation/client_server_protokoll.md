@@ -1,4 +1,4 @@
-[Inhaltsverzeichnis](inhaltsverzeichnis.md) | [Vorherige Seite](anforderungen.md)
+[Inhaltsverzeichnis](inhaltsverzeichnis.md) | [Vorherige Seite](anforderungen.md) | [Nächste Seite](umsetzung.md)
 
 # Server-Client Protokoll
 
@@ -598,4 +598,4 @@ Gibt dem Client die Möglichkeit den offnen Spielräume abzufragen, um das korre
 }
 ```
 
-[Inhaltsverzeichnis](inhaltsverzeichnis.md) | [Vorherige Seite](anforderungen.md)
+[Inhaltsverzeichnis](inhaltsverzeichnis.md) | [Vorherige Seite](anforderungen.md) | [Nächste Seite](umsetzung.md)
