@@ -84,3 +84,5 @@ Anstatt eine Karte als dritte Aktion seines Zuges auf den eigenen Ablagestapel a
 ## Spielende
 
 Ein Spieler gewinnt sofort, wenn er sich im 8. Level befindet und es auslegt (er muss also seine restlichen Handkarten nicht mehr loswerden!). Ein Spieler gewinnt auch, wenn er sein 7. Level ausgelegt hat und den laufenden Durchgang beendet. Dadurch überspringt er das 8. Level und schiebt seine Levelkarte auf das Wort "Sieg"!
+
+[Inhaltsverzeichnis](inhaltsverzeichnis.md) | [Vorherige Seite](randbedingungen.md) | [Nächste Seite](anforderungen.md)

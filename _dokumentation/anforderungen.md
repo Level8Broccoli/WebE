@@ -305,3 +305,5 @@ TBD hat jemand gewonnen?
 6. Sollten mehrere Sprachen gewünscht sein, sollte das Spiel den Entwicklern die einfache Möglichkeit bieten, Sprachübersetzungen hinzuzufügen.
 7. Das Spiel soll mindestens 3 verschiedene Levels haben.
 8. Das User Interface passt sich an verschiedene Bildschirmgrössen an.
+
+[Inhaltsverzeichnis](inhaltsverzeichnis.md) | [Vorherige Seite](spielregeln.md) | [Nächste Seite](client_server_protokoll.md)

@@ -89,3 +89,5 @@ Die folgende Tabelle stellt die Stakeholder von unserem Projekt und ihre jeweili
 | Benutzer / Spieler    | Kennt das Spiel möglicherweise nicht. Will mit seinen Freunden / seiner Familie eine Runde spielen. Beliebiges Alter und technische Versiertheit. |
 | Heinrich Zimmermann   | Dozent und stellt die Aufgabe.                                                                                                                    |
 | Wir (Oliver, Thierry) | Projekt erfolgreich abschliessen. Neue Technologie anwenden. Projekt kann auf Github als Demo publiziert werden.                                  |
+
+[Inhaltsverzeichnis](inhaltsverzeichnis.md) | [Nächste Seite](randbedingungen.md)

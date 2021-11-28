@@ -20,3 +20,5 @@
 | Vorgehensmodel        | Entwicklung iterativ und inkrementell.                                                                                            |
 | Entwicklungswerkzeuge | Erstellung des Quelltextes erfolgt mit Visual Studio Code. Die Bereitstellung der lauffähigen Version wird mit Docker realisiert. |
 | Versionsverwaltung    | Als Versionsverwaltung wird Git und die Plattform [github.com](https://github.com/Level8Broccoli/WebE/) verwendet.                |
+
+[Inhaltsverzeichnis](inhaltsverzeichnis.md) | [Vorherige Seite](einfuehrung_ziele.md) | [Nächste Seite](spielregeln.md)

@@ -597,3 +597,5 @@ Gibt dem Client die Möglichkeit den offnen Spielräume abzufragen, um das korre
   }
 }
 ```
+
+[Inhaltsverzeichnis](inhaltsverzeichnis.md) | [Vorherige Seite](anforderungen.md)
