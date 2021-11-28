@@ -1,5 +1,0 @@
-| Beschreibung |     |
-| ------------ | --- |
-
-| Sender | Empfänger | Event |
-| ------ | --------- | ----- |
