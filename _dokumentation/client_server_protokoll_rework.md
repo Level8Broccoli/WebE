@@ -43,4 +43,22 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
 }
 ```
 
+## Logout eines Spielers vom Server
+
+### Request
+
+| Sender    | Empfänger | Event          |
+| --------- | --------- | -------------- |
+| Client[1] | Server    | `logoutPlayer` |
+
+```json
+{
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
+    "secret": "[secret]"
+  }
+}
+```
+
 [Inhaltsverzeichnis](inhaltsverzeichnis.md) | [Vorherige Seite](anforderungen.md) | [Nächste Seite](umsetzung.md)
