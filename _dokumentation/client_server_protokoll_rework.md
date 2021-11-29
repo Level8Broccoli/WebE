@@ -38,7 +38,7 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
     "secret": "[secret]"
   },
   "games": [
-    /* Liste aller aktiven Spielräume, deren Konfiguration und Anzahl besetzter Plätze */
+    // Liste aller aktiven Spielräume, deren Konfiguration und Anzahl besetzter Plätze
   ]
 }
 ```
@@ -82,7 +82,7 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
 ```json
 {
   "playerList": [
-    /* Liste aller am Server angemeldeter Spieler */
+    // Liste aller am Server angemeldeter Spieler
   ]
 }
 ```
@@ -94,7 +94,7 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
 ```json
 {
   "gameList": [
-    /* Liste aller offener Spiele auf dem Server */
+    // Liste aller offener Spiele auf dem Server
   ]
 }
 ```
@@ -133,7 +133,7 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
     "secret": "[secret]"
   },
   "games": [
-    /* Liste aller Spiele auf dem Server */
+    // Liste aller Spiele auf dem Server
   ],
   "activeGameId": "[activeGameId]"
 }
@@ -146,7 +146,7 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
 ```json
 {
   "playerList": [
-    /* Liste aller am Server angemeldeter Spieler */
+    // Liste aller am Server angemeldeter Spieler
   ]
 }
 ```
@@ -194,7 +194,7 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
 ```json
 {
   "playerList": [
-    /* Liste aller am Server angemeldeter Spieler */
+    // Liste aller am Server angemeldeter Spieler
   ]
 }
 ```
@@ -215,7 +215,7 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
     "secret": "[secret]"
   },
   "config": {
-    /* Spielkonfiguration */
+    // Spielkonfiguration
   }
 }
 ```
@@ -238,13 +238,13 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
     "id": "[gameId]",
     "creatorId": "[creatorId]",
     "players": [
-      /* Liste von Spieler Id's in der Lobby */
+      // Liste von Spieler Id's in der Lobby
     ],
     "config": {
-      /* Spielkonfiguration */
+      // Spielkonfiguration
     },
     "chat": [
-      /* Liste von Chat Meldungen in der Lobby */
+      // Liste von Chat Meldungen in der Lobby
     ]
   }
 }
@@ -257,7 +257,7 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
 ```json
 {
   "gameList": [
-    /* Liste aller offener Spiele auf dem Server */
+    // Liste aller offener Spiele auf dem Server
   ]
 }
 ```
@@ -302,7 +302,7 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
 ```json
 {
   "gameList": [
-    /* Liste aller offener Spiele auf dem Server */
+    // Liste aller offener Spiele auf dem Server
   ]
 }
 ```
@@ -341,7 +341,7 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
     "name": "[playerName]"
   },
   "game": {
-    /* Spielinformationen */
+    // Spielinformationen
   }
 }
 ```
@@ -353,7 +353,7 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
 ```json
 {
   "gameList": [
-    /* Liste aller offener Spiele auf dem Server */
+    // Liste aller offener Spiele auf dem Server
   ]
 }
 ```
@@ -402,7 +402,7 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
 ```json
 {
   "gameList": [
-    /* Liste aller offener Spiele auf dem Server */
+    // Liste aller offener Spiele auf dem Server
   ]
 }
 ```
@@ -469,7 +469,7 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
 ```json
 {
   "gameList": [
-    /* Rückgabe der Spielzustände pro Spieler */
+    // Rückgabe der Spielzustände pro Spieler
   ]
 }
 ```
@@ -503,7 +503,7 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
 ```json
 {
   "gameList": [
-    /* Rückgabe der Spielzustände pro Spieler */
+    // Rückgabe der Spielzustände pro Spieler
   ]
 }
 ```
@@ -537,7 +537,7 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
 ```json
 {
   "gameList": [
-    /* Rückgabe der Spielzustände pro Spieler */
+    // Rückgabe der Spielzustände pro Spieler
   ]
 }
 ```
@@ -570,7 +570,7 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
 ```json
 {
   "gameList": [
-    /* Rückgabe der Spielzustände pro Spieler */
+    // Rückgabe der Spielzustände pro Spieler
   ]
 }
 ```
@@ -603,7 +603,7 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
 ```json
 {
   "gameList": [
-    /* Rückgabe der Spielzustände pro Spieler */
+    // Rückgabe der Spielzustände pro Spieler
   ]
 }
 ```
@@ -638,7 +638,7 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
 ```json
 {
   "gameList": [
-    /* Rückgabe der Spielzustände pro Spieler */
+    // Rückgabe der Spielzustände pro Spieler
   ]
 }
 ```
@@ -660,7 +660,7 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
   },
   "gameId": "[gameId]",
   "level": [
-    /* Zu prüfende Karten für das aktuelle Level (CardRowRequest) */
+    // Zu prüfende Karten für das aktuelle Level (CardRowRequest)
   ]
 }
 ```
@@ -674,7 +674,35 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
 ```json
 {
   "gameList": [
-    /* Rückgabe der Spielzustände pro Spieler */
+    // Rückgabe der Spielzustände pro Spieler
+  ]
+}
+```
+
+## Leaderboard abfragen
+
+### Request
+
+| Sender     | Empfänger | Event         |
+| ---------- | --------- | ------------- |
+| Client [1] | Server    | `leaderboard` |
+
+```json
+{
+  // leer
+}
+```
+
+### Response
+
+| Sender | Empfänger | Event         |
+| ------ | --------- | ------------- |
+| Server | Client[1] | `leaderboard` |
+
+```json
+{
+  "leaderboard": [
+    // Sortierte Leaderboardeinträge der Form {"name":"[name]", "wins": number}
   ]
 }
 ```
