@@ -151,4 +151,52 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
 }
 ```
 
+## Spielername aktualisieren
+
+### Request
+
+| Sender    | Empfänger | Event            |
+| --------- | --------- | ---------------- |
+| Client[1] | Server    | `editPlayerName` |
+
+```json
+{
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
+    "secret": "[secret]"
+  }
+}
+```
+
+### Responses
+
+| Sender | Empfänger | Event            |
+| ------ | --------- | ---------------- |
+| Server | Client[n] | `editPlayerName` |
+
+```json
+{
+  "status": "[StatusCode]",
+  "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
+    "secret": "[secret]"
+  }
+}
+```
+
+| Sender | Empfänger | Event              |
+| ------ | --------- | ------------------ |
+| Server | Client[n] | `updatePlayerList` |
+
+```json
+{
+  "playerList": [
+    /* Liste aller am Server angemeldeter Spieler */
+  ]
+}
+```
+
 [Inhaltsverzeichnis](inhaltsverzeichnis.md) | [Vorherige Seite](anforderungen.md) | [Nächste Seite](umsetzung.md)
