@@ -199,4 +199,71 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
 }
 ```
 
+## Spiel erstellen
+
+### Request
+
+| Sender     | Empfänger | Event        |
+| ---------- | --------- | ------------ |
+| Client [1] | Server    | `createGame` |
+
+### Body
+
+```json
+{
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
+    "secret": "[secret]"
+  },
+  "config": {
+    /* Spielkonfiguration */
+  }
+}
+```
+
+### Responses
+
+| Sender | Empfänger  | Event        |
+| ------ | ---------- | ------------ |
+| Server | Client [n] | `createGame` |
+
+### Body
+
+```json
+{
+  "status": "[StatusCode]",
+  "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]"
+  },
+  "game": {
+    "id": "[gameId]",
+    "creatorId": "[creatorId]",
+    "players": [
+      /* Liste von Spieler Id's in der Lobby */
+    ],
+    "config": {
+      /* Spielkonfiguration */
+    },
+    "chat": [
+      /* Liste von Chat Meldungen in der Lobby */
+    ]
+  }
+}
+```
+
+| Sender | Empfänger | Event            |
+| ------ | --------- | ---------------- |
+| Server | Client[n] | `updateGameList` |
+
+```json
+{
+  "gameList": [
+    /* Liste aller offener Spiele auf dem Server */
+  ]
+}
+```
+
 [Inhaltsverzeichnis](inhaltsverzeichnis.md) | [Vorherige Seite](anforderungen.md) | [Nächste Seite](umsetzung.md)
