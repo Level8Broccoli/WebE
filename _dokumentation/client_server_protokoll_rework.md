@@ -207,8 +207,6 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
 | ---------- | --------- | ------------ |
 | Client [1] | Server    | `createGame` |
 
-### Body
-
 ```json
 {
   "player": {
@@ -227,8 +225,6 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
 | Sender | Empfänger  | Event        |
 | ------ | ---------- | ------------ |
 | Server | Client [n] | `createGame` |
-
-### Body
 
 ```json
 {
@@ -251,6 +247,53 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
       /* Liste von Chat Meldungen in der Lobby */
     ]
   }
+}
+```
+
+| Sender | Empfänger | Event            |
+| ------ | --------- | ---------------- |
+| Server | Client[n] | `updateGameList` |
+
+```json
+{
+  "gameList": [
+    /* Liste aller offener Spiele auf dem Server */
+  ]
+}
+```
+
+## Spiel löschen
+
+### Request
+
+| Sender     | Empfänger | Event        |
+| ---------- | --------- | ------------ |
+| Client [1] | Server    | `deleteGame` |
+
+```json
+{
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
+    "secret": "[secret]"
+  },
+  "game": {
+    "id": "[gameId]"
+  }
+}
+```
+
+### Responses
+
+| Sender | Empfänger  | Event        |
+| ------ | ---------- | ------------ |
+| Server | Client [n] | `deleteGame` |
+
+```json
+{
+  "status": "[StatusCode]",
+  "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+  "gameId": "[deletedGameId]"
 }
 ```
 
