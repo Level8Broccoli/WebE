@@ -608,4 +608,75 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
 }
 ```
 
+## Karte auspielen
+
+### Request
+
+| Sender     | Empfänger | Event      |
+| ---------- | --------- | ---------- |
+| Client [1] | Server    | `playCard` |
+
+```json
+{
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
+    "secret": "[secret]"
+  },
+  "gameId": "[gameId]",
+  "cardId": "[cardId]",
+  "cardRowId": "[cardRowId]"
+}
+```
+
+### Response
+
+| Sender | Empfänger | Event            |
+| ------ | --------- | ---------------- |
+| Server | Client[n] | `updateGameList` |
+
+```json
+{
+  "gameList": [
+    /* Rückgabe der Spielzustände pro Spieler */
+  ]
+}
+```
+
+## Level auslegen
+
+### Request
+
+| Sender     | Empfänger | Event               |
+| ---------- | --------- | ------------------- |
+| Client [1] | Server    | `finishFulfillment` |
+
+```json
+{
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
+    "secret": "[secret]"
+  },
+  "gameId": "[gameId]",
+  "level": [
+    /* Zu prüfende Karten für das aktuelle Level (CardRowRequest) */
+  ]
+}
+```
+
+### Response
+
+| Sender | Empfänger | Event            |
+| ------ | --------- | ---------------- |
+| Server | Client[n] | `updateGameList` |
+
+```json
+{
+  "gameList": [
+    /* Rückgabe der Spielzustände pro Spieler */
+  ]
+}
+```
+
 [Inhaltsverzeichnis](inhaltsverzeichnis.md) | [Vorherige Seite](anforderungen.md) | [Nächste Seite](umsetzung.md)
