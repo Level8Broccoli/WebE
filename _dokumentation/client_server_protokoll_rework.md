@@ -542,4 +542,70 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
 }
 ```
 
+## Level auslegen überspringen
+
+### Request
+
+| Sender     | Empfänger | Event                  |
+| ---------- | --------- | ---------------------- |
+| Client [1] | Server    | `skipLevelFulfillStep` |
+
+```json
+{
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
+    "secret": "[secret]"
+  },
+  "gameId": "[gameId]"
+}
+```
+
+### Response
+
+| Sender | Empfänger | Event            |
+| ------ | --------- | ---------------- |
+| Server | Client[n] | `updateGameList` |
+
+```json
+{
+  "gameList": [
+    /* Rückgabe der Spielzustände pro Spieler */
+  ]
+}
+```
+
+## Karte auslegen überspringen
+
+### Request
+
+| Sender     | Empfänger | Event               |
+| ---------- | --------- | ------------------- |
+| Client [1] | Server    | `skipPlayCardsStep` |
+
+```json
+{
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
+    "secret": "[secret]"
+  },
+  "gameId": "[gameId]"
+}
+```
+
+### Response
+
+| Sender | Empfänger | Event            |
+| ------ | --------- | ---------------- |
+| Server | Client[n] | `updateGameList` |
+
+```json
+{
+  "gameList": [
+    /* Rückgabe der Spielzustände pro Spieler */
+  ]
+}
+```
+
 [Inhaltsverzeichnis](inhaltsverzeichnis.md) | [Vorherige Seite](anforderungen.md) | [Nächste Seite](umsetzung.md)
