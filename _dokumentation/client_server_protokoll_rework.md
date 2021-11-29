@@ -407,4 +407,38 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
 }
 ```
 
+## Mit Spielern chatten
+
+## Request
+
+| Sender     | Empfänger | Event  |
+| ---------- | --------- | ------ |
+| Client [1] | Server    | `chat` |
+
+```json
+{
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
+    "secret": "[secret]"
+  },
+  "gameId": "[gameId]",
+  "message": "[chatMessage]"
+}
+```
+
+## Response
+
+| Sender | Empfänger  | Event  |
+| ------ | ---------- | ------ |
+| Server | Client [n] | `chat` |
+
+```json
+{
+  "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+  "playerId": "[playerId]",
+  "message": "[chatMessage]"
+}
+```
+
 [Inhaltsverzeichnis](inhaltsverzeichnis.md) | [Vorherige Seite](anforderungen.md) | [Nächste Seite](umsetzung.md)
