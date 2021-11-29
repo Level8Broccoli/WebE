@@ -309,4 +309,59 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
 }
 ```
 
+## Spiel beitreten
+
+### Request
+
+| Sender     | Empfänger | Event      |
+| ---------- | --------- | ---------- |
+| Client [1] | Server    | `joinGame` |
+
+```json
+{
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
+    "secret": "[secret]"
+  },
+  "game": {
+    "id": "[gameId]"
+  }
+}
+```
+
+### Responses
+
+| Sender | Empfänger  | Event      |
+| ------ | ---------- | ---------- |
+| Server | Client [n] | `joinGame` |
+
+### Body
+
+```json
+{
+  "status": "[StatusCode]",
+  "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]"
+  },
+  "game": {
+    /* Spielinformationen */
+  }
+}
+```
+
+| Sender | Empfänger | Event            |
+| ------ | --------- | ---------------- |
+| Server | Client[n] | `updateGameList` |
+
+```json
+{
+  "gameList": [
+    /* Liste aller offener Spiele auf dem Server */
+  ]
+}
+```
+
 [Inhaltsverzeichnis](inhaltsverzeichnis.md) | [Vorherige Seite](anforderungen.md) | [Nächste Seite](umsetzung.md)
