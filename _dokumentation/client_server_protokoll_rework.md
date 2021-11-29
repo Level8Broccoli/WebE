@@ -277,9 +277,7 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
     "name": "[playerName]",
     "secret": "[secret]"
   },
-  "game": {
-    "id": "[gameId]"
-  }
+  "gameId": "[gameId]"
 }
 ```
 
@@ -324,9 +322,7 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
     "name": "[playerName]",
     "secret": "[secret]"
   },
-  "game": {
-    "id": "[gameId]"
-  }
+  "gameId": "[gameId]"
 }
 ```
 
@@ -335,8 +331,6 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
 | Sender | Empfänger  | Event      |
 | ------ | ---------- | ---------- |
 | Server | Client [n] | `joinGame` |
-
-### Body
 
 ```json
 {
@@ -349,6 +343,55 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
   "game": {
     /* Spielinformationen */
   }
+}
+```
+
+| Sender | Empfänger | Event            |
+| ------ | --------- | ---------------- |
+| Server | Client[n] | `updateGameList` |
+
+```json
+{
+  "gameList": [
+    /* Liste aller offener Spiele auf dem Server */
+  ]
+}
+```
+
+## Spiel verlassen
+
+### Request
+
+| Sender     | Empfänger | Event       |
+| ---------- | --------- | ----------- |
+| Client [1] | Server    | `leaveGame` |
+
+```json
+{
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
+    "secret": "[secret]"
+  },
+  "gameId": "[gameId]"
+}
+```
+
+### Responses
+
+| Sender | Empfänger  | Event       |
+| ------ | ---------- | ----------- |
+| Server | Client [n] | `leaveGame` |
+
+```json
+{
+  "status": "[StatusCode]",
+  "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]"
+  },
+  "gameId": "[gameId]"
 }
 ```
 
