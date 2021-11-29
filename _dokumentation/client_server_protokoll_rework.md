@@ -47,9 +47,9 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
 
 ### Request
 
-| Sender    | Empfänger | Event          |
-| --------- | --------- | -------------- |
-| Client[1] | Server    | `logoutPlayer` |
+| Sender    | Empfänger | Event    |
+| --------- | --------- | -------- |
+| Client[1] | Server    | `logout` |
 
 ```json
 {
@@ -58,6 +58,96 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
     "name": "[playerName]",
     "secret": "[secret]"
   }
+}
+```
+
+### Responses
+
+| Sender | Empfänger | Event    |
+| ------ | --------- | -------- |
+| Server | Client[1] | `logout` |
+
+```json
+{
+  "status": "[StatusCode]",
+  "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+  "playerId": "[playerId]"
+}
+```
+
+| Sender | Empfänger | Event              |
+| ------ | --------- | ------------------ |
+| Server | Client[n] | `updatePlayerList` |
+
+```json
+{
+  "playerList": [
+    /* Liste aller am Server angemeldeter Spieler */
+  ]
+}
+```
+
+| Sender | Empfänger | Event            |
+| ------ | --------- | ---------------- |
+| Server | Client[n] | `updateGameList` |
+
+```json
+{
+  "gameList": [
+    /* Liste aller offener Spiele auf dem Server */
+  ]
+}
+```
+
+## Neuverbindung auf den Server (Clientrefresh oder nach Verbindungsverlust)
+
+### Request
+
+| Sender    | Empfänger | Event                    |
+| --------- | --------- | ------------------------ |
+| Client[1] | Server    | `registerExistingPlayer` |
+
+```json
+{
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
+    "secret": "[secret]"
+  }
+}
+```
+
+### Responses
+
+| Sender | Empfänger | Event                    |
+| ------ | --------- | ------------------------ |
+| Server | Client[1] | `registerExistingPlayer` |
+
+```json
+{
+  "status": "[StatusCode]",
+  "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
+    "secret": "[secret]"
+  },
+  "games": [
+    /* Liste aller Spiele auf dem Server */
+  ],
+  "activeGameId": "[activeGameId]"
+}
+```
+
+| Sender | Empfänger | Event              |
+| ------ | --------- | ------------------ |
+| Server | Client[n] | `updatePlayerList` |
+
+```json
+{
+  "playerList": [
+    /* Liste aller am Server angemeldeter Spieler */
+  ]
 }
 ```
 
