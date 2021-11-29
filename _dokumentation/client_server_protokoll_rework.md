@@ -474,4 +474,72 @@ Die einzelnen Nachrichten werden folgend näher beschrieben:
 }
 ```
 
+## Karte ziehen
+
+### Request
+
+| Sender     | Empfänger | Event      |
+| ---------- | --------- | ---------- |
+| Client [1] | Server    | `drawCard` |
+
+```json
+{
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
+    "secret": "[secret]"
+  },
+  "gameId": "[gameId]",
+  "pileId": "[pileId]"
+}
+```
+
+### Response
+
+| Sender | Empfänger | Event            |
+| ------ | --------- | ---------------- |
+| Server | Client[n] | `updateGameList` |
+
+```json
+{
+  "gameList": [
+    /* Rückgabe der Spielzustände pro Spieler */
+  ]
+}
+```
+
+## Karte ablegen
+
+### Request
+
+| Sender     | Empfänger | Event         |
+| ---------- | --------- | ------------- |
+| Client [1] | Server    | `discardCard` |
+
+```json
+{
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
+    "secret": "[secret]"
+  },
+  "gameId": "[gameId]",
+  "cardId": "[pileId]"
+}
+```
+
+### Response
+
+| Sender | Empfänger | Event            |
+| ------ | --------- | ---------------- |
+| Server | Client[n] | `updateGameList` |
+
+```json
+{
+  "gameList": [
+    /* Rückgabe der Spielzustände pro Spieler */
+  ]
+}
+```
+
 [Inhaltsverzeichnis](inhaltsverzeichnis.md) | [Vorherige Seite](anforderungen.md) | [Nächste Seite](umsetzung.md)
