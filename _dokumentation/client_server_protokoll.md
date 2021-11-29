@@ -14,13 +14,16 @@ Grundsätzlich werden folgende Datenpunkte regelmässig verwendet:
 | `game.creatorId` | UUID des Spielraumerstellers                                                        |
 | `game.players`   | Liste der Spieler Id's in der Lobby                                                 |
 | `game.config`    | Spielkonfiguration                                                                  |
+| `game.status`    | Aktueller Spielstatus (Lobby, Gestartet, Beendet)                                   |
 | `game.chat`      | Liste der Chatnachrichten in der Lobby                                              |
+| `game.cards`     | Alle Karten des Spiels                                                              |
+| `game.levels`    | Der Reihenfolgen der Levels                                                         |
+| `game.state`     | Beinhaltet den Spielstand (siehe unten)                                             |
 | `timestamp`      | Server-Zeitstempel                                                                  |
 | `player`         | Beinhaltet eine Spielerreferenz                                                     |
 | `player.Id`      | UUID um Spieler zu identifizieren (wird auch an andere Spieler weitergegeben)       |
 | `player.secret`  | UUID um Spieler zu authentifizieren (wird nur zwischen Client und Server verwendet) |
 | `player.name`    | Wird vom GUI verwendet (z.B. Autor einer Chatnachricht, aktiver Spieler)            |
-| `gameState`      | Beinhaltet den Spielstand (siehe unten)                                             |
 
 ## Spielstand
 
