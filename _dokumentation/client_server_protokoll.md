@@ -2,7 +2,7 @@
 
 # Server-Client Protokoll
 
-Im folgenden werden die Nachrichten aufgeführt, die zwischen Clients und Server ausgetauscht werden können.
+Im folgenden werden die Nachrichten aufgeführt, die zwischen Clients und Server ausgetauscht werden können. Um eine Realtime-Anwendung zu bauen, wurde entschieden, über das Websocket Protokoll JSON-Nachrichten auszutauschen. Eine Nachricht besteht dabei immer aus einem Sender, einem Empfänger und einem Eventtyp.
 
 Grundsätzlich werden folgende Datenpunkte regelmässig verwendet:
 
@@ -34,17 +34,17 @@ Der Spielstand beinhaltet:
 - Liste von erlaubten Spielzügen, falls der aktive Spieler die Anfrage gesendet hat
 - Protokoll aller vergangenen Spielzügen
 
-## Spieler registration
+# Nachrichtenformate
 
-Jeder Spieler muss sich mit einem Benutzernamen registrieren.
+Die einzelnen Nachrichten für die Kommunikation zwischen Client und Server werden folgend näher beschrieben:
 
-### Spieler sendet Benutzername an Server
+## Registrierung eines neuen Spielers am Server
 
-| Sender     | Empfänger | Event            |
-| ---------- | --------- | ---------------- |
-| Client [1] | Server    | `registerPlayer` |
+### Request
 
-### Body
+| Sender    | Empfänger | Event            |
+| --------- | --------- | ---------------- |
+| Client[1] | Server    | `registerPlayer` |
 
 ```json
 {
@@ -52,13 +52,11 @@ Jeder Spieler muss sich mit einem Benutzernamen registrieren.
 }
 ```
 
-### Server teilt Spieler ID und verfügbare Räume mit
+### Response
 
-| Sender | Empfänger  | Event            |
-| ------ | ---------- | ---------------- |
-| Server | Client [1] | `registerPlayer` |
-
-### Body
+| Sender | Empfänger | Event            |
+| ------ | --------- | ---------------- |
+| Server | Client[1] | `registerPlayer` |
 
 ```json
 {
@@ -70,22 +68,174 @@ Jeder Spieler muss sich mit einem Benutzernamen registrieren.
     "secret": "[secret]"
   },
   "games": [
-    /* Liste aller aktiven Spielräume, deren Konfiguration und Anzahl besetzter Plätze */
+    // Liste aller aktiven Spielräume, deren Konfiguration und Anzahl besetzter Plätze
+  ]
+}
+```
+
+## Logout eines Spielers vom Server
+
+### Request
+
+| Sender    | Empfänger | Event    |
+| --------- | --------- | -------- |
+| Client[1] | Server    | `logout` |
+
+```json
+{
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
+    "secret": "[secret]"
+  }
+}
+```
+
+### Responses
+
+| Sender | Empfänger | Event    |
+| ------ | --------- | -------- |
+| Server | Client[1] | `logout` |
+
+```json
+{
+  "status": "[StatusCode]",
+  "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+  "playerId": "[playerId]"
+}
+```
+
+| Sender | Empfänger | Event              |
+| ------ | --------- | ------------------ |
+| Server | Client[n] | `updatePlayerList` |
+
+```json
+{
+  "playerList": [
+    // Liste aller am Server angemeldeter Spieler
+  ]
+}
+```
+
+| Sender | Empfänger | Event            |
+| ------ | --------- | ---------------- |
+| Server | Client[n] | `updateGameList` |
+
+```json
+{
+  "gameList": [
+    // Liste aller offener Spiele auf dem Server
+  ]
+}
+```
+
+## Neuverbindung auf den Server (Clientrefresh oder nach Verbindungsverlust)
+
+### Request
+
+| Sender    | Empfänger | Event                    |
+| --------- | --------- | ------------------------ |
+| Client[1] | Server    | `registerExistingPlayer` |
+
+```json
+{
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
+    "secret": "[secret]"
+  }
+}
+```
+
+### Responses
+
+| Sender | Empfänger | Event                    |
+| ------ | --------- | ------------------------ |
+| Server | Client[1] | `registerExistingPlayer` |
+
+```json
+{
+  "status": "[StatusCode]",
+  "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
+    "secret": "[secret]"
+  },
+  "games": [
+    // Liste aller Spiele auf dem Server
+  ],
+  "activeGameId": "[activeGameId]"
+}
+```
+
+| Sender | Empfänger | Event              |
+| ------ | --------- | ------------------ |
+| Server | Client[n] | `updatePlayerList` |
+
+```json
+{
+  "playerList": [
+    // Liste aller am Server angemeldeter Spieler
+  ]
+}
+```
+
+## Spielername aktualisieren
+
+### Request
+
+| Sender    | Empfänger | Event            |
+| --------- | --------- | ---------------- |
+| Client[1] | Server    | `editPlayerName` |
+
+```json
+{
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
+    "secret": "[secret]"
+  }
+}
+```
+
+### Responses
+
+| Sender | Empfänger | Event            |
+| ------ | --------- | ---------------- |
+| Server | Client[n] | `editPlayerName` |
+
+```json
+{
+  "status": "[StatusCode]",
+  "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
+    "secret": "[secret]"
+  }
+}
+```
+
+| Sender | Empfänger | Event              |
+| ------ | --------- | ------------------ |
+| Server | Client[n] | `updatePlayerList` |
+
+```json
+{
+  "playerList": [
+    // Liste aller am Server angemeldeter Spieler
   ]
 }
 ```
 
 ## Spiel erstellen
 
-Jeder Spieler kann ein Spiel bzw. Spielraum erstellen.
-
-### Spieler sendet Server Bitte um Kreation eines Spielraums
+### Request
 
 | Sender     | Empfänger | Event        |
 | ---------- | --------- | ------------ |
 | Client [1] | Server    | `createGame` |
-
-### Body
 
 ```json
 {
@@ -95,18 +245,16 @@ Jeder Spieler kann ein Spiel bzw. Spielraum erstellen.
     "secret": "[secret]"
   },
   "config": {
-    /* Spielkonfiguration */
+    // Spielkonfiguration
   }
 }
 ```
 
-### Server broadcastet allen Spielern, die keinem Spiel zugewiesen sind, den neuerstellten Spielraum
+### Responses
 
 | Sender | Empfänger  | Event        |
 | ------ | ---------- | ------------ |
 | Server | Client [n] | `createGame` |
-
-### Body
 
 ```json
 {
@@ -120,30 +268,38 @@ Jeder Spieler kann ein Spiel bzw. Spielraum erstellen.
     "id": "[gameId]",
     "creatorId": "[creatorId]",
     "players": [
-      /* Liste von Spieler Id's in der Lobby */
+      // Liste von Spieler Id's in der Lobby
     ],
     "config": {
-      /* Spielkonfiguration */
+      // Spielkonfiguration
     },
     "chat": [
-      /* Liste von Chat Meldungen in der Lobby */
+      // Liste von Chat Meldungen in der Lobby
     ]
   }
 }
 ```
 
-## Spiel abbrechen
+| Sender | Empfänger | Event            |
+| ------ | --------- | ---------------- |
+| Server | Client[n] | `updateGameList` |
 
-Der Ersteller eines Spiels kann diesen löschen, solange das Spiel noch nicht gestartet wurde
+```json
+{
+  "gameList": [
+    // Liste aller offener Spiele auf dem Server
+  ]
+}
+```
 
-### 5.4.1 Spieler sendet Server Bitte um Löschung eines Spielraums
+## Spiel löschen
+
+### Request
 
 | Sender     | Empfänger | Event        |
 | ---------- | --------- | ------------ |
 | Client [1] | Server    | `deleteGame` |
 
-### Body
-
 ```json
 {
   "player": {
@@ -151,42 +307,44 @@ Der Ersteller eines Spiels kann diesen löschen, solange das Spiel noch nicht ge
     "name": "[playerName]",
     "secret": "[secret]"
   },
-  "game": {
-    "id": "[gameId]"
-  }
+  "gameId": "[gameId]"
 }
 ```
 
-### Server broadcastet allen Spielern, die keinem Spiel zugewiesen sind und allen Spielern, die bereits beigetreten sind, dass dieses Spiel gelöscht wurde
+### Responses
 
 | Sender | Empfänger  | Event        |
 | ------ | ---------- | ------------ |
 | Server | Client [n] | `deleteGame` |
 
-### Body
-
 ```json
 {
   "status": "[StatusCode]",
   "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
-  "game": {
-    "id": "[deletedGameId]"
-  }
+  "gameId": "[deletedGameId]"
+}
+```
+
+| Sender | Empfänger | Event            |
+| ------ | --------- | ---------------- |
+| Server | Client[n] | `updateGameList` |
+
+```json
+{
+  "gameList": [
+    // Liste aller offener Spiele auf dem Server
+  ]
 }
 ```
 
 ## Spiel beitreten
 
-Jeder Spieler kann einem Spiel beitreten, welches noch nicht gestartet wurde und noch Plätze verfügbar hat.
-
-### Spieler sendet Server die gewünschte Spiel ID
+### Request
 
 | Sender     | Empfänger | Event      |
 | ---------- | --------- | ---------- |
 | Client [1] | Server    | `joinGame` |
 
-### Body
-
 ```json
 {
   "player": {
@@ -194,20 +352,16 @@ Jeder Spieler kann einem Spiel beitreten, welches noch nicht gestartet wurde und
     "name": "[playerName]",
     "secret": "[secret]"
   },
-  "game": {
-    "id": "[gameId]"
-  }
+  "gameId": "[gameId]"
 }
 ```
 
-### Server broadcastet allen Spieler, dass ein Spieler einem Spiel beigetreten ist
+### Responses
 
 | Sender | Empfänger  | Event      |
 | ------ | ---------- | ---------- |
 | Server | Client [n] | `joinGame` |
 
-### Body
-
 ```json
 {
   "status": "[StatusCode]",
@@ -217,22 +371,30 @@ Jeder Spieler kann einem Spiel beitreten, welches noch nicht gestartet wurde und
     "name": "[playerName]"
   },
   "game": {
-    "id": "[gameId]"
+    // Spielinformationen
   }
+}
+```
+
+| Sender | Empfänger | Event            |
+| ------ | --------- | ---------------- |
+| Server | Client[n] | `updateGameList` |
+
+```json
+{
+  "gameList": [
+    // Liste aller offener Spiele auf dem Server
+  ]
 }
 ```
 
 ## Spiel verlassen
 
-Jeder Spieler kann eine Lobby verlassen, nachdem er sie betreten hat.
-
-### Spieler sendet Server die gewünschte Spiel ID
+### Request
 
 | Sender     | Empfänger | Event       |
 | ---------- | --------- | ----------- |
 | Client [1] | Server    | `leaveGame` |
-
-### Body
 
 ```json
 {
@@ -241,19 +403,15 @@ Jeder Spieler kann eine Lobby verlassen, nachdem er sie betreten hat.
     "name": "[playerName]",
     "secret": "[secret]"
   },
-  "game": {
-    "id": "[gameId]"
-  }
+  "gameId": "[gameId]"
 }
 ```
 
-### Server broadcastet allen Spieler, dass ein Spieler ein Spiel verlassen hat.
+### Responses
 
 | Sender | Empfänger  | Event       |
 | ------ | ---------- | ----------- |
 | Server | Client [n] | `leaveGame` |
-
-### Body
 
 ```json
 {
@@ -263,23 +421,29 @@ Jeder Spieler kann eine Lobby verlassen, nachdem er sie betreten hat.
     "id": "[playerId]",
     "name": "[playerName]"
   },
-  "game": {
-    "id": "[gameId]"
-  }
+  "gameId": "[gameId]"
 }
 ```
 
-## Chat-Nachrichten
+| Sender | Empfänger | Event            |
+| ------ | --------- | ---------------- |
+| Server | Client[n] | `updateGameList` |
 
-Sendet Nachrichten an den Server, welcher wiederum die Nachrichten den anderen Spielern im selben Spiel weiterleitet.
+```json
+{
+  "gameList": [
+    // Liste aller offener Spiele auf dem Server
+  ]
+}
+```
 
-### Spieler sendet Chat-Nachricht an Server
+## Mit Spielern chatten
+
+## Request
 
 | Sender     | Empfänger | Event  |
 | ---------- | --------- | ------ |
 | Client [1] | Server    | `chat` |
-
-### Body
 
 ```json
 {
@@ -288,44 +452,33 @@ Sendet Nachrichten an den Server, welcher wiederum die Nachrichten den anderen S
     "name": "[playerName]",
     "secret": "[secret]"
   },
-  "game": {
-    "id": "[gameId]"
-  },
+  "gameId": "[gameId]",
   "message": "[chatMessage]"
 }
 ```
 
-### Server broadcastet Chat-Nachricht an alle Spieler in Spielraum
+## Response
 
 | Sender | Empfänger  | Event  |
 | ------ | ---------- | ------ |
 | Server | Client [n] | `chat` |
 
-### Body
-
 ```json
 {
   "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
-  "player": {
-    "id": "[playerId]",
-    "name": "[playerName]"
-  },
+  "playerId": "[playerId]",
   "message": "[chatMessage]"
 }
 ```
 
 ## Spiel starten
 
-Der Ersteller des Spiels kann das Spiel starten, sobald die minimale Spieleranzahl erreicht wurde.
-
-### Spieler sendet Server Bitte um Start des Spiels
+### Request
 
 | Sender     | Empfänger | Event       |
 | ---------- | --------- | ----------- |
 | Client [1] | Server    | `startGame` |
 
-### Body
-
 ```json
 {
   "player": {
@@ -333,88 +486,32 @@ Der Ersteller des Spiels kann das Spiel starten, sobald die minimale Spieleranza
     "name": "[playerName]",
     "secret": "[secret]"
   },
-  "game": {
-    "id": "[gameId]"
-  }
+  "gameId": "[gameId]"
 }
 ```
 
-### Server broadcastet initialen Spielstand und die jeweilig private Hand an alle Spieler im Spiel
+### Response
 
-| Sender | Empfänger  | Event       |
-| ------ | ---------- | ----------- |
-| Server | Client [n] | `startGame` |
-
-### Body
+| Sender | Empfänger | Event            |
+| ------ | --------- | ---------------- |
+| Server | Client[n] | `updateGameList` |
 
 ```json
 {
   "gameList": [
-    /* Informationen zum Spiel (Spielstand, Hand des Spielers etc. */
+    // Rückgabe der Spielzustände pro Spieler
   ]
 }
 ```
 
-# TBD ACHTUNG Fehlt irgendwie
+## Karte ziehen
 
-## Spielstand
-
-Gibt dem Client die Möglichkeit den aktuellen Spielstand abzufragen, um das korrekte GUI anzuzeigen. Wird u.a. verwendet, wenn ein Spieler den Browser neulädt.
-
-### Spieler sendet Server Bitte um aktuellen Spielstand
-
-| Sender     | Empfänger | Event       |
-| ---------- | --------- | ----------- |
-| Client [1] | Server    | `gameState` |
-
-### Body
-
-```json
-{
-  "event": "gameState",
-  "data": {
-    "playerName": "[playerName]",
-    "playerId": "[playerId]",
-    "secret": "[secret]",
-    "gameId": "[gameId]"
-  }
-}
-```
-
-### Server sendet aktuellen Spielstand an Spieler
-
-| Sender | Empfänger  | Event       |
-| ------ | ---------- | ----------- |
-| Server | Client [1] | `gameState` |
-
-### Body
-
-```json
-{
-  "event": "gameState",
-  "data": {
-    "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
-    "gameState": {
-      /* aktueller Spielstand */
-    }
-  }
-}
-```
-
-# Ende TBD Achtung
-
-## Spielzug
-
-Der aktive Spieler kann einen Spielzug durchführen. Falls dieser valide ist, erhalten alle Spieler im Spiel einen aktualisierten Spielstand.
-
-### Spieler nimmt eine Karte auf.
+### Request
 
 | Sender     | Empfänger | Event      |
 | ---------- | --------- | ---------- |
 | Client [1] | Server    | `drawCard` |
 
-### Body
-
 ```json
 {
   "player": {
@@ -422,77 +519,66 @@ Der aktive Spieler kann einen Spielzug durchführen. Falls dieser valide ist, er
     "name": "[playerName]",
     "secret": "[secret]"
   },
-  "game": {
-    "id": "[gameId]"
-  },
+  "gameId": "[gameId]",
   "pileId": "[pileId]"
 }
 ```
 
-### Spieler erhält seine aktualisierte Hand mit der neuen Karte.
+### Response
 
-| Sender | Empfänger  | Event      |
-| ------ | ---------- | ---------- |
-| Server | Client [1] | `drawCard` |
-
-### Body
+| Sender | Empfänger | Event            |
+| ------ | --------- | ---------------- |
+| Server | Client[n] | `updateGameList` |
 
 ```json
 {
   "gameList": [
-    /* Informationen zum Spiel (Spielstand, Hand des Spielers etc. */
+    // Rückgabe der Spielzustände pro Spieler
   ]
 }
 ```
 
-### Spieler sendet einen Spielzug
+## Karte ablegen
 
-| Sender     | Empfänger | Event      |
-| ---------- | --------- | ---------- |
-| Client [1] | Server    | `gameMove` |
-
-### Body
-
-```json
-{
-  "event": "gameMove",
-  "data": {
-    "playerName": "[playerName]",
-    "playerId": "[playerId]",
-    "secret": "[secret]",
-    "gameId": "[gameId]",
-    "move": "[move]"
-  }
-}
-```
-
-### Server broadcastet aktuellen Spielstand an alle Spieler im Spiel
-
-| Sender | Empfänger  | Event      |
-| ------ | ---------- | ---------- |
-| Server | Client [n] | `gameMove` |
-
-### Body
-
-```json
-{
-  "event": "gameMove",
-  "data": {
-    "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
-    "gameState": {
-      /* aktueller Spielstand */
-    }
-  }
-}
-```
-
-### Spieler legt Karte ab.
+### Request
 
 | Sender     | Empfänger | Event         |
 | ---------- | --------- | ------------- |
 | Client [1] | Server    | `discardCard` |
 
-### Body
+```json
+{
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
+    "secret": "[secret]"
+  },
+  "gameId": "[gameId]",
+  "cardId": "[pileId]"
+}
+```
+
+### Response
+
+| Sender | Empfänger | Event            |
+| ------ | --------- | ---------------- |
+| Server | Client[n] | `updateGameList` |
+
+```json
+{
+  "gameList": [
+    // Rückgabe der Spielzustände pro Spieler
+  ]
+}
+```
+
+## Level auslegen überspringen
+
+### Request
+
+| Sender     | Empfänger | Event                  |
+| ---------- | --------- | ---------------------- |
+| Client [1] | Server    | `skipLevelFulfillStep` |
 
 ```json
 {
@@ -501,100 +587,153 @@ Der aktive Spieler kann einen Spielzug durchführen. Falls dieser valide ist, er
     "name": "[playerName]",
     "secret": "[secret]"
   },
-  "game": {
-    "id": "[gameId]"
-  },
-  "card": {
-    "id": "[cardId]"
-  }
+  "gameId": "[gameId]"
 }
 ```
 
-## Spiel abbrechen
+### Response
 
-Jeder Spieler kann die restlichen Spieler um ein Spielabbruch bitten. Sollte innert festgelegter Frist kein anderer Spieler dem Abbruch widersprechen, wird das Spiel abgebrochen.
-
-### Spieler sendet Anfrage um Spielabbruch bzw. Mitspieler bestätigen Abbruch oder widersprechen Abbruch
-
-| Sender     | Empfänger | Event       |
-| ---------- | --------- | ----------- |
-| Client [1] | Server    | `gameAbort` |
-
-### Body
+| Sender | Empfänger | Event            |
+| ------ | --------- | ---------------- |
+| Server | Client[n] | `updateGameList` |
 
 ```json
 {
-   "event": "gameAbort",
-   "data": {
-      "playerName": "[playerName]",
-      "playerId": "[playerId]",
-      "secret": "[secret]",
-      "gameId": "[gameId]",
-      "wantsToAbort": [true|false]
-   }
+  "gameList": [
+    // Rückgabe der Spielzustände pro Spieler
+  ]
 }
 ```
 
-### Server broadcastet Anfrage an alle Spieler im Spiel
+## Karte auslegen überspringen
 
-| Sender | Empfänger  | Event       |
-| ------ | ---------- | ----------- |
-| Server | Client [n] | `gameAbort` |
+### Request
 
-### Body
-
-```json
-{
-   "event": "gameAbort",
-   "data": {
-      "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
-      "playerName": "[playerName]",
-      "playerId": "[playerId]",
-      "wantsToAbort": [true|false]
-   }
-}
-```
-
-## Spielraumübersicht
-
-Gibt dem Client die Möglichkeit den offnen Spielräume abzufragen, um das korrekte GUI anzuzeigen. Wird u.a. verwendet, wenn ein Spieler den Browser neulädt oder ein Spiel verlässt.
-
-### Spieler sendet Server Bitte um aktuelle Spielraumübersicht
-
-| Sender     | Empfänger | Event       |
-| ---------- | --------- | ----------- |
-| Client [1] | Server    | `gameState` |
-
-### Body
+| Sender     | Empfänger | Event               |
+| ---------- | --------- | ------------------- |
+| Client [1] | Server    | `skipPlayCardsStep` |
 
 ```json
 {
-  "event": "gameState",
-  "data": {
-    "playerName": "[playerName]",
-    "playerId": "[playerId]",
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
     "secret": "[secret]"
-  }
+  },
+  "gameId": "[gameId]"
 }
 ```
 
-### Server sendet aktuelle Spielraumübersicht an Spieler
+### Response
 
-| Sender | Empfänger  | Event       |
-| ------ | ---------- | ----------- |
-| Server | Client [1] | `gameState` |
-
-### Body
+| Sender | Empfänger | Event            |
+| ------ | --------- | ---------------- |
+| Server | Client[n] | `updateGameList` |
 
 ```json
 {
-  "event": "gameState",
-  "data": {
-    "timestamp": "[timestamp | YYYY-MM-DDThh:mm:ss]",
-    "games": [
-      /* Liste aller aktiven Spielräume, deren Konfiguration und Anzahl besetzter Plätze */
-    ]
-  }
+  "gameList": [
+    // Rückgabe der Spielzustände pro Spieler
+  ]
+}
+```
+
+## Karte auspielen
+
+### Request
+
+| Sender     | Empfänger | Event      |
+| ---------- | --------- | ---------- |
+| Client [1] | Server    | `playCard` |
+
+```json
+{
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
+    "secret": "[secret]"
+  },
+  "gameId": "[gameId]",
+  "cardId": "[cardId]",
+  "cardRowId": "[cardRowId]"
+}
+```
+
+### Response
+
+| Sender | Empfänger | Event            |
+| ------ | --------- | ---------------- |
+| Server | Client[n] | `updateGameList` |
+
+```json
+{
+  "gameList": [
+    // Rückgabe der Spielzustände pro Spieler
+  ]
+}
+```
+
+## Level auslegen
+
+### Request
+
+| Sender     | Empfänger | Event               |
+| ---------- | --------- | ------------------- |
+| Client [1] | Server    | `finishFulfillment` |
+
+```json
+{
+  "player": {
+    "id": "[playerId]",
+    "name": "[playerName]",
+    "secret": "[secret]"
+  },
+  "gameId": "[gameId]",
+  "level": [
+    // Zu prüfende Karten für das aktuelle Level (CardRowRequest)
+  ]
+}
+```
+
+### Response
+
+| Sender | Empfänger | Event            |
+| ------ | --------- | ---------------- |
+| Server | Client[n] | `updateGameList` |
+
+```json
+{
+  "gameList": [
+    // Rückgabe der Spielzustände pro Spieler
+  ]
+}
+```
+
+## Leaderboard abfragen
+
+### Request
+
+| Sender     | Empfänger | Event         |
+| ---------- | --------- | ------------- |
+| Client [1] | Server    | `leaderboard` |
+
+```json
+{
+  // leer
+}
+```
+
+### Response
+
+| Sender | Empfänger | Event         |
+| ------ | --------- | ------------- |
+| Server | Client[1] | `leaderboard` |
+
+```json
+{
+  "leaderboard": [
+    // Sortierte Leaderboardeinträge der Form {"name":"[name]", "wins": number}
+  ]
 }
 ```
 
