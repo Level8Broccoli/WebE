@@ -57,5 +57,6 @@
   "nextStep": "nächster Schritt",
   "finishFulfillment": "Level abschliessen",
   "notYetValid": "noch nicht valide",
-  "skipStep": "Schritt überspringen"
+  "skipStep": "Schritt überspringen",
+  "currentLevelLabel": "Dein aktuelles Level"
 }

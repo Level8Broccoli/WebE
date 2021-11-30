@@ -31,7 +31,7 @@ const messageList = computed(() =>
 
 <style scoped>
 aside {
-  height: 100%;
+  display: contents;
 }
 
 ul {
@@ -41,7 +41,6 @@ ul {
   border-radius: 0.375em;
   border: 1px solid #dbdbdb;
   background-color: rgb(219, 219, 219, 0.3);
-  height: 75vh;
   overflow-y: scroll;
 }
 

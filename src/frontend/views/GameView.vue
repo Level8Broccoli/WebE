@@ -2,11 +2,11 @@
   <section>
     <div class="left">
       <TheGame />
-      <InGameButtons />
     </div>
     <div class="right">
       <Chat />
     </div>
+    <InGameButtons />
   </section>
 </template>
 
@@ -20,12 +20,22 @@ import TheGame from "../components/in-game/TheGame.vue";
 section {
   display: grid;
   grid-template-columns: 4fr 2fr;
+  grid-template-rows: 1fr max-content;
   gap: 2rem;
 }
 
 .left {
+  height: 100%;
   display: grid;
-  grid-template-rows: 1fr max-content;
-  gap: 2rem;
+  grid-template-rows: 1fr;
+  max-height: 75vh;
+  position: relative;
+}
+
+.right {
+  height: 100%;
+  display: grid;
+  grid-template-rows: max-content 1fr;
+  max-height: 75vh;
 }
 </style>

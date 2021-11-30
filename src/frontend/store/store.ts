@@ -17,6 +17,7 @@ import {
   GameRules,
   GameStatus,
   LevelSystem,
+  PlayerLevel,
   PlayerOverviewAggregate,
 } from "../../shared/model/Game";
 import { LeaderboardEntry } from "../../shared/model/Leaderboard";
@@ -69,12 +70,22 @@ export const store = createStore<State>({
     i18n: (state) => {
       return i18n(state.language);
     },
-    getActiveGame: (state) => {
+    getActiveGame: (state): Game => {
       const activeGame = state.games.find((g) => g.id === state.activeGameId);
       if (typeof activeGame === "undefined") {
         throw new Error("Active Game ID is wrong!");
       }
       return activeGame;
+    },
+    getCurrentPlayerLevel: (state, getters): PlayerLevel | null => {
+      const activeGame =
+        state.activeGameId.length > 0 && (getters.getActiveGame as Game);
+      if (!activeGame) {
+        return null;
+      }
+      return activeGame.state.playerLevels.filter(
+        (pl) => pl.playerId === state.player.id
+      )[0];
     },
     view: (state, getters) => {
       const activeGame =
