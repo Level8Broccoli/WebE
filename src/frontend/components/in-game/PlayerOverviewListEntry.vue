@@ -4,7 +4,7 @@
       <span class="bold">
         {{ playerName }}
       </span>
-      <span class="left-margin"> (Level {{ currentLevelIndex }}) </span>
+      <span class="left-margin"> (Level {{ currentLevelIndex + 1 }}) </span>
       <span class="hasLevelFulfilled" v-if="hasAchievedLevel">
         <i class="fas fa-check"></i>
       </span>
