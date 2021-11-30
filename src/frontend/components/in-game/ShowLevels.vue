@@ -28,7 +28,7 @@ const hasLevelFulfilled: ComputedRef<boolean> = computed(
   () => store.getters.getCurrentPlayerLevel.hasAchievedLevel
 );
 const maxLevelCount = computed(
-  () => store.getters.getActiveGame.config.maxPlayerCount
+  () => store.getters.getActiveGame.config.levelCount
 );
 const levels: ComputedRef<string[]> = computed(
   () => store.getters.getTranslatedLevels
