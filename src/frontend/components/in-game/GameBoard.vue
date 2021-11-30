@@ -22,10 +22,15 @@ const cardRows: ComputedRef<CardRow[]> = computed(
 </script>
 
 <style scoped>
+div {
+  margin: 2rem;
+}
+
 ul {
   margin: 0;
   padding: 0;
 }
+
 div > ul ul {
   margin-block: 1rem;
   display: flex;

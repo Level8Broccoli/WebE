@@ -16,7 +16,7 @@ const i18n = computed(() => store.getters.i18n);
 <style scoped>
 .empty {
   border-radius: 0.375em;
-  border: 5px dotted #000000;
+  border: 1px dotted #000000;
   color: #000000;
   text-align: center;
   width: 3em;

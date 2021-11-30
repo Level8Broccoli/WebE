@@ -1,45 +1,63 @@
 <template>
-  <div v-if="isActivePlayer">
-    {{ i18n.yourTurn }}
-    {{ currentStep }}.
-    <br />
-    <em>{{ currentStepExplanation }}</em>
+  <div :class="(isActivePlayer ? 'is-active' : 'is-waiting') + ' steps'">
+    <div v-if="isActivePlayer">
+      <div class="main-message">
+        {{ i18n.yourTurn }}
+        {{ currentStep }}.
+      </div>
+      <div>
+        <em>{{ currentStepExplanation }}</em>
+      </div>
+    </div>
+    <div v-else>
+      <div class="main-message">
+        {{ i18n.pleaseWaitOnPlayer }}
+      </div>
+      <div>
+        <em>{{ currentPlayerName }}</em>
+        ({{ currentStep }})
+      </div>
+    </div>
+    <div class="buttons">
+      <button
+        v-if="isInLevelFulfillStep && !fulfillLevelMode"
+        @click.prevent="startFulfillingLevel"
+      >
+        <i class="far fa-check icon-left"></i>
+        {{ i18n.startFulfillingLevel }}
+      </button>
+      <button v-if="fulfillLevelMode" @click.prevent="abortFulfillment">
+        <i class="far fa-times icon-left"></i>
+        {{ i18n.abortButton }}
+      </button>
+      <button
+        v-if="fulfillLevelMode && valid && !isLastPart"
+        @click.prevent="nextFulfillmentPart"
+      >
+        <i class="far fa-check icon-left"></i>
+        {{ i18n.nextStep }}
+      </button>
+      <button
+        v-if="fulfillLevelMode && valid && isLastPart"
+        @click.prevent="finishFulfillment"
+      >
+        <i class="far fa-check icon-left"></i>
+        {{ i18n.finishFulfillment }}
+      </button>
+      <button v-if="fulfillLevelMode && !valid" class="is-disabled">
+        <i class="fas fa-exclamation-circle icon-left"></i>
+        {{ i18n.notYetValid }}
+      </button>
+      <button v-if="isInLevelFulfillStep" @click.prevent="skipLevelFulfillStep">
+        <i class="far fa-arrow-to-right icon-left"></i>
+        {{ i18n.skipStep }}
+      </button>
+      <button v-if="isInPlayCardStep" @click.prevent="skipPlayCardsStep">
+        <i class="far fa-arrow-to-right icon-left"></i>
+        {{ i18n.skipStep }}
+      </button>
+    </div>
   </div>
-  <div v-else>
-    {{ i18n.pleaseWaitOnPlayer }}
-    <em>{{ currentPlayerName }}</em>
-    ({{ currentStep }})
-  </div>
-  <button
-    v-if="isInLevelFulfillStep && !fulfillLevelMode"
-    @click.prevent="startFulfillingLevel"
-  >
-    {{ i18n.startFulfillingLevel }}
-  </button>
-  <button v-if="fulfillLevelMode" @click.prevent="abortFulfillment">
-    {{ i18n.abortButton }}
-  </button>
-  <button
-    v-if="fulfillLevelMode && valid && !isLastPart"
-    @click.prevent="nextFulfillmentPart"
-  >
-    {{ i18n.nextStep }}
-  </button>
-  <button
-    v-if="fulfillLevelMode && valid && isLastPart"
-    @click.prevent="finishFulfillment"
-  >
-    {{ i18n.finishFulfillment }}
-  </button>
-  <button v-if="fulfillLevelMode && !valid" class="is-disabled">
-    {{ i18n.notYetValid }}
-  </button>
-  <button v-if="isInLevelFulfillStep" @click.prevent="skipLevelFulfillStep">
-    {{ i18n.skipStep }}
-  </button>
-  <button v-if="isInPlayCardStep" @click.prevent="skipPlayCardsStep">
-    {{ i18n.skipStep }}
-  </button>
 </template>
 
 <script setup lang="ts">
@@ -68,7 +86,6 @@ const currentPlayerName: ComputedRef<string> = computed(() => {
   const activePlayerId = game.state.activePlayerId;
   return store.getters.getPlayerName(activePlayerId) || activePlayerId;
 });
-
 
 const fulfillLevelCounter = ref(0);
 
@@ -171,3 +188,31 @@ const isLastPart = computed(
   () => fulfillLevelCounter.value + 1 === currentLevelRules.value.length
 );
 </script>
+
+<style scoped>
+.main-message {
+  font-weight: bold;
+}
+.steps {
+  padding: 1rem;
+  text-align: center;
+}
+
+.is-waiting {
+  background-color: rgb(114, 114, 112, 0.65);
+}
+
+.is-active {
+  background-color: rgb(255, 100, 100, 0.65);
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+button {
+  margin-top: 1rem;
+}
+</style>

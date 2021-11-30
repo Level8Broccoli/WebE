@@ -1,9 +1,17 @@
 <template>
   <main class="my-hand">
-    <button @click.prevent="switchSorting" v-if="sorting === 'COLOR'">
+    <button
+      class="secondary"
+      @click.prevent="switchSorting"
+      v-if="sorting === 'COLOR'"
+    >
       <i class="fas fa-shapes"></i>
     </button>
-    <button @click.prevent="switchSorting" v-if="sorting === 'NUMBER'">
+    <button
+      class="secondary"
+      @click.prevent="switchSorting"
+      v-if="sorting === 'NUMBER'"
+    >
       <i class="fas fa-sort-numeric-down"></i>
     </button>
     <ul role="list">
@@ -67,7 +75,7 @@ ul {
 }
 
 .my-hand {
-  padding: 2rem;
+  padding: 1rem 2rem;
   display: grid;
   grid-template-columns: max-content 1fr;
   align-items: center;
@@ -82,7 +90,14 @@ ul {
 }
 
 button {
+  padding-inline: 0.7em;
   aspect-ratio: 1;
-  font-size: 1.2em;
+  font-size: 1.5em;
+}
+
+.secondary {
+  border: 1px solid #5432d3;
+  background-color: transparent;
+  color: #5432d3;
 }
 </style>

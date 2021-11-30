@@ -1,8 +1,10 @@
 <template>
-  <main>
-    {{ i18n.drawPile }}
+  <li>
+    <p>
+      {{ i18n.drawPile }}
+    </p>
     <BackPileView :count="drawPileCount" :isDrawPile="true" />
-  </main>
+  </li>
 </template>
 
 <script setup lang="ts">
@@ -17,3 +19,16 @@ const drawPileCount: ComputedRef<number> = computed(() => {
 });
 const i18n = computed(() => store.getters.i18n);
 </script>
+
+<style scoped>
+li {
+  display: grid;
+  grid-template-rows: 1fr max-content;
+  padding: 1rem;
+}
+
+p {
+  color: black;
+  font-weight: bold;
+}
+</style>

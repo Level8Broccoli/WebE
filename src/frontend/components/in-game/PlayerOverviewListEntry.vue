@@ -1,9 +1,12 @@
 <template>
   <div :class="'entry ' + (isActivePlayer ? 'is-active' : '')">
     <p>
-      {{ playerName }} || Level: {{ currentLevelIndex + 1 }}/{{ maxLevelCount }}
-      || Done:
-      {{ hasAchievedLevel ? "YES" : "NO" }}
+      <span class="bold">
+        {{ playerName }}
+      </span>
+      <span class="hasLevelFulfilled" v-if="hasAchievedLevel">
+        <i class="fas fa-check"></i>
+      </span>
       <br />
       <span v-if="isActivePlayer">{{ currentStep }}</span>
       <span v-else>{{ i18n.stepWaiting }}</span>
@@ -40,11 +43,10 @@ const playerName: ComputedRef<string> = computed(
   () => store.getters.getPlayerName(playerId.value) || playerId.value
 );
 const isActivePlayer = computed(() => props.player.isActivePlayer);
-const currentLevelIndex = computed(() => props.player.currentLevelIndex);
-const hasAchievedLevel = computed(() => props.player.hasAchievedLevel);
-const maxLevelCount = computed(() => props.player.maxLevelCount);
 const handCount = computed(() => props.player.handCardCount);
 const i18n = computed(() => store.getters.i18n);
+
+const hasAchievedLevel = computed(() => props.player.hasAchievedLevel);
 
 const currentStep: ComputedRef<string> = computed(() =>
   store.getters.translateCurrentStep(props.player.currentStep)
@@ -60,13 +62,33 @@ const discardPile = computed(() => props.player.discardPile);
     "hand discard" max-content
     / max-content max-content;
   gap: 0.5rem;
+  padding: 1rem;
 }
 
 p {
   grid-area: name;
+  color: black;
+}
+
+.bold {
+  font-weight: bold;
 }
 
 .is-active {
-  border: 1px solid #5432d3;
+  background-color: hsl(253, 65%, 51%, 0.3);
+  border-radius: 0.375em;
+}
+
+span:not(.bold) {
+  font-style: italic;
+}
+
+.is-active .bold {
+  color: #5432d3;
+}
+
+.hasLevelFulfilled {
+  margin-left: 0.5rem;
+  color: green;
 }
 </style>
