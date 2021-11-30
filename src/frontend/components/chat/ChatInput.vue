@@ -18,7 +18,9 @@ const updateMessage = (e: Event) => {
   message.value = (e.target as HTMLInputElement).value;
 };
 const sendChatMessage = () => {
-  store.commit("sendChatMessage", message.value);
+  if (message.value.trim().length > 0) {
+    store.commit("sendChatMessage", message.value);
+  }
   message.value = "";
 };
 </script>

@@ -203,7 +203,8 @@ const isLastPart = computed(
 }
 
 .is-active {
-  background-color: rgb(255, 100, 100, 0.65);
+  background-color: rgb(250, 255, 0, 0.65);
+  color: black;
 }
 
 .buttons {

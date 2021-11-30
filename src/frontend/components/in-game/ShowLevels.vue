@@ -10,7 +10,7 @@
     </span>
     <span>
       (Level
-      {{ currentLevelIndex + 1 }}/{{ maxLevelCount }})
+      {{ currentLevelIndex + 1 }} / {{ maxLevelCount }})
     </span>
   </div>
 </template>
@@ -40,7 +40,7 @@ const myCurrentLevel: ComputedRef<number> = computed(
 
 <style scoped>
 div {
-  background-color: #241e92;
+  background-color: #5432d3;
   padding: 1rem;
   text-align: center;
   border-radius: 0.375em;

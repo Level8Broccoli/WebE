@@ -4,6 +4,7 @@
       <span class="bold">
         {{ playerName }}
       </span>
+      <span class="left-margin"> (Level {{ currentLevelIndex }}) </span>
       <span class="hasLevelFulfilled" v-if="hasAchievedLevel">
         <i class="fas fa-check"></i>
       </span>
@@ -47,6 +48,7 @@ const handCount = computed(() => props.player.handCardCount);
 const i18n = computed(() => store.getters.i18n);
 
 const hasAchievedLevel = computed(() => props.player.hasAchievedLevel);
+const currentLevelIndex = computed(() => props.player.currentLevelIndex);
 
 const currentStep: ComputedRef<string> = computed(() =>
   store.getters.translateCurrentStep(props.player.currentStep)
@@ -79,10 +81,13 @@ p {
   border-radius: 0.375em;
 }
 
-span:not(.bold) {
+span:not(.bold):not(.left-margin) {
   font-style: italic;
 }
 
+.left-margin {
+  margin-left: 0.5rem;
+}
 .is-active .bold {
   color: #5432d3;
 }
