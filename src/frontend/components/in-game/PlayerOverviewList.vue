@@ -32,7 +32,7 @@ const otherPlayers: ComputedRef<PlayerOverviewAggregate[]> = computed(
 
 <style scoped>
 main {
-  padding: 2rem 1rem;
+  padding: 0.5rem;
   background: rgb(219, 219, 219);
   background: linear-gradient(
     180deg,

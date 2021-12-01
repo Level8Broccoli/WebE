@@ -31,6 +31,18 @@ ul {
   padding: 0;
 }
 
+div > ul {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem 2rem;
+}
+
+@media (max-width: 100rem) {
+  div > ul {
+    display: unset;
+  }
+}
+
 div > ul ul {
   margin-block: 1rem;
   display: flex;
