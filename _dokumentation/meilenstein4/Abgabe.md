@@ -40,12 +40,12 @@ Bereiten Sie den 4. Meilenstein gemäss der nachfolgender Beschreibung vor.
     - Minimale Verbesserung Responsive Design
     - Leaderboard GUI erstellt
     - Spielende GUI erstellt
-    - Game GUI massiv verbessert 
+    - Spiel GUI massiv verbessert
 - Validity Check (Überprüfung der Spielregeln)
     - Spielregeln waren bereits im Meilenstein 3 fast komplett implementiert
     - Letzte Spielregeln implementiert:
         - Level-Aufstieg
-        - Rundenend
+        - Rundenende
         - Spielgewinn
 
 - Diverses:
