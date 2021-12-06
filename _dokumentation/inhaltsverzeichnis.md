@@ -12,3 +12,4 @@ Dieses Dokument beschreibt eine digitale Umsetzung unsererseits und gibt einen Ã
 4. [Anforderungen](anforderungen.md)
 5. [Client Server Protokoll](client_server_protokoll.md)
 6. [Umsetzung](umsetzung.md)
+7. [Installationshandbuch](installation.md)

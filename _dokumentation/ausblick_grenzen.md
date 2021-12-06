@@ -1,4 +1,4 @@
-[Inhaltsverzeichnis](inhaltsverzeichnis.md) | [Vorherige Seite](beispielsession.md)
+[Inhaltsverzeichnis](inhaltsverzeichnis.md) | [Vorherige Seite](beispielsession.md) | [Nächste Seite](installation.md)
 
 # Aktuelle Grenzen / Ausblick
 
@@ -11,4 +11,4 @@ Als logische Folgerung sehen wir als nächste Schritte die Umsetzung der folgend
 
 Für spätere Interationen könnten zusätzliche Features und weitere UX Optimierungen eingebaut werden wie z.B. Handanimationen, Kartenablageanimationen oder auch eine Art Monetarisierungssystem mit neuen Karten etc.
 
-[Inhaltsverzeichnis](inhaltsverzeichnis.md) | [Vorherige Seite](beispielsession.md)
+[Inhaltsverzeichnis](inhaltsverzeichnis.md) | [Vorherige Seite](beispielsession.md) | [Nächste Seite](installation.md)

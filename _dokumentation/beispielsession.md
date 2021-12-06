@@ -1,4 +1,4 @@
-[Inhaltsverzeichnis](inhaltsverzeichnis.md) | [Vorherige Seite](programmstruktur.md) | [Nächste Seite](ausblick_grenzen.md)
+[Inhaltsverzeichnis](inhaltsverzeichnis.md) | [Vorherige Seite](qualitaet.md) | [Nächste Seite](ausblick_grenzen.md)
 
 # Beispielsession
 
@@ -6,4 +6,4 @@ Um die gesamte Funktionalität des Spiels einfach zu demonstrieren, haben wir un
 
 Das Video kann unter dem folgenden [Link](resources/beispielsession.mp4) abgerufen und heruntergeladen werden.
 
-[Inhaltsverzeichnis](inhaltsverzeichnis.md) | [Vorherige Seite](programmstruktur.md) | [Nächste Seite](ausblick_grenzen.md)
+[Inhaltsverzeichnis](inhaltsverzeichnis.md) | [Vorherige Seite](qualitaet.md) | [Nächste Seite](ausblick_grenzen.md)
