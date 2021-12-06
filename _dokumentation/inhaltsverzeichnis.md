@@ -8,7 +8,7 @@ Dieses Dokument beschreibt eine digitale Umsetzung unsererseits und gibt einen √
 
 1. [Einf√ºhrung und Ziele](einfuehrung_ziele.md)
 2. [Randbedingungen](randbedingungen.md)
-3. [Spielregeln](spielregeln.md)
+3. [Spielregeln / Benutzerhandbuch](spielregeln.md)
 4. [Anforderungen](anforderungen.md)
 5. [Client Server Protokoll](client_server_protokoll.md)
 6. [Umsetzung](umsetzung.md)
