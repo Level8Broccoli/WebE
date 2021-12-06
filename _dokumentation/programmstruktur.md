@@ -1,4 +1,4 @@
-[Inhaltsverzeichnis](inhaltsverzeichnis.md) | [Vorherige Seite](systemarchitektur.md) | [Nächste Seite](benutzerhandbuch.md)
+[Inhaltsverzeichnis](inhaltsverzeichnis.md) | [Vorherige Seite](systemarchitektur.md) | [Nächste Seite](beispielsession.md)
 
 # Programmstruktur
 
@@ -29,4 +29,4 @@ Das Verzeichnis ist der Kern des Projektes und enthält sämtlichen Quellcode un
 | public      | Öffentliche Daten für Frontend (PDF's mit Spielregeln)                                       |
 | shared      | Geteilte Resourcen (hauptsächlich Datenklassen), die in Front- und Backend verwendet werden. |
 
-[Inhaltsverzeichnis](inhaltsverzeichnis.md) | [Vorherige Seite](systemarchitektur.md) | [Nächste Seite](benutzerhandbuch.md)
+[Inhaltsverzeichnis](inhaltsverzeichnis.md) | [Vorherige Seite](systemarchitektur.md) | [Nächste Seite](beispielsession.md)
