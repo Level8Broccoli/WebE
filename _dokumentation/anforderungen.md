@@ -85,7 +85,7 @@ Für das bessere Verständnis der Abläufe werden einzelne Anforderungen direkt 
 
 > Abnahmekriterium:
 >
-> Spieler ID und "Secret" werden wo möglich im Browser gespeichert und bei Neuladen der Webapplikation wird der aktuelle Spielstand geladen.
+> Spieler ID und «Secret» werden wo möglich im Browser gespeichert und bei Neuladen der Webapplikation wird der aktuelle Spielstand geladen.
 
 10. Jederzeit kann ein Benutzer zwischen Deutscher und Englischer Sprache wechseln.
 

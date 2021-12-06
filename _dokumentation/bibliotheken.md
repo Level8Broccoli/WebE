@@ -2,7 +2,7 @@
 
 # Verwendete Bibliotheken und Technologien
 
-Das Projekt wurde grundsätzlich in der Sprache "Typescript" umgesetzt. Typescript erweitert JavaScript um Typsicherheit und einfacheres Objekthandling. Die Sprache wurde im Frontend, wie auch im Backend eingesetzt. Als Frontendframework wurde auf Vue.js und im Backend auf Node.js als Runtime-Environment gesetzt. Front- und Backend können unabhängig von einander deployed werden und sind Docker-fähig.
+Das Projekt wurde grundsätzlich in der Sprache «Typescript» umgesetzt. Typescript erweitert JavaScript um Typsicherheit und einfacheres Objekthandling. Die Sprache wurde im Frontend, wie auch im Backend eingesetzt. Als Frontendframework wurde auf Vue.js und im Backend auf Node.js als Runtime-Environment gesetzt. Front- und Backend können unabhängig von einander deployed werden und sind Docker-fähig.
 
 Docker wurde verwendet um einerseits unsere Entwicklungsumgebung VS Code einzurichten und um später die beiden Artefakte in die Cloud zu deployen.
 

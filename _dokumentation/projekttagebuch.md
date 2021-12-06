@@ -92,7 +92,7 @@ Folgende Anforderungen sind an das Projekttagebuch gestellt:
 - Aufgaben, die voraussichtlich nicht abgeschlossen werden für Meilenstein #2
   - Spielregeln einsehbar (noch nicht begonnen)
   - Internationalization (noch nicht begonnen)
-  - Erstellen eines "Shared" Subprojekt, in dem alle gemeinsam genutzten Codesnippets (Frontend & Backend) abgelegt werden (begonnen)
+  - Erstellen eines «Shared» Subprojekt, in dem alle gemeinsam genutzten Codesnippets (Frontend & Backend) abgelegt werden (begonnen)
 - Nächste Schritte:
   - Oliver: Abarbeiten der offnen Aufgaben (Chat GUI, Abmelden von Spieler, Namensänderung von Spieler)
   - Thierry: keine
@@ -111,7 +111,7 @@ Folgende Anforderungen sind an das Projekttagebuch gestellt:
     - Nichts aussagende Kommentare löschen
     - Promise reject verwenden statt nur throw? _Thierry investiert Zeit, um das richtige Vorgehen herauszufinden_
     - Benutzereingaben zuerst trimmen und redundante if-Bedingungen auflösen
-    - ErrorCodes statt Text, in der Form: "ERROR_CODE"
+    - ErrorCodes statt Text, in der Form: «ERROR_CODE»
     - Luxon update. _Ja, im Backend bereits durchgeführt_
 - Types möglicherweise extrahieren, da beide Projekte die gleichen Types verwenden und sonst beide jeweils angepasst werden müssen.
 - Socket.io Problem (nicht lauffähig via Dockercontainer) behoben
@@ -164,7 +164,7 @@ Folgende Anforderungen sind an das Projekttagebuch gestellt:
 - Protokollentwurf besprochen und diskutiert
 
   - Es wird eine reine Websockets angestrebt
-  - Ein neuer Raum wird erst gebroadcastet, wenn alle Regeln gesetzt sind und der Button "Create" betätigt wird. In der Lobby können die Regeln nicht mehr angepasst werden.
+  - Ein neuer Raum wird erst gebroadcastet, wenn alle Regeln gesetzt sind und der Button «Create» betätigt wird. In der Lobby können die Regeln nicht mehr angepasst werden.
 
 - Client Server Authetifizierung wird mit Spieler ID und Secret realisiert.
 

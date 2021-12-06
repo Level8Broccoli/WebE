@@ -24,8 +24,8 @@ Das Verzeichnis ist der Kern des Projektes und enthält sämtlichen Quellcode un
 
 | Verzeichnis | Beschreibung                                                                                 |
 | ----------- | -------------------------------------------------------------------------------------------- |
-| frontend    | Programmcode des Frontends                                                                   |
-| backend     | Programmcode des Backends                                                                    |
+| frontend    | Programmcode des Frontend                                                                    |
+| backend     | Programmcode des Backend                                                                     |
 | public      | Öffentliche Daten für Frontend (PDF's mit Spielregeln)                                       |
 | shared      | Geteilte Resourcen (hauptsächlich Datenklassen), die in Front- und Backend verwendet werden. |
 
