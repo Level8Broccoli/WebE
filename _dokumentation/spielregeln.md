@@ -1,6 +1,6 @@
 [Inhaltsverzeichnis](inhaltsverzeichnis.md) | [Vorherige Seite](randbedingungen.md) | [Nächste Seite](anforderungen.md)
 
-# Spielregeln
+# Spielregeln / Benutzerhandbuch
 
 Das Spiel wird auf der Webseite vom Hersteller wiefolgt beschrieben:
 
