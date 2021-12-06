@@ -66,7 +66,7 @@ Für das bessere Verständnis der Abläufe werden einzelne Anforderungen direkt 
 > Abnahmekriterium:
 >
 > Die Spieler haben in der Lobby die Möglichkeit,\
-> via Klick auf einen Butteon diese wieder zu verlassen.
+> via Klick auf einen Button diese wieder zu verlassen.
 
 7. Nachdem das Spiel gestartet ist, bietet das System den Spielern die Möglichkeit das Spiel zu spielen.
 
